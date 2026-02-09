@@ -1,5 +1,3 @@
-using ProjectTracker.Enums;
-
 namespace ProjectTracker.Entities;
 
 public class Issue
@@ -8,7 +6,7 @@ public class Issue
     public required int Number { get; set; }
     public required string ShortName { get; set; }
     public required string Title { get; set; }
-    public required string Description { get; set; }
+    public string? Description { get; set; }
     public List<Attachment> Attachments { get; set; } = new();
     public required Guid CreatorId { get; set; }
     public required User Creator { get; set; }
@@ -17,10 +15,15 @@ public class Issue
     public Guid? AssigneeId { get; set; }
     public User? Assignee { get; set; }
     public required IssueStatus Status { get; set; } = IssueStatus.Open;
-    public required IssuePriority Priority { get; set; } = IssuePriority.Normal;
+    public required IssuePriority Priority { get; set; }
 
-    public Issue(string title, Project project, User creator, User? assignee)
+    [SetsRequiredMembers]
+    public Issue(int number, string title, Project project,
+        User creator, User? assignee = null, IssuePriority? priority = null)
     {
+        Id = Guid.CreateVersion7();
+        Number = number;
+        ShortName = $"{project.ShortName}-{Number}";
         Title = title;
         Project = project;
         ProjectId = project.Id;
@@ -28,5 +31,6 @@ public class Issue
         CreatorId = creator.Id;
         Assignee = assignee;
         AssigneeId = assignee?.Id;
+        Priority = priority ?? IssuePriority.Normal;
     }
 }
