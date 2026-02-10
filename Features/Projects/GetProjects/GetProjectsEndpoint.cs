@@ -9,9 +9,10 @@ public static class GetProjectsEndpoint
         // GET /projects
         app.MapGet("/", async (
             [FromServices] List<Project> projects,
+            ProjectMapper mapper,
             ILogger<Program> logger) =>
         {
-            return TypedResults.Ok(projects.Select(p => new ProjectDto(p.Id, p.ShortName, p.Name, p.Description)));
+            return TypedResults.Ok(projects.Select(p => mapper.ToDto(p)));
         })
         .Produces<List<ProjectDto>>(StatusCodes.Status200OK);
     }

@@ -9,6 +9,7 @@ public static class GetProjectEndpoint
         // GET /projects/{id}
         app.MapGet("/{id}", async (
             Guid id,
+            ProjectMapper mapper,
             [FromServices] List<Project> projects) =>
         {
             var project = projects.FirstOrDefault(p => p.Id == id);
@@ -18,7 +19,7 @@ public static class GetProjectEndpoint
                 return Results.NotFound();
             }
 
-            return TypedResults.Ok(new ProjectDto(project.Id, project.ShortName, project.Name, project.Description));
+            return TypedResults.Ok(mapper.ToDto(project));
         })
         .WithName(EndpointNames.GetProject)
         .Produces<ProjectDto>(StatusCodes.Status200OK)

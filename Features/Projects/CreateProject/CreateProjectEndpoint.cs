@@ -11,6 +11,7 @@ public static class CreateProjectEndpoint
             CreateProjectRequest request,
             [FromServices] List<Project> projects,
             [FromServices] User user,
+            ProjectMapper mapper,
             IValidator<CreateProjectRequest> validator,
             ILogger<Program> logger) =>
         {
@@ -26,7 +27,7 @@ public static class CreateProjectEndpoint
                 project.Name);
 
             return TypedResults.CreatedAtRoute(
-                new ProjectDto(project.Id, project.ShortName, project.Name, project.Description),
+                mapper.ToDto(project),
                 EndpointNames.GetProject,
                 new { id = project.Id });
         })

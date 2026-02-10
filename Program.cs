@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using ProjectTracker.Features.Projects;
+using ProjectTracker.Features.Projects.GetProject;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddSingleton(projects);
 builder.Services.AddSingleton(user);
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddSingleton<ProjectMapper>();
 
 var app = builder.Build();
 
