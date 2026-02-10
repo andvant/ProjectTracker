@@ -12,6 +12,8 @@ public class Issue
     public required User Creator { get; set; }
     public required Guid ProjectId { get; set; }
     public required Project Project { get; set; }
+    public required DateTime Created { get; set; }
+    public required DateTime Updated { get; set; }
     public Guid? AssigneeId { get; set; }
     public User? Assignee { get; set; }
     public required IssueStatus Status { get; set; } = IssueStatus.Open;
@@ -32,5 +34,7 @@ public class Issue
         Assignee = assignee;
         AssigneeId = assignee?.Id;
         Priority = priority ?? IssuePriority.Normal;
+        Created = DateTime.UtcNow;
+        Updated = DateTime.UtcNow;
     }
 }

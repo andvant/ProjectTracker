@@ -6,6 +6,7 @@ public class Project
     public required string ShortName { get; set; }
     public required string Name { get; set; }
     public string? Description { get; set; }
+    public required DateTime Created { get; set; }
     public List<Attachment> Attachments { get; set; } = new();
     public required User Owner { get; set; }
     public List<User> Members { get; set; } = new();
@@ -19,6 +20,7 @@ public class Project
         Name = name;
         Owner = owner;
         Members.Add(owner);
+        Created = DateTime.UtcNow;
     }
 
     public void AddIssue(Issue issue)

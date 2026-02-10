@@ -9,8 +9,11 @@ public static class UpdateProjectEndpoint
             Guid id,
             UpdateProjectRequest request,
             [FromServices] List<Project> projects,
+            IValidator<UpdateProjectRequest> validator,
             ILogger<Program> logger) =>
         {
+            await validator.ValidateAndThrowAsync(request);
+
             var project = projects.FirstOrDefault(p => p.Id == id);
 
             if (project is not null)

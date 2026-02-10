@@ -11,8 +11,11 @@ public static class CreateProjectEndpoint
             CreateProjectRequest request,
             [FromServices] List<Project> projects,
             [FromServices] User user,
+            IValidator<CreateProjectRequest> validator,
             ILogger<Program> logger) =>
         {
+            await validator.ValidateAndThrowAsync(request);
+
             var project = new Project(request.ShortName, request.Name, user);
             projects.Add(project);
 
