@@ -8,14 +8,14 @@ public static class UpdateProjectEndpoint
 {
     public static void MapUpdateProject(this IEndpointRouteBuilder app)
     {
-        // PUT /projects/{id}
-        app.MapPut("/{id}", async (
-            Guid id,
+        // PUT /projects/{projectId}
+        app.MapPut("/{projectId}", async (
+            Guid projectId,
             UpdateProjectRequest request,
             ISender sender,
             ILogger<Program> logger) =>
         {
-            var command = new UpdateProjectCommand(id, request.Name, request.Description);
+            var command = new UpdateProjectCommand(projectId, request.Name, request.Description);
 
             await sender.Send(command);
 

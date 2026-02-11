@@ -8,13 +8,13 @@ public static class GetProjectEndpoint
 {
     public static void MapGetProject(this IEndpointRouteBuilder app)
     {
-        // GET /projects/{id}
-        app.MapGet("/{id}", async (
-            Guid id,
+        // GET /projects/{projectId}
+        app.MapGet("/{projectId}", async (
+            Guid projectId,
             ISender sender,
             List<Project> projects) =>
         {
-            var query = new GetProjectQuery(id);
+            var query = new GetProjectQuery(projectId);
 
             var project = await sender.Send(query);
 

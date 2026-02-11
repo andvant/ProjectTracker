@@ -6,10 +6,10 @@ public static class DeleteProjectEndpoint
 {
     public static void MapDeleteProject(this IEndpointRouteBuilder app)
     {
-        // DELETE /projects/{id}
-        app.MapDelete("/{id}", async (Guid id, ISender sender) =>
+        // DELETE /projects/{projectId}
+        app.MapDelete("/{projectId}", async (Guid projectId, ISender sender) =>
         {
-            var command = new DeleteProjectCommand(id);
+            var command = new DeleteProjectCommand(projectId);
 
             await sender.Send(command);
 
