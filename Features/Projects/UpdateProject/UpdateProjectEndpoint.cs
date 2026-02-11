@@ -1,4 +1,8 @@
+using MediatR;
+
 namespace ProjectTracker.Features.Projects.UpdateProject;
+
+public record UpdateProjectRequest(string Name, string? Description);
 
 public static class UpdateProjectEndpoint
 {
@@ -8,27 +12,14 @@ public static class UpdateProjectEndpoint
         app.MapPut("/{id}", async (
             Guid id,
             UpdateProjectRequest request,
-            [FromServices] List<Project> projects,
-            IValidator<UpdateProjectRequest> validator,
+            ISender sender,
             ILogger<Program> logger) =>
         {
-            await validator.ValidateAndThrowAsync(request);
+            var command = new UpdateProjectCommand(id, request.Name, request.Description);
 
-            var project = projects.FirstOrDefault(p => p.Id == id);
+            await sender.Send(command);
 
-            if (project is not null)
-            {
-                project.Name = request.Name;
-                project.Description = request?.Description;
-
-                logger.LogInformation(
-                    "Updated project {Id} with short name {ShortName}, name {Name}",
-                    project.Id,
-                    project.ShortName,
-                    project.Name);
-            }
-
-            return TypedResults.NoContent();
+            return Results.NoContent();
         })
         .Produces(StatusCodes.Status204NoContent)
         .ProducesValidationProblem();

@@ -1,6 +1,9 @@
+using MediatR;
 using ProjectTracker.Features.Projects.Common;
 
 namespace ProjectTracker.Features.Projects.CreateProject;
+
+public record CreateProjectRequest(string ShortName, string Name);
 
 public static class CreateProjectEndpoint
 {
@@ -9,25 +12,15 @@ public static class CreateProjectEndpoint
         // POST /projects
         app.MapPost("/", async (
             CreateProjectRequest request,
-            [FromServices] List<Project> projects,
             [FromServices] User user,
-            ProjectMapper mapper,
-            IValidator<CreateProjectRequest> validator,
-            ILogger<Program> logger) =>
+            ISender sender) =>
         {
-            await validator.ValidateAndThrowAsync(request);
+            var command = new CreateProjectCommand(request.ShortName, request.Name, user);
 
-            var project = new Project(request.ShortName, request.Name, user);
-            projects.Add(project);
-
-            logger.LogInformation(
-                "Created project {Id} with short name {ShortName}, name {Name}",
-                project.Id,
-                project.ShortName,
-                project.Name);
+            var project = await sender.Send(command);
 
             return TypedResults.CreatedAtRoute(
-                mapper.ToDto(project),
+                project,
                 EndpointNames.GetProject,
                 new { id = project.Id });
         })

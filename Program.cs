@@ -1,7 +1,9 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using ProjectTracker.Features.Behaviors;
 using ProjectTracker.Features.Projects;
-using ProjectTracker.Features.Projects.GetProject;
+using ProjectTracker.Features.Projects.Common;
+using ProjectTracker.Features.Projects.GetProjects;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +16,16 @@ var projects = GetProjects();
 builder.Services.AddSingleton(projects);
 builder.Services.AddSingleton(user);
 
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-builder.Services.AddSingleton<ProjectMapper>();
+var assembly = Assembly.GetExecutingAssembly();
+builder.Services.AddValidatorsFromAssembly(assembly);
+builder.Services.AddSingleton<ProjectDtoMapper>();
+builder.Services.AddSingleton<ProjectsDtoMapper>();
+
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(assembly);
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
 
 var app = builder.Build();
 

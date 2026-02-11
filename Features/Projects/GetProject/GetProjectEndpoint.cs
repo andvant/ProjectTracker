@@ -1,3 +1,4 @@
+using MediatR;
 using ProjectTracker.Features.Projects.Common;
 
 namespace ProjectTracker.Features.Projects.GetProject;
@@ -9,17 +10,16 @@ public static class GetProjectEndpoint
         // GET /projects/{id}
         app.MapGet("/{id}", async (
             Guid id,
-            ProjectMapper mapper,
+            ISender sender,
             [FromServices] List<Project> projects) =>
         {
-            var project = projects.FirstOrDefault(p => p.Id == id);
+            var query = new GetProjectQuery(id);
 
-            if (project is null)
-            {
-                return Results.NotFound();
-            }
+            var project = await sender.Send(query);
 
-            return TypedResults.Ok(mapper.ToDto(project));
+            return project is null
+                ? Results.NotFound()
+                : TypedResults.Ok(project);
         })
         .WithName(EndpointNames.GetProject)
         .Produces<ProjectDto>(StatusCodes.Status200OK)
