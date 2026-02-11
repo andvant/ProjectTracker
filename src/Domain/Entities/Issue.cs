@@ -22,7 +22,7 @@ public class Issue
     public required IssuePriority Priority { get; set; }
 
     [SetsRequiredMembers]
-    public Issue(int number, string title, Project project,
+    internal Issue(Project project, int number, string title,
         User creator, User? assignee = null, IssuePriority? priority = null)
     {
         Id = Guid.CreateVersion7();
@@ -38,5 +38,22 @@ public class Issue
         Priority = priority ?? IssuePriority.Normal;
         Created = DateTime.UtcNow;
         Updated = DateTime.UtcNow;
+    }
+
+    public void UpdateDetails(string title, IssuePriority priority, string? description)
+    {
+        Title = title;
+        Priority = priority;
+        Description = description;
+        Updated = DateTime.UtcNow;
+    }
+
+    public void ChangeStatus(IssueStatus status)
+    {
+        if (status != Status)
+        {
+            Status = status;
+            Updated = DateTime.UtcNow;
+        }
     }
 }

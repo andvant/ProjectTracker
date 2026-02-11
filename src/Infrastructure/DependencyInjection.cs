@@ -31,14 +31,8 @@ public static class DependencyInjection
             }
         };
 
-        var issues = new List<Issue>()
-        {
-            new(1, "Issue One", projects[0], user, user),
-            new(2, "Issue Two", projects[0], user, priority: IssuePriority.Critical)
-        };
-
-        projects[0].AddIssue(issues[0]);
-        projects[0].AddIssue(issues[1]);
+        projects[0].CreateIssue(1, "Issue One", user, user);
+        projects[0].CreateIssue(2, "Issue Two", user, priority: IssuePriority.Critical);
 
         return projects;
     }

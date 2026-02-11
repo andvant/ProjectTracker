@@ -16,6 +16,6 @@ public static class GetProjectsEndpoint
 
             return TypedResults.Ok(projects);
         })
-        .Produces<List<ProjectDto>>(StatusCodes.Status200OK);
+        .Produces<List<ProjectsDto>>(StatusCodes.Status200OK);
     }
 }

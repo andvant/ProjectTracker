@@ -1,3 +1,5 @@
+using ProjectTracker.Domain.Enums;
+
 namespace ProjectTracker.Domain.Entities;
 
 public class Project
@@ -23,10 +25,17 @@ public class Project
         Created = DateTime.UtcNow;
     }
 
-    public void AddIssue(Issue issue)
+    public Issue CreateIssue(int number, string title, User creator,
+        User? assignee = null, IssuePriority? priority = null)
     {
-        issue.ProjectId = Id;
-        issue.Project = this;
+        var issue = new Issue(this, number, title, creator, assignee, priority);
         Issues.Add(issue);
+
+        return issue;
+    }
+
+    public void RemoveIssue(Issue issue)
+    {
+        Issues.Remove(issue);
     }
 }

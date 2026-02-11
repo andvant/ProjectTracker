@@ -1,6 +1,8 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectTracker.Application.Common.Behaviors;
+using ProjectTracker.Application.Features.Issues.Common;
+using ProjectTracker.Application.Features.Issues.GetIssues;
 using ProjectTracker.Application.Features.Projects.Common;
 using ProjectTracker.Application.Features.Projects.GetProjects;
 
@@ -22,6 +24,8 @@ public static class DependencyInjection
 
         services.AddSingleton<ProjectDtoMapper>();
         services.AddSingleton<ProjectsDtoMapper>();
+        services.AddSingleton<IssueDtoMapper>();
+        services.AddSingleton<IssuesDtoMapper>();
 
         return services;
     }

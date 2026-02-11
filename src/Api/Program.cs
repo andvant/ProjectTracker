@@ -12,5 +12,6 @@ builder.Services.AddApiServices();
 var app = builder.Build();
 
 app.MapProjects();
+app.MapIssues();
 
 app.Run();
