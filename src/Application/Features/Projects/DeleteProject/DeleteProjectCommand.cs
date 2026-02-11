@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace ProjectTracker.Application.Features.Projects.DeleteProject;
 
 public record DeleteProjectCommand(Guid Id) : IRequest;

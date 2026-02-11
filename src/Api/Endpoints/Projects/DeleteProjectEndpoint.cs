@@ -1,4 +1,6 @@
-namespace ProjectTracker.Application.Features.Projects.DeleteProject;
+using ProjectTracker.Application.Features.Projects.DeleteProject;
+
+namespace ProjectTracker.Api.Endpoints.Projects;
 
 public static class DeleteProjectEndpoint
 {

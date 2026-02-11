@@ -1,4 +1,6 @@
-namespace ProjectTracker.Application.Features.Projects.UpdateProject;
+using ProjectTracker.Application.Features.Projects.UpdateProject;
+
+namespace ProjectTracker.Api.Endpoints.Projects;
 
 public record UpdateProjectRequest(string Name, string? Description);
 

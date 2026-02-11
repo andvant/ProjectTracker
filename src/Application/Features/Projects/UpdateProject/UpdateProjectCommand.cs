@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace ProjectTracker.Application.Features.Projects.UpdateProject;
 
 public record UpdateProjectCommand(Guid Id, string Name, string? Description) : IRequest;

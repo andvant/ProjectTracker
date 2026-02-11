@@ -1,6 +1,8 @@
 using ProjectTracker.Application.Features.Projects.Common;
+using ProjectTracker.Application.Features.Projects.GetProject;
+using ProjectTracker.Domain.Entities;
 
-namespace ProjectTracker.Application.Features.Projects.GetProject;
+namespace ProjectTracker.Api.Endpoints.Projects;
 
 public static class GetProjectEndpoint
 {

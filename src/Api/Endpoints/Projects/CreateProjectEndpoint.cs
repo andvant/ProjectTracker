@@ -1,6 +1,8 @@
 using ProjectTracker.Application.Features.Projects.Common;
+using ProjectTracker.Application.Features.Projects.CreateProject;
+using ProjectTracker.Domain.Entities;
 
-namespace ProjectTracker.Application.Features.Projects.CreateProject;
+namespace ProjectTracker.Api.Endpoints.Projects;
 
 public record CreateProjectRequest(string ShortName, string Name);
 

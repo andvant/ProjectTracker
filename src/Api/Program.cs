@@ -1,13 +1,13 @@
 using ProjectTracker.Api;
+using ProjectTracker.Api.Endpoints;
 using ProjectTracker.Application;
-using ProjectTracker.Application.Features.Projects;
 using ProjectTracker.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApiServices();
-builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
+builder.Services.AddApiServices();
 
 var app = builder.Build();
 

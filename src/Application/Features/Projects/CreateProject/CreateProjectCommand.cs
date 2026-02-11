@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using ProjectTracker.Application.Features.Projects.Common;
 
 namespace ProjectTracker.Application.Features.Projects.CreateProject;
