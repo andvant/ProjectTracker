@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 using ProjectTracker.Api.Middleware;
 
@@ -10,7 +11,16 @@ public static class DependencyInjection
         services.ConfigureHttpJsonOptions(opts =>
             opts.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-        services.AddProblemDetails();
+        services.AddProblemDetails(opts =>
+        {
+            opts.CustomizeProblemDetails = context =>
+            {
+                context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+                context.ProblemDetails.Extensions["traceId"] = Activity.Current?.TraceId.ToString();
+                context.ProblemDetails.Extensions["requestId"] = context.HttpContext.TraceIdentifier;
+            };
+        });
+        services.AddExceptionHandler<ValidationExceptionHandler>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
         return services;
