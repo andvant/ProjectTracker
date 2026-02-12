@@ -22,6 +22,7 @@ public static class UpdateProjectEndpoint
             return Results.NoContent();
         })
         .Produces(StatusCodes.Status204NoContent)
+        .Produces(StatusCodes.Status404NotFound)
         .ProducesValidationProblem();
     }
 }

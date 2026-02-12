@@ -28,6 +28,11 @@ public class Project
     public Issue CreateIssue(int number, string title, User creator,
         User? assignee = null, IssuePriority? priority = null)
     {
+        if (assignee is not null && !Members.Select(u => u.Id).Contains(assignee.Id))
+        {
+            throw new AssigneeNotMemberException(assignee.Id);
+        }
+
         var issue = new Issue(this, number, title, creator, assignee, priority);
         Issues.Add(issue);
 

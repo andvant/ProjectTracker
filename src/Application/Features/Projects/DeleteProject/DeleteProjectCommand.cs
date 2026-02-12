@@ -19,9 +19,8 @@ public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand>
 
     public async Task Handle(DeleteProjectCommand command, CancellationToken cancellationToken)
     {
-        var project = _projects.FirstOrDefault(p => p.Id == command.Id);
-
-        if (project is null) return;
+        var project = _projects.FirstOrDefault(p => p.Id == command.Id)
+            ?? throw new ProjectNotFoundException(command.Id);
 
         _projects.Remove(project);
 

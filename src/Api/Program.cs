@@ -11,6 +11,8 @@ builder.Services.AddApiServices();
 
 var app = builder.Build();
 
+app.UseExceptionHandler();
+
 app.MapProjects();
 app.MapIssues();
 

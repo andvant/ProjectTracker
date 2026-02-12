@@ -12,5 +12,6 @@ indent_size = 2
 
 [*.cs]
 indent_size = 4
-tab_width = 4
 dotnet_sort_system_directives_first = true
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_after_colon_in_inheritance_clause = true

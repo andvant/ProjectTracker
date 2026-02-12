@@ -15,6 +15,7 @@ public static class DeleteProjectEndpoint
 
             return Results.NoContent();
         })
-        .Produces(StatusCodes.Status204NoContent);
+        .Produces(StatusCodes.Status204NoContent)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }

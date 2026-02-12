@@ -25,12 +25,11 @@ public class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
 
         if (project is null)
         {
-            throw new ApplicationException($"Project with id {command.ProjectId} not found");
+            throw new ProjectNotFoundException(command.ProjectId);
         }
 
-        var issue = project.Issues.FirstOrDefault(i => i.Id == command.IssueId);
-
-        if (issue is null) return;
+        var issue = project.Issues.FirstOrDefault(i => i.Id == command.IssueId)
+            ?? throw new IssueNotFoundException(command.IssueId);
 
         issue.UpdateDetails(command.Title, command.Priority, command.Description);
         issue.ChangeStatus(command.Status);

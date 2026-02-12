@@ -1,5 +1,5 @@
-using ProjectTracker.Api.Endpoints.Projects;
 using ProjectTracker.Api.Endpoints.Issues;
+using ProjectTracker.Api.Endpoints.Projects;
 
 namespace ProjectTracker.Api.Endpoints;
 

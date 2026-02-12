@@ -18,9 +18,7 @@ public static class GetProjectEndpoint
 
             var project = await sender.Send(query);
 
-            return project is null
-                ? Results.NotFound()
-                : TypedResults.Ok(project);
+            return TypedResults.Ok(project);
         })
         .WithName(EndpointNames.GetProject)
         .Produces<ProjectDto>(StatusCodes.Status200OK)

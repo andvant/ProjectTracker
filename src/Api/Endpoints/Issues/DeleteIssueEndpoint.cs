@@ -15,6 +15,7 @@ public static class DeleteIssueEndpoint
 
             return Results.NoContent();
         })
-        .Produces(StatusCodes.Status204NoContent);
+        .Produces(StatusCodes.Status204NoContent)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }

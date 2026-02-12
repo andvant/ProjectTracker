@@ -17,9 +17,7 @@ public static class GetIssueEndpoint
 
             var issue = await sender.Send(query);
 
-            return issue is null
-                ? Results.NotFound()
-                : TypedResults.Ok(issue);
+            return TypedResults.Ok(issue);
         })
         .WithName(EndpointNames.GetIssue)
         .Produces<IssueDto>(StatusCodes.Status200OK)

@@ -1,4 +1,3 @@
-using ProjectTracker.Application.Features.Projects.Common;
 using ProjectTracker.Application.Features.Projects.GetProjects;
 
 namespace ProjectTracker.Api.Endpoints.Projects;

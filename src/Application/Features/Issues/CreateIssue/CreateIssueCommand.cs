@@ -10,15 +10,18 @@ public record CreateIssueCommand(Guid ProjectId, string Title, User Creator,
 public class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, IssueDto>
 {
     private readonly List<Project> _projects;
+    private readonly List<User> _users;
     private readonly IssueDtoMapper _mapper;
     private readonly ILogger<CreateIssueCommandHandler> _logger;
 
     public CreateIssueCommandHandler(
         List<Project> projects,
+        List<User> users,
         IssueDtoMapper mapper,
         ILogger<CreateIssueCommandHandler> logger)
     {
         _projects = projects;
+        _users = users;
         _mapper = mapper;
         _logger = logger;
     }
@@ -31,19 +34,15 @@ public class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, Iss
 
         if (project is null)
         {
-            throw new ApplicationException($"Project with id {command.ProjectId} not found");
+            throw new ProjectNotFoundException(command.ProjectId);
         }
 
         User? assignee = null;
 
         if (command.AssigneeId != null)
         {
-            assignee = project.Members.FirstOrDefault(m => m.Id == command.AssigneeId.Value);
-
-            if (assignee is null)
-            {
-                throw new ApplicationException($"Assignee with id {command.AssigneeId} is not a member of the project");
-            }
+            assignee = _users.FirstOrDefault(u => u.Id == command.AssigneeId.Value)
+                ?? throw new AssigneeNotFoundException(command.AssigneeId.Value);
         }
 
         var issue = project.CreateIssue(nextIssueNumber, command.Title, command.Creator, assignee, command.Priority);

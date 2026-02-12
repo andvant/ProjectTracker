@@ -10,9 +10,11 @@ public static class DependencyInjection
     {
         var user = new User("John Doe", "john.doe@mail.com");
         var projects = GetProjects(user);
+        List<User> users = [user];
 
         services.AddSingleton(user);
         services.AddSingleton(projects);
+        services.AddSingleton(users);
 
         return services;
     }

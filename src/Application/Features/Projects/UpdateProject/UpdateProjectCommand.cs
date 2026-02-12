@@ -19,9 +19,8 @@ public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand>
 
     public async Task Handle(UpdateProjectCommand command, CancellationToken cancellationToken)
     {
-        var project = _projects.FirstOrDefault(p => p.Id == command.Id);
-
-        if (project is null) return;
+        var project = _projects.FirstOrDefault(p => p.Id == command.Id)
+            ?? throw new ProjectNotFoundException(command.Id);
 
         project.Name = command.Name;
         project.Description = command.Description;

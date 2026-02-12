@@ -21,7 +21,7 @@ public class GetIssuesQueryHandler : IRequestHandler<GetIssuesQuery, List<Issues
 
         if (project is null)
         {
-            throw new ApplicationException($"Project with id {query.ProjectId} not found");
+            throw new ProjectNotFoundException(query.ProjectId);
         }
 
         return project.Issues.Select(_mapper.ToDto).ToList();

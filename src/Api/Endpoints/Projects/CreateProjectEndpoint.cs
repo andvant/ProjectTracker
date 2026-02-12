@@ -23,7 +23,7 @@ public static class CreateProjectEndpoint
             return TypedResults.CreatedAtRoute(
                 project,
                 EndpointNames.GetProject,
-                new { id = project.Id });
+                new { projectId = project.Id });
         })
         .Produces<ProjectDto>(StatusCodes.Status201Created)
         .ProducesValidationProblem();

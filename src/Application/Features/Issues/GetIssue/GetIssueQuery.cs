@@ -2,9 +2,9 @@ using ProjectTracker.Application.Features.Issues.Common;
 
 namespace ProjectTracker.Application.Features.Issues.GetIssue;
 
-public record GetIssueQuery(Guid ProjectId, Guid IssueId) : IRequest<IssueDto?>;
+public record GetIssueQuery(Guid ProjectId, Guid IssueId) : IRequest<IssueDto>;
 
-public class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto?>
+public class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto>
 {
     private readonly List<Project> _projects;
     private readonly IssueDtoMapper _mapper;
@@ -17,17 +17,18 @@ public class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto?>
         _mapper = mapper;
     }
 
-    public async Task<IssueDto?> Handle(GetIssueQuery query, CancellationToken cancellationToken)
+    public async Task<IssueDto> Handle(GetIssueQuery query, CancellationToken cancellationToken)
     {
         var project = _projects.FirstOrDefault(p => p.Id == query.ProjectId);
 
         if (project is null)
         {
-            throw new ApplicationException($"Project with id {query.ProjectId} not found");
+            throw new ProjectNotFoundException(query.ProjectId);
         }
 
-        var issue = project.Issues.FirstOrDefault(i => i.Id == query.IssueId);
+        var issue = project.Issues.FirstOrDefault(i => i.Id == query.IssueId)
+            ?? throw new IssueNotFoundException(query.IssueId);
 
-        return issue is null ? null : _mapper.ToDto(issue);
+        return _mapper.ToDto(issue);
     }
 }
