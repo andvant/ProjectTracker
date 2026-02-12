@@ -13,7 +13,8 @@ public static class Endpoints
 {
     public static void MapProjects(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/projects");
+        var group = app.MapGroup("/projects")
+            .WithTags("Projects");
 
         group.MapGetProject();
         group.MapGetProjects();
@@ -24,7 +25,8 @@ public static class Endpoints
 
     public static void MapIssues(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/projects/{projectId:guid}/issues");
+        var group = app.MapGroup("/projects/{projectId:guid}/issues")
+            .WithTags("Issues");
 
         group.MapGetIssue();
         group.MapGetIssues();

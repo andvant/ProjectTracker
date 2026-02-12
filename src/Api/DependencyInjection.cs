@@ -23,6 +23,8 @@ public static class DependencyInjection
         services.AddExceptionHandler<ValidationExceptionHandler>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
+        services.AddOpenApiServices();
+
         return services;
     }
 }

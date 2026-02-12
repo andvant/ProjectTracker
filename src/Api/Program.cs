@@ -1,5 +1,6 @@
 using ProjectTracker.Api;
 using ProjectTracker.Api.Endpoints;
+using ProjectTracker.Api.Middleware;
 using ProjectTracker.Application;
 using ProjectTracker.Infrastructure;
 
@@ -12,6 +13,8 @@ builder.Services.AddApiServices();
 var app = builder.Build();
 
 app.UseExceptionHandler();
+
+app.UseOpenApi();
 
 app.MapProjects();
 app.MapIssues();
