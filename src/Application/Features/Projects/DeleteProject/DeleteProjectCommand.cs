@@ -17,7 +17,7 @@ internal class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectComman
         _logger = logger;
     }
 
-    public async Task Handle(DeleteProjectCommand command, CancellationToken cancellationToken)
+    public async Task Handle(DeleteProjectCommand command, CancellationToken ct)
     {
         var project = _projects.FirstOrDefault(p => p.Id == command.Id)
             ?? throw new ProjectNotFoundException(command.Id);

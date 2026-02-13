@@ -17,7 +17,7 @@ internal class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectComman
         _logger = logger;
     }
 
-    public async Task Handle(UpdateProjectCommand command, CancellationToken cancellationToken)
+    public async Task Handle(UpdateProjectCommand command, CancellationToken ct)
     {
         var project = _projects.FirstOrDefault(p => p.Id == command.Id)
             ?? throw new ProjectNotFoundException(command.Id);

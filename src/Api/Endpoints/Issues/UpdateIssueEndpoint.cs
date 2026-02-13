@@ -15,12 +15,13 @@ internal static class UpdateIssueEndpoint
             Guid issueId,
             UpdateIssueRequest request,
             ISender sender,
-            ILogger<Program> logger) =>
+            ILogger<Program> logger,
+            CancellationToken ct) =>
         {
             var command = new UpdateIssueCommand(projectId, issueId, request.Title,
                 request.Status, request.Priority, request.Description);
 
-            await sender.Send(command);
+            await sender.Send(command, ct);
 
             return Results.NoContent();
         })

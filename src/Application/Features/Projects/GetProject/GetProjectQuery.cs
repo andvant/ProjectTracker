@@ -17,7 +17,7 @@ internal class GetProjectQueryHandler : IRequestHandler<GetProjectQuery, Project
         _mapper = mapper;
     }
 
-    public async Task<ProjectDto> Handle(GetProjectQuery query, CancellationToken cancellationToken)
+    public async Task<ProjectDto> Handle(GetProjectQuery query, CancellationToken ct)
     {
         var project = _projects.FirstOrDefault(p => p.Id == query.Id)
             ?? throw new ProjectNotFoundException(query.Id);

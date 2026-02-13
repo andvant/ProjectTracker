@@ -7,11 +7,11 @@ internal static class GetIssuesEndpoint
     public static void MapGetIssues(this IEndpointRouteBuilder app)
     {
         // GET /projects/{projectId}/issues
-        app.MapGet("/", async (Guid projectId, ISender sender) =>
+        app.MapGet("/", async (Guid projectId, ISender sender, CancellationToken ct) =>
         {
             var query = new GetIssuesQuery(projectId);
 
-            var issues = await sender.Send(query);
+            var issues = await sender.Send(query, ct);
 
             return TypedResults.Ok(issues);
         })

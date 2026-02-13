@@ -19,7 +19,7 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
         _logger = logger;
     }
 
-    public async Task Handle(UpdateIssueCommand command, CancellationToken cancellationToken)
+    public async Task Handle(UpdateIssueCommand command, CancellationToken ct)
     {
         var project = _projects.FirstOrDefault(p => p.Id == command.ProjectId);
 

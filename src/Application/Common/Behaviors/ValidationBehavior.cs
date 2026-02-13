@@ -10,11 +10,11 @@ internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequ
         _validators = validators;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
         foreach (var validator in _validators)
         {
-            await validator.ValidateAndThrowAsync(request, cancellationToken);
+            await validator.ValidateAndThrowAsync(request, ct);
         }
 
         return await next();

@@ -14,11 +14,12 @@ internal static class CreateProjectEndpoint
         app.MapPost("/", async (
             CreateProjectRequest request,
             User user,
-            ISender sender) =>
+            ISender sender,
+            CancellationToken ct) =>
         {
             var command = new CreateProjectCommand(request.ShortName, request.Name, user);
 
-            var project = await sender.Send(command);
+            var project = await sender.Send(command, ct);
 
             return TypedResults.CreatedAtRoute(
                 project,

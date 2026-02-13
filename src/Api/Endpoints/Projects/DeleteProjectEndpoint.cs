@@ -7,11 +7,11 @@ internal static class DeleteProjectEndpoint
     public static void MapDeleteProject(this IEndpointRouteBuilder app)
     {
         // DELETE /projects/{projectId}
-        app.MapDelete("/{projectId}", async (Guid projectId, ISender sender) =>
+        app.MapDelete("/{projectId}", async (Guid projectId, ISender sender, CancellationToken ct) =>
         {
             var command = new DeleteProjectCommand(projectId);
 
-            await sender.Send(command);
+            await sender.Send(command, ct);
 
             return Results.NoContent();
         })

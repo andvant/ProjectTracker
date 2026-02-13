@@ -16,11 +16,12 @@ internal static class CreateIssueEndpoint
             Guid projectId,
             CreateIssueRequest request,
             User user,
-            ISender sender) =>
+            ISender sender,
+            CancellationToken ct) =>
         {
             var command = new CreateIssueCommand(projectId, request.Title, user, request.AssigneeId, request.Priority);
 
-            var issue = await sender.Send(command);
+            var issue = await sender.Send(command, ct);
 
             return TypedResults.CreatedAtRoute(
                 issue,

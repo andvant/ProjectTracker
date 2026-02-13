@@ -21,7 +21,7 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
         _logger = logger;
     }
 
-    public async Task<ProjectDto> Handle(CreateProjectCommand command, CancellationToken cancellationToken)
+    public async Task<ProjectDto> Handle(CreateProjectCommand command, CancellationToken ct)
     {
         var project = new Project(command.ShortName, command.Name, command.User);
 

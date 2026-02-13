@@ -11,12 +11,12 @@ internal static class GetIssueEndpoint
         app.MapGet("/{issueId:guid}", async (
             Guid projectId,
             Guid issueId,
-            ISender sender) =>
+            ISender sender,
+            CancellationToken ct) =>
         {
             var query = new GetIssueQuery(projectId, issueId);
 
-            var issue = await sender.Send(query);
-
+            var issue = await sender.Send(query, ct);
             return TypedResults.Ok(issue);
         })
         .WithName(EndpointNames.GetIssue)

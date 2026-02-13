@@ -12,11 +12,12 @@ internal static class GetProjectEndpoint
         app.MapGet("/{projectId}", async (
             Guid projectId,
             ISender sender,
-            List<Project> projects) =>
+            List<Project> projects,
+            CancellationToken ct) =>
         {
             var query = new GetProjectQuery(projectId);
 
-            var project = await sender.Send(query);
+            var project = await sender.Send(query, ct);
 
             return TypedResults.Ok(project);
         })

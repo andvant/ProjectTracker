@@ -15,7 +15,7 @@ internal class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, List<
         _mapper = mapper;
     }
 
-    public async Task<List<ProjectsDto>> Handle(GetProjectsQuery query, CancellationToken cancellationToken)
+    public async Task<List<ProjectsDto>> Handle(GetProjectsQuery query, CancellationToken ct)
     {
         return _projects.Select(_mapper.ToDto).ToList();
     }

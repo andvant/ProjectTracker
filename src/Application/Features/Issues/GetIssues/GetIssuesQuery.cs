@@ -15,7 +15,7 @@ internal class GetIssuesQueryHandler : IRequestHandler<GetIssuesQuery, List<Issu
         _mapper = mapper;
     }
 
-    public async Task<List<IssuesDto>> Handle(GetIssuesQuery query, CancellationToken cancellationToken)
+    public async Task<List<IssuesDto>> Handle(GetIssuesQuery query, CancellationToken ct)
     {
         var project = _projects.FirstOrDefault(p => p.Id == query.ProjectId);
 

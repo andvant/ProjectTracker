@@ -73,12 +73,12 @@ public class CreateIssueCommandTests
     [Theory]
     [InlineAutoData("")]
     [InlineAutoData(null)]
-    public void Validator_fails_if_invalid_title(string? title, User user)
+    public async Task Validator_fails_if_invalid_title(string? title, User user)
     {
         var validator = new CreateIssueCommandValidator();
         var command = new CreateIssueCommand(Guid.NewGuid(), title!, user);
 
-        var result = validator.Validate(command);
+        var result = await validator.ValidateAsync(command, TestContext.Current.CancellationToken);
 
         result.IsValid.ShouldBeFalse();
         result.Errors.ShouldContain(e => e.PropertyName == nameof(CreateIssueCommand.Title));
@@ -86,12 +86,12 @@ public class CreateIssueCommandTests
 
     [Theory]
     [AutoData]
-    public void Validator_passes_if_valid_title(User user)
+    public async Task Validator_passes_if_valid_title(User user)
     {
         var validator = new CreateIssueCommandValidator();
         var command = new CreateIssueCommand(Guid.NewGuid(), "valid title", user);
 
-        var result = validator.Validate(command);
+        var result = await validator.ValidateAsync(command, TestContext.Current.CancellationToken);
 
         result.IsValid.ShouldBeTrue();
     }

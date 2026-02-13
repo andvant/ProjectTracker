@@ -13,11 +13,12 @@ internal static class UpdateProjectEndpoint
             Guid projectId,
             UpdateProjectRequest request,
             ISender sender,
-            ILogger<Program> logger) =>
+            ILogger<Program> logger,
+            CancellationToken ct) =>
         {
             var command = new UpdateProjectCommand(projectId, request.Name, request.Description);
 
-            await sender.Send(command);
+            await sender.Send(command, ct);
 
             return Results.NoContent();
         })
