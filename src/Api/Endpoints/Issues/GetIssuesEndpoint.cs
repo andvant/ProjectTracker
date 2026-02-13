@@ -2,7 +2,7 @@ using ProjectTracker.Application.Features.Issues.GetIssues;
 
 namespace ProjectTracker.Api.Endpoints.Issues;
 
-public static class GetIssuesEndpoint
+internal static class GetIssuesEndpoint
 {
     public static void MapGetIssues(this IEndpointRouteBuilder app)
     {

@@ -4,7 +4,7 @@ namespace ProjectTracker.Application.Features.Projects.GetProject;
 
 public record GetProjectQuery(Guid Id) : IRequest<ProjectDto>;
 
-public class GetProjectQueryHandler : IRequestHandler<GetProjectQuery, ProjectDto>
+internal class GetProjectQueryHandler : IRequestHandler<GetProjectQuery, ProjectDto>
 {
     private readonly List<Project> _projects;
     private readonly ProjectDtoMapper _mapper;

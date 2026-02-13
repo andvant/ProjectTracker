@@ -7,7 +7,7 @@ namespace ProjectTracker.Api.Endpoints.Issues;
 
 public record CreateIssueRequest(string Title, Guid? AssigneeId = null, IssuePriority? Priority = null);
 
-public static class CreateIssueEndpoint
+internal static class CreateIssueEndpoint
 {
     public static void MapCreateIssue(this IEndpointRouteBuilder app)
     {

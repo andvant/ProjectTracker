@@ -4,7 +4,7 @@ namespace ProjectTracker.Api.Endpoints.Projects;
 
 public record UpdateProjectRequest(string Name, string? Description);
 
-public static class UpdateProjectEndpoint
+internal static class UpdateProjectEndpoint
 {
     public static void MapUpdateProject(this IEndpointRouteBuilder app)
     {

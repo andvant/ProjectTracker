@@ -2,7 +2,7 @@ using ProjectTracker.Application.Features.Projects.DeleteProject;
 
 namespace ProjectTracker.Api.Endpoints.Projects;
 
-public static class DeleteProjectEndpoint
+internal static class DeleteProjectEndpoint
 {
     public static void MapDeleteProject(this IEndpointRouteBuilder app)
     {

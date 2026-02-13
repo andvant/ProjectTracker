@@ -4,7 +4,7 @@ namespace ProjectTracker.Application.Features.Issues.GetIssue;
 
 public record GetIssueQuery(Guid ProjectId, Guid IssueId) : IRequest<IssueDto>;
 
-public class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto>
+internal class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto>
 {
     private readonly List<Project> _projects;
     private readonly IssueDtoMapper _mapper;

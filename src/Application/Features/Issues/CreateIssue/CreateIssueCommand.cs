@@ -7,7 +7,7 @@ namespace ProjectTracker.Application.Features.Issues.CreateIssue;
 public record CreateIssueCommand(Guid ProjectId, string Title, User Creator,
     Guid? AssigneeId = null, IssuePriority? Priority = null) : IRequest<IssueDto>;
 
-public class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, IssueDto>
+internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, IssueDto>
 {
     private readonly List<Project> _projects;
     private readonly List<User> _users;
@@ -56,7 +56,7 @@ public class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, Iss
     }
 }
 
-public class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
+internal class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
 {
     public CreateIssueCommandValidator()
     {

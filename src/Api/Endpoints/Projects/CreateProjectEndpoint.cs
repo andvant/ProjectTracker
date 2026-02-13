@@ -6,7 +6,7 @@ namespace ProjectTracker.Api.Endpoints.Projects;
 
 public record CreateProjectRequest(string ShortName, string Name);
 
-public static class CreateProjectEndpoint
+internal static class CreateProjectEndpoint
 {
     public static void MapCreateProject(this IEndpointRouteBuilder app)
     {

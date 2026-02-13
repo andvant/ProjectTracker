@@ -2,7 +2,7 @@ using ProjectTracker.Application.Features.Issues.DeleteIssue;
 
 namespace ProjectTracker.Api.Endpoints.Issues;
 
-public static class DeleteIssueEndpoint
+internal static class DeleteIssueEndpoint
 {
     public static void MapDeleteIssue(this IEndpointRouteBuilder app)
     {

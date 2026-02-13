@@ -6,7 +6,7 @@ namespace ProjectTracker.Application.Features.Issues.UpdateIssue;
 public record UpdateIssueCommand(Guid ProjectId, Guid IssueId, string Title,
     IssueStatus Status, IssuePriority Priority, string? Description) : IRequest;
 
-public class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
+internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
 {
     private readonly List<Project> _projects;
     private readonly ILogger<UpdateIssueCommandHandler> _logger;
@@ -40,7 +40,7 @@ public class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
     }
 }
 
-public class UpdateIssueCommandValidator : AbstractValidator<UpdateIssueCommand>
+internal class UpdateIssueCommandValidator : AbstractValidator<UpdateIssueCommand>
 {
     public UpdateIssueCommandValidator()
     {

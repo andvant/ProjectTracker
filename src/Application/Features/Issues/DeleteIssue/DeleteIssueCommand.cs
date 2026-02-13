@@ -4,7 +4,7 @@ namespace ProjectTracker.Application.Features.Issues.DeleteIssue;
 
 public record DeleteIssueCommand(Guid ProjectId, Guid IssueId) : IRequest;
 
-public class DeleteIssueCommandHandler : IRequestHandler<DeleteIssueCommand>
+internal class DeleteIssueCommandHandler : IRequestHandler<DeleteIssueCommand>
 {
     private readonly List<Project> _projects;
     private readonly ILogger<DeleteIssueCommandHandler> _logger;

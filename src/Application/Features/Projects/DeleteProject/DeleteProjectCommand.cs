@@ -4,7 +4,7 @@ namespace ProjectTracker.Application.Features.Projects.DeleteProject;
 
 public record DeleteProjectCommand(Guid Id) : IRequest;
 
-public class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand>
+internal class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand>
 {
     private readonly List<Project> _projects;
     private readonly ILogger<DeleteProjectCommandHandler> _logger;

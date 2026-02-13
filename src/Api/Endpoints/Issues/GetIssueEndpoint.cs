@@ -3,7 +3,7 @@ using ProjectTracker.Application.Features.Issues.GetIssue;
 
 namespace ProjectTracker.Api.Endpoints.Issues;
 
-public static class GetIssueEndpoint
+internal static class GetIssueEndpoint
 {
     public static void MapGetIssue(this IEndpointRouteBuilder app)
     {

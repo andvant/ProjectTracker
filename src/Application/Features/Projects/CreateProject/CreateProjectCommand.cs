@@ -5,7 +5,7 @@ namespace ProjectTracker.Application.Features.Projects.CreateProject;
 
 public record CreateProjectCommand(string ShortName, string Name, User User) : IRequest<ProjectDto>;
 
-public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ProjectDto>
+internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ProjectDto>
 {
     private readonly List<Project> _projects;
     private readonly ProjectDtoMapper _mapper;
@@ -35,7 +35,7 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
     }
 }
 
-public class CreateProjectCommandValidator : AbstractValidator<CreateProjectCommand>
+internal class CreateProjectCommandValidator : AbstractValidator<CreateProjectCommand>
 {
     public CreateProjectCommandValidator()
     {

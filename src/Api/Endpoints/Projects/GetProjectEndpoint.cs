@@ -4,7 +4,7 @@ using ProjectTracker.Domain.Entities;
 
 namespace ProjectTracker.Api.Endpoints.Projects;
 
-public static class GetProjectEndpoint
+internal static class GetProjectEndpoint
 {
     public static void MapGetProject(this IEndpointRouteBuilder app)
     {

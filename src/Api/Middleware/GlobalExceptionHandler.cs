@@ -5,7 +5,7 @@ using ProjectTracker.Domain.Exceptions;
 
 namespace ProjectTracker.Api.Middleware;
 
-public class GlobalExceptionHandler(
+internal class GlobalExceptionHandler(
     IProblemDetailsService problemDetailsService,
     ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {

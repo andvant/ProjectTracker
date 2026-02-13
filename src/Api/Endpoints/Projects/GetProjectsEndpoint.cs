@@ -2,7 +2,7 @@ using ProjectTracker.Application.Features.Projects.GetProjects;
 
 namespace ProjectTracker.Api.Endpoints.Projects;
 
-public static class GetProjectsEndpoint
+internal static class GetProjectsEndpoint
 {
     public static void MapGetProjects(this IEndpointRouteBuilder app)
     {

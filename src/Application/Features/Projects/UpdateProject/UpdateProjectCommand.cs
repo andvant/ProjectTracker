@@ -4,7 +4,7 @@ namespace ProjectTracker.Application.Features.Projects.UpdateProject;
 
 public record UpdateProjectCommand(Guid Id, string Name, string? Description) : IRequest;
 
-public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand>
+internal class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand>
 {
     private readonly List<Project> _projects;
     private readonly ILogger<UpdateProjectCommandHandler> _logger;
@@ -31,7 +31,7 @@ public class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand>
     }
 }
 
-public class UpdateProjectCommandValidator : AbstractValidator<UpdateProjectCommand>
+internal class UpdateProjectCommandValidator : AbstractValidator<UpdateProjectCommand>
 {
     public UpdateProjectCommandValidator()
     {

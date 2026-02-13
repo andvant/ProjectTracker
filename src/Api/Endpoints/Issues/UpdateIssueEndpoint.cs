@@ -5,7 +5,7 @@ namespace ProjectTracker.Api.Endpoints.Issues;
 
 public record UpdateIssueRequest(string Title, IssueStatus Status, IssuePriority Priority, string? Description);
 
-public static class UpdateIssueEndpoint
+internal static class UpdateIssueEndpoint
 {
     public static void MapUpdateIssue(this IEndpointRouteBuilder app)
     {

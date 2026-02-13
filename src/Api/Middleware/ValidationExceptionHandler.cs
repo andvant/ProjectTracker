@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ProjectTracker.Api.Middleware;
 
-public class ValidationExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
+internal class ValidationExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken token)
     {

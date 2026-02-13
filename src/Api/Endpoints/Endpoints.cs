@@ -3,13 +3,13 @@ using ProjectTracker.Api.Endpoints.Projects;
 
 namespace ProjectTracker.Api.Endpoints;
 
-public static class EndpointNames
+internal static class EndpointNames
 {
     public const string GetProject = nameof(GetProject);
     public const string GetIssue = nameof(GetIssue);
 }
 
-public static class Endpoints
+internal static class Endpoints
 {
     public static void MapProjects(this IEndpointRouteBuilder app)
     {

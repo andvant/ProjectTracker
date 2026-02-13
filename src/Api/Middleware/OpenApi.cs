@@ -2,7 +2,7 @@ using Scalar.AspNetCore;
 
 namespace ProjectTracker.Api.Middleware;
 
-public static class OpenApi
+internal static class OpenApi
 {
     public static IServiceCollection AddOpenApiServices(this IServiceCollection services)
     {
