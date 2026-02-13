@@ -29,7 +29,7 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
     public async Task<IssueDto> Handle(CreateIssueCommand command, CancellationToken ct)
     {
         var issues = _projects.SelectMany(p => p.Issues).ToList();
-        var nextIssueNumber = issues.Any() ? issues.Max(i => i.Number) + 1 : 1;
+        var nextIssueNumber = issues.Any() ? issues.Max(i => i.Key.Number) + 1 : 1;
 
         var project = _projects.FirstOrDefault(p => p.Id == command.ProjectId);
 
