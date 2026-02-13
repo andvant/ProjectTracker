@@ -4,9 +4,9 @@ using ProjectTracker.Domain.Exceptions;
 using Shouldly;
 using Xunit;
 
-namespace ProjectTracker.UnitTests.Domain.Entities;
+namespace ProjectTracker.UnitTests.Domain;
 
-public class Project_CreateIssue
+public class ProjectTests
 {
     [Theory]
     [AutoData]
