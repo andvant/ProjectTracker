@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace ProjectTracker.Domain.ValueObjects;
 
-public class ProjectKey : ValueObject
+public record ProjectKey
 {
     private const int MAX_LENGTH = 10;
     private static readonly Regex Pattern = new("^[a-zA-Z][a-zA-Z0-9]*$", RegexOptions.Compiled);
@@ -32,9 +32,4 @@ public class ProjectKey : ValueObject
 
     public static implicit operator string(ProjectKey key) => key.Value;
     public override string ToString() => Value;
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Value;
-    }
 }
