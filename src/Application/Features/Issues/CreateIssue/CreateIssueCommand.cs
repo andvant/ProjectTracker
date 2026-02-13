@@ -50,14 +50,14 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
             assignee, command.Type, command.Priority);
 
         _logger.LogInformation(
-            "Created issue with id '{Id}', short name '{ShortName}', title '{Title}'",
-            issue.Id, issue.ShortName, issue.Title);
+            "Created issue with id '{Id}', key '{Key}', title '{Title}'",
+            issue.Id, issue.Key, issue.Title);
 
         return _mapper.ToDto(issue);
     }
 }
 
-internal class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
+public class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
 {
     public CreateIssueCommandValidator()
     {

@@ -1,4 +1,4 @@
-namespace ProjectTracker.Application.Exceptions;
+namespace ProjectTracker.Application.Common;
 
 public abstract class ApplicationException : Exception
 {

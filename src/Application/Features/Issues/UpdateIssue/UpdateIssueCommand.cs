@@ -35,12 +35,12 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
         issue.ChangeStatus(command.Status);
 
         _logger.LogInformation(
-            "Updated project {Id} with short name {ShortName}, name {Name}",
-            project.Id, project.ShortName, project.Name);
+            "Updated project {Id} with key {Key}, name {Name}",
+            project.Id, project.Key, project.Name);
     }
 }
 
-internal class UpdateIssueCommandValidator : AbstractValidator<UpdateIssueCommand>
+public class UpdateIssueCommandValidator : AbstractValidator<UpdateIssueCommand>
 {
     public UpdateIssueCommandValidator()
     {

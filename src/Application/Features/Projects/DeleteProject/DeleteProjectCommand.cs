@@ -25,7 +25,7 @@ internal class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectComman
         _projects.Remove(project);
 
         _logger.LogInformation(
-            "Deleted project {Id} with short name {ShortName}, name {Name}",
-            project.Id, project.ShortName, project.Name);
+            "Deleted project {Id} with key {Key}, name {Name}",
+            project.Id, project.Key, project.Name);
     }
 }

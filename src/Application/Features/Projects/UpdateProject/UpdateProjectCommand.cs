@@ -25,12 +25,12 @@ internal class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectComman
         project.UpdateDetails(command.Name, command.Description);
 
         _logger.LogInformation(
-            "Updated project {Id} with short name {ShortName}, name {Name}",
-            project.Id, project.ShortName, project.Name);
+            "Updated project {Id} with key {Key}, name {Name}",
+            project.Id, project.Key, project.Name);
     }
 }
 
-internal class UpdateProjectCommandValidator : AbstractValidator<UpdateProjectCommand>
+public class UpdateProjectCommandValidator : AbstractValidator<UpdateProjectCommand>
 {
     public UpdateProjectCommandValidator()
     {

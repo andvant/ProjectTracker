@@ -1,11 +1,12 @@
 using ProjectTracker.Domain.Enums;
+using ProjectTracker.Domain.ValueObjects;
 
 namespace ProjectTracker.Domain.Entities;
 
 public class Issue : AuditableEntity
 {
     public int Number { get; private set; }
-    public string ShortName { get; private set; }
+    public IssueKey Key { get; private set; }
     public string Title { get; private set; }
     public string? Description { get; private set; }
     public Guid ReporterId { get; private set; }
@@ -25,7 +26,7 @@ public class Issue : AuditableEntity
     {
         Id = Guid.CreateVersion7();
         Number = number;
-        ShortName = $"{project.ShortName}-{Number}";
+        Key = new IssueKey(project.Key, number);
         Title = title;
         Project = project;
         ProjectId = project.Id;

@@ -32,7 +32,7 @@ internal class DeleteIssueCommandHandler : IRequestHandler<DeleteIssueCommand>
         project.RemoveIssue(issue);
 
         _logger.LogInformation(
-            "Deleted issue with id '{Id}', short name '{ShortName}', title '{Name}'",
-            issue.Id, issue.ShortName, issue.Title);
+            "Deleted issue with id '{Id}', key '{Key}', title '{Name}'",
+            issue.Id, issue.Key, issue.Title);
     }
 }

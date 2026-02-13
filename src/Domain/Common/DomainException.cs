@@ -1,4 +1,4 @@
-namespace ProjectTracker.Domain.Exceptions;
+namespace ProjectTracker.Domain.Common;
 
 public abstract class DomainException : Exception
 {

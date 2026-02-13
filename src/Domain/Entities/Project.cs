@@ -1,10 +1,11 @@
 using ProjectTracker.Domain.Enums;
+using ProjectTracker.Domain.ValueObjects;
 
 namespace ProjectTracker.Domain.Entities;
 
 public class Project : AuditableEntity
 {
-    public string ShortName { get; private set; }
+    public ProjectKey Key { get; private set; }
     public string Name { get; private set; }
     public string? Description { get; private set; }
     public Guid OwnerId { get; private set; }
@@ -14,10 +15,10 @@ public class Project : AuditableEntity
     public List<User> Members { get; private set; } = new();
     public List<Issue> Issues { get; private set; } = new();
 
-    public Project(string shortName, string name, User owner, string? description)
+    public Project(string key, string name, User owner, string? description)
     {
         Id = Guid.CreateVersion7();
-        ShortName = shortName;
+        Key = new ProjectKey(key);
         Name = name;
         Owner = owner;
         Members.Add(owner);

@@ -1,9 +1,10 @@
 using Microsoft.Extensions.Logging;
 using ProjectTracker.Application.Features.Projects.Common;
+using ProjectTracker.Domain.ValueObjects;
 
 namespace ProjectTracker.Application.Features.Projects.CreateProject;
 
-public record CreateProjectCommand(string ShortName, string Name, User User, string? Description) : IRequest<ProjectDto>;
+public record CreateProjectCommand(string Key, string Name, User User, string? Description) : IRequest<ProjectDto>;
 
 internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ProjectDto>
 {
@@ -23,23 +24,23 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
 
     public async Task<ProjectDto> Handle(CreateProjectCommand command, CancellationToken ct)
     {
-        var project = new Project(command.ShortName, command.Name, command.User, command.Description);
+        var project = new Project(command.Key, command.Name, command.User, command.Description);
 
         _projects.Add(project);
 
         _logger.LogInformation(
-            "Created project {Id} with short name {ShortName}, name {Name}",
-            project.Id, project.ShortName, project.Name);
+            "Created project {Id} with key {Key}, name {Name}",
+            project.Id, project.Key, project.Name);
 
         return _mapper.ToDto(project);
     }
 }
 
-internal class CreateProjectCommandValidator : AbstractValidator<CreateProjectCommand>
+public class CreateProjectCommandValidator : AbstractValidator<CreateProjectCommand>
 {
     public CreateProjectCommandValidator()
     {
         RuleFor(c => c.Name).MaximumLength(100).NotEmpty();
-        RuleFor(c => c.ShortName).MaximumLength(10).Matches("^[a-zA-Z]{1}[a-zA-Z0-9]*$").NotEmpty();
+        RuleFor(c => c.Key).Must(ProjectKey.IsValid).WithMessage(ProjectKey.ValidationMessage);
     }
 }

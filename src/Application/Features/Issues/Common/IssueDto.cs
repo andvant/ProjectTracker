@@ -4,7 +4,7 @@ namespace ProjectTracker.Application.Features.Issues.Common;
 
 public record IssueDto(
     Guid Id,
-    string ShortName,
+    string Key,
     string Title,
     string? Description,
     Guid ReporterId,
