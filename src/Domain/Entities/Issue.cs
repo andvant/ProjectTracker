@@ -2,28 +2,26 @@ using ProjectTracker.Domain.Enums;
 
 namespace ProjectTracker.Domain.Entities;
 
-public class Issue
+public class Issue : AuditableEntity
 {
-    public required Guid Id { get; set; }
-    public required int Number { get; set; }
-    public required string ShortName { get; set; }
-    public required string Title { get; set; }
-    public string? Description { get; set; }
-    public List<Attachment> Attachments { get; set; } = new();
-    public required Guid CreatorId { get; set; }
-    public required User Creator { get; set; }
-    public required Guid ProjectId { get; set; }
-    public required Project Project { get; set; }
-    public required DateTime Created { get; set; }
-    public required DateTime Updated { get; set; }
-    public Guid? AssigneeId { get; set; }
-    public User? Assignee { get; set; }
-    public required IssueStatus Status { get; set; } = IssueStatus.Open;
-    public required IssuePriority Priority { get; set; }
+    public int Number { get; private set; }
+    public string ShortName { get; private set; }
+    public string Title { get; private set; }
+    public string? Description { get; private set; }
+    public Guid ReporterId { get; private set; }
+    public User Reporter { get; private set; }
+    public Guid ProjectId { get; private set; }
+    public Project Project { get; private set; }
+    public Guid? AssigneeId { get; private set; }
+    public User? Assignee { get; private set; }
+    public IssueStatus Status { get; private set; }
+    public IssueType Type { get; private set; }
+    public IssuePriority Priority { get; private set; }
 
-    [SetsRequiredMembers]
+    public List<Attachment> Attachments { get; set; } = new();
+
     internal Issue(Project project, int number, string title,
-        User creator, User? assignee = null, IssuePriority? priority = null)
+        User reporter, User? assignee, IssueType? type, IssuePriority? priority)
     {
         Id = Guid.CreateVersion7();
         Number = number;
@@ -31,13 +29,14 @@ public class Issue
         Title = title;
         Project = project;
         ProjectId = project.Id;
-        Creator = creator;
-        CreatorId = creator.Id;
+        Reporter = reporter;
+        ReporterId = reporter.Id;
         Assignee = assignee;
         AssigneeId = assignee?.Id;
+        Status = IssueStatus.Open;
+        Type = type ?? IssueType.Task;
         Priority = priority ?? IssuePriority.Normal;
-        Created = DateTime.UtcNow;
-        Updated = DateTime.UtcNow;
+        CreatedOn = DateTime.UtcNow; // TODO: move to DbContext
     }
 
     public void UpdateDetails(string title, IssuePriority priority, string? description)
@@ -45,15 +44,10 @@ public class Issue
         Title = title;
         Priority = priority;
         Description = description;
-        Updated = DateTime.UtcNow;
     }
 
     public void ChangeStatus(IssueStatus status)
     {
-        if (status != Status)
-        {
-            Status = status;
-            Updated = DateTime.UtcNow;
-        }
+        Status = status;
     }
 }

@@ -4,7 +4,7 @@ using ProjectTracker.Domain.Entities;
 
 namespace ProjectTracker.Api.Endpoints.Projects;
 
-public record CreateProjectRequest(string ShortName, string Name);
+public record CreateProjectRequest(string ShortName, string Name, string? Description);
 
 internal static class CreateProjectEndpoint
 {
@@ -17,7 +17,7 @@ internal static class CreateProjectEndpoint
             ISender sender,
             CancellationToken ct) =>
         {
-            var command = new CreateProjectCommand(request.ShortName, request.Name, user);
+            var command = new CreateProjectCommand(request.ShortName, request.Name, user, request.Description);
 
             var project = await sender.Send(command, ct);
 

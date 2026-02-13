@@ -8,7 +8,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        var user = new User("John Doe", "john.doe@mail.com");
+        var user = new User("John Doe", "john.doe@mail.com", DateTime.UtcNow);
         var projects = GetProjects(user);
         List<User> users = [user];
 
@@ -23,18 +23,12 @@ public static class DependencyInjection
     {
         var projects = new List<Project>()
         {
-            new("P1", "Project One", user)
-            {
-                Description = "Description of Project One"
-            },
-            new("P2", "Project Two", user)
-            {
-                Description = "Description of Project Two"
-            }
+            new("P1", "Project One", user, "Description of Project One"),
+            new("P2", "Project Two", user, "Description of Project Two")
         };
 
-        projects[0].CreateIssue(1, "Issue One", user, user);
-        projects[0].CreateIssue(2, "Issue Two", user, priority: IssuePriority.Critical);
+        projects[0].CreateIssue(1, "Issue One", user, null, IssueType.Task, IssuePriority.Normal);
+        projects[0].CreateIssue(2, "Issue Two", user, user, IssueType.Bug, IssuePriority.Critical);
 
         return projects;
     }

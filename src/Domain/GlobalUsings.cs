@@ -1,2 +1,2 @@
-global using System.Diagnostics.CodeAnalysis;
+global using ProjectTracker.Domain.Common;
 global using ProjectTracker.Domain.Exceptions;

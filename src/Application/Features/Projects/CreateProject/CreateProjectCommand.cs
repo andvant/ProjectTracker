@@ -3,7 +3,7 @@ using ProjectTracker.Application.Features.Projects.Common;
 
 namespace ProjectTracker.Application.Features.Projects.CreateProject;
 
-public record CreateProjectCommand(string ShortName, string Name, User User) : IRequest<ProjectDto>;
+public record CreateProjectCommand(string ShortName, string Name, User User, string? Description) : IRequest<ProjectDto>;
 
 internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ProjectDto>
 {
@@ -23,7 +23,7 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
 
     public async Task<ProjectDto> Handle(CreateProjectCommand command, CancellationToken ct)
     {
-        var project = new Project(command.ShortName, command.Name, command.User);
+        var project = new Project(command.ShortName, command.Name, command.User, command.Description);
 
         _projects.Add(project);
 

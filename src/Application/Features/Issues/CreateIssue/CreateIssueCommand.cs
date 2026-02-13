@@ -4,8 +4,8 @@ using ProjectTracker.Domain.Enums;
 
 namespace ProjectTracker.Application.Features.Issues.CreateIssue;
 
-public record CreateIssueCommand(Guid ProjectId, string Title, User Creator,
-    Guid? AssigneeId = null, IssuePriority? Priority = null) : IRequest<IssueDto>;
+public record CreateIssueCommand(Guid ProjectId, string Title, User Reporter,
+    Guid? AssigneeId, IssueType? Type, IssuePriority? Priority) : IRequest<IssueDto>;
 
 internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, IssueDto>
 {
@@ -46,7 +46,8 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
                 ?? throw new AssigneeNotFoundException(command.AssigneeId.Value);
         }
 
-        var issue = project.CreateIssue(nextIssueNumber, command.Title, command.Creator, assignee, command.Priority);
+        var issue = project.CreateIssue(nextIssueNumber, command.Title, command.Reporter,
+            assignee, command.Type, command.Priority);
 
         _logger.LogInformation(
             "Created issue with id '{Id}', short name '{ShortName}', title '{Title}'",
@@ -61,6 +62,7 @@ internal class CreateIssueCommandValidator : AbstractValidator<CreateIssueComman
     public CreateIssueCommandValidator()
     {
         RuleFor(c => c.Title).MaximumLength(100).NotEmpty();
+        RuleFor(c => c.Type).IsInEnum();
         RuleFor(c => c.Priority).IsInEnum();
     }
 }

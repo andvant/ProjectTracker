@@ -1,8 +1,15 @@
 namespace ProjectTracker.Domain.Entities;
 
-public class Attachment
+public class Attachment : AuditableEntity
 {
-    public required Guid Id { get; set; }
-    public required string Name { get; set; }
-    public required string StorageKey { get; set; }
+    public string Name { get; private set; }
+    public string StorageKey { get; private set; }
+
+    public Attachment(string name, string storageKey)
+    {
+        Id = Guid.CreateVersion7();
+        Name = name;
+        StorageKey = storageKey;
+        CreatedOn = DateTime.UtcNow; // TODO: move to DbContext
+    }
 }

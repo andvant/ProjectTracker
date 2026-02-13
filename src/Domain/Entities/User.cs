@@ -1,16 +1,16 @@
 namespace ProjectTracker.Domain.Entities;
 
-public class User
+public class User : Entity
 {
-    public required Guid Id { get; set; }
-    public required string Name { get; set; }
-    public required string Email { get; set; }
+    public string Name { get; private set; }
+    public string Email { get; private set; }
+    public DateTime RegistrationDate { get; private set; }
 
-    [SetsRequiredMembers]
-    public User(string name, string email)
+    public User(string name, string email, DateTime registrationDate)
     {
         Id = Guid.CreateVersion7();
         Name = name;
         Email = email;
+        RegistrationDate = registrationDate;
     }
 }

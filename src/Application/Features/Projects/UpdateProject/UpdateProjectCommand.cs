@@ -22,8 +22,7 @@ internal class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectComman
         var project = _projects.FirstOrDefault(p => p.Id == command.Id)
             ?? throw new ProjectNotFoundException(command.Id);
 
-        project.Name = command.Name;
-        project.Description = command.Description;
+        project.UpdateDetails(command.Name, command.Description);
 
         _logger.LogInformation(
             "Updated project {Id} with short name {ShortName}, name {Name}",

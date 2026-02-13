@@ -7,10 +7,10 @@ public record IssueDto(
     string ShortName,
     string Title,
     string? Description,
-    Guid CreatorId,
+    Guid ReporterId,
     Guid ProjectId,
-    DateTime Created,
-    DateTime Updated,
+    DateTime CreatedOn,
+    DateTime UpdatedOn,
     Guid? AssigneeId,
     IssueStatus Status,
     IssuePriority Priority);
