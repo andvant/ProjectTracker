@@ -64,4 +64,28 @@ public class Project : AuditableEntity
         Name = name;
         Description = description;
     }
+
+    public void AddMember(User member)
+    {
+        if (!Members.Select(w => w.Id).Contains(member.Id))
+        {
+            Members.Add(member);
+        }
+    }
+
+    public void RemoveMember(User member)
+    {
+        Members.RemoveAll(w => w.Id == member.Id);
+    }
+
+    public void TransferOwnership(User newOwner)
+    {
+        if (!Members.Select(w => w.Id).Contains(newOwner.Id))
+        {
+            throw new OwnerNotMemberException(newOwner.Id);
+        }
+
+        Owner = newOwner;
+        OwnerId = newOwner.Id;
+    }
 }

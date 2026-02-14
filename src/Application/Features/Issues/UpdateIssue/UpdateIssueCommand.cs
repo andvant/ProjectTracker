@@ -31,8 +31,7 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
         var issue = project.Issues.FirstOrDefault(i => i.Id == command.IssueId)
             ?? throw new IssueNotFoundException(command.IssueId);
 
-        issue.UpdateDetails(command.Title, command.Priority, command.Description);
-        issue.ChangeStatus(command.Status);
+        issue.UpdateDetails(command.Title, command.Description, command.Status, command.Priority);
 
         _logger.LogInformation(
             "Updated project {Id} with key {Key}, name {Name}",

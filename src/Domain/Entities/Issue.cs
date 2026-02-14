@@ -64,16 +64,12 @@ public class Issue : AuditableEntity
         }
     }
 
-    public void UpdateDetails(string title, IssuePriority priority, string? description)
+    public void UpdateDetails(string title, string? description, IssueStatus status, IssuePriority priority)
     {
         Title = title;
-        Priority = priority;
         Description = description;
-    }
-
-    public void ChangeStatus(IssueStatus status)
-    {
         Status = status;
+        Priority = priority;
     }
 
     public void AddWatcher(User watcher)
