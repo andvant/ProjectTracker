@@ -7,6 +7,7 @@ namespace ProjectTracker.Api.Endpoints.Issues;
 
 public record CreateIssueRequest(
     string Title,
+    string? Description,
     Guid? AssigneeId,
     IssueType? Type,
     IssuePriority? Priority,
@@ -29,6 +30,7 @@ internal static class CreateIssueEndpoint
             var command = new CreateIssueCommand(
                 projectId,
                 request.Title,
+                request.Description,
                 user,
                 request.AssigneeId,
                 request.Type,

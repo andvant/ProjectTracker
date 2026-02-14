@@ -27,6 +27,7 @@ public class Project : AuditableEntity
     public Issue CreateIssue(
         int number,
         string title,
+        string? description,
         User reporter,
         User? assignee,
         IssueType? type,
@@ -39,6 +40,7 @@ public class Project : AuditableEntity
             this,
             number,
             title,
+            description,
             reporter,
             assignee,
             type,

@@ -27,6 +27,7 @@ public class Issue : AuditableEntity
         Project project,
         int number,
         string title,
+        string? description,
         User reporter,
         User? assignee,
         IssueType? type,
@@ -40,6 +41,7 @@ public class Issue : AuditableEntity
         Id = Guid.CreateVersion7();
         Key = new IssueKey(project.Key, number);
         Title = title;
+        Description = description;
         Project = project;
         ProjectId = project.Id;
         Reporter = reporter;
@@ -51,22 +53,31 @@ public class Issue : AuditableEntity
         Priority = priority ?? IssuePriority.Normal;
         DueDate = dueDate;
         EstimationMinutes = estimationMinutes;
+        ParentIssue = parentIssue;
+        ParentIssueId = parentIssue?.Id;
+        parentIssue?.ChildIssues.Add(this);
         CreatedOn = DateTime.UtcNow; // TODO: move to DbContext
-
-        if (parentIssue != null)
-        {
-            ParentIssue = parentIssue;
-            ParentIssueId = parentIssue.Id;
-            parentIssue.ChildIssues.Add(this);
-        }
     }
 
-    public void UpdateDetails(string title, string? description, IssueStatus status, IssuePriority priority)
+    public void UpdateDetails(
+        string title,
+        string? description,
+        User? assignee,
+        IssueStatus status,
+        IssuePriority priority,
+        DateTime? dueDate,
+        int? estimationMinutes)
     {
+        ValidateDetails(Project, assignee, dueDate, estimationMinutes, null);
+
         Title = title;
         Description = description;
+        Assignee = assignee;
+        AssigneeId = assignee?.Id;
         Status = status;
         Priority = priority;
+        DueDate = dueDate;
+        EstimationMinutes = estimationMinutes;
     }
 
     public void AddWatcher(User watcher)
@@ -108,7 +119,7 @@ public class Issue : AuditableEntity
         }
         if (parentIssue != null)
         {
-            ParentIssueWrongProjectException.ThrowIfMismatch(parentIssue.ProjectId, ProjectId, parentIssue.Id);
+            ParentIssueWrongProjectException.ThrowIfMismatch(parentIssue.ProjectId, project.Id, parentIssue.Id);
             ParentIssueWrongTypeException.ThrowIfMismatch(parentIssue.Type, IssueType.Epic, parentIssue.Id);
         }
     }

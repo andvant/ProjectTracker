@@ -6,6 +6,7 @@ namespace ProjectTracker.Application.Features.Issues.CreateIssue;
 public record CreateIssueCommand(
     Guid ProjectId,
     string Title,
+    string? Description,
     User Reporter,
     Guid? AssigneeId,
     IssueType? Type,
@@ -63,6 +64,7 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
         var issue = project.CreateIssue(
             nextIssueNumber,
             command.Title,
+            command.Description,
             command.Reporter,
             assignee,
             command.Type,

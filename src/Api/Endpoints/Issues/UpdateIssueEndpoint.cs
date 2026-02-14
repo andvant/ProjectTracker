@@ -3,7 +3,15 @@ using ProjectTracker.Domain.Enums;
 
 namespace ProjectTracker.Api.Endpoints.Issues;
 
-public record UpdateIssueRequest(string Title, IssueStatus Status, IssuePriority Priority, string? Description);
+public record UpdateIssueRequest(
+    string Title,
+    string? Description,
+    Guid? AssigneeId,
+    IssueStatus Status,
+    IssuePriority Priority,
+    DateTime? DueDate,
+    int? EstimationMinutes
+);
 
 internal static class UpdateIssueEndpoint
 {
@@ -18,8 +26,16 @@ internal static class UpdateIssueEndpoint
             ILogger<Program> logger,
             CancellationToken ct) =>
         {
-            var command = new UpdateIssueCommand(projectId, issueId, request.Title,
-                request.Status, request.Priority, request.Description);
+            var command = new UpdateIssueCommand(
+                projectId,
+                issueId,
+                request.Title,
+                request.Description,
+                request.AssigneeId,
+                request.Status,
+                request.Priority,
+                request.DueDate,
+                request.EstimationMinutes);
 
             await sender.Send(command, ct);
 
