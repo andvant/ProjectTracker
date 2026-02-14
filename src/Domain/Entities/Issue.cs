@@ -71,6 +71,11 @@ public class Issue : AuditableEntity
 
     public void AddWatcher(User watcher)
     {
+        if (!Project.Members.Select(u => u.Id).Contains(watcher.Id))
+        {
+            throw new WatcherNotMemberException(watcher.Id);
+        }
+
         if (!Watchers.Select(w => w.Id).Contains(watcher.Id))
         {
             Watchers.Add(watcher);

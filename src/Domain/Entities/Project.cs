@@ -80,7 +80,7 @@ public class Project : AuditableEntity
     {
         if (!Members.Select(w => w.Id).Contains(newOwner.Id))
         {
-            throw new OwnerNotMemberException(newOwner.Id);
+            throw new NewOwnerNotMemberException(newOwner.Id);
         }
 
         Owner = newOwner;

@@ -14,14 +14,20 @@ internal class GlobalExceptionHandler(
     {
         switch (exception)
         {
-            case ProjectNotFoundException or IssueNotFoundException or UserNotFoundException:
+            case // problem with URL
+                ProjectNotFoundException or
+                IssueNotFoundException or
+                UserNotFoundException or
+                MemberNotFoundException or
+                WatcherNotFoundException or
+                NewOwnerNotFoundException:
                 httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                 break;
-            case AssigneeNotFoundException or ParentIssueNotFoundException:
+            case // problem with body
+                AssigneeNotFoundException or
+                ParentIssueNotFoundException or
+                AssigneeNotMemberException:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                break;
-            case AssigneeNotMemberException:
-                httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
                 break;
             case ApplicationException or DomainException:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
