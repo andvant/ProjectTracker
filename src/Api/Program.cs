@@ -13,10 +13,8 @@ builder.Services.AddApiServices();
 var app = builder.Build();
 
 app.UseExceptionHandler();
-
 app.UseOpenApi();
 
-app.MapProjects();
-app.MapIssues();
+app.MapAllEndpoints();
 
 app.Run();

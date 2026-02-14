@@ -8,13 +8,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        var user = new User("John Doe", "john.doe@mail.com", DateTime.UtcNow);
-        var projects = GetProjects(user);
-        List<User> users = [user];
+        var users = GetUsers();
+        var projects = GetProjects(users[0]);
 
-        services.AddSingleton(user);
-        services.AddSingleton(projects);
         services.AddSingleton(users);
+        services.AddSingleton(projects);
+        services.AddSingleton(users[0]);
 
         return services;
     }
@@ -32,4 +31,11 @@ public static class DependencyInjection
 
         return projects;
     }
+
+    private static List<User> GetUsers() => new List<User>()
+    {
+        new("Test User 1", "test.1@example.com", DateTime.UtcNow.AddDays(-3)),
+        new("Test User 2", "test.2@example.com", DateTime.UtcNow.AddDays(-2)),
+        new("Test User 3", "test.3@example.com", DateTime.UtcNow.AddDays(-1)),
+    };
 }

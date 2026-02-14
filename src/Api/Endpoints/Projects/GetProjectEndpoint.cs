@@ -1,6 +1,5 @@
 using ProjectTracker.Application.Features.Projects.Common;
 using ProjectTracker.Application.Features.Projects.GetProject;
-using ProjectTracker.Domain.Entities;
 
 namespace ProjectTracker.Api.Endpoints.Projects;
 
@@ -12,7 +11,6 @@ internal static class GetProjectEndpoint
         app.MapGet("/{projectId}", async (
             Guid projectId,
             ISender sender,
-            List<Project> projects,
             CancellationToken ct) =>
         {
             var query = new GetProjectQuery(projectId);

@@ -1,10 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectTracker.Application.Common.Behaviors;
-using ProjectTracker.Application.Features.Issues.Common;
-using ProjectTracker.Application.Features.Issues.GetIssues;
-using ProjectTracker.Application.Features.Projects.Common;
-using ProjectTracker.Application.Features.Projects.GetProjects;
 
 namespace ProjectTracker.Application;
 
@@ -22,10 +18,22 @@ public static class DependencyInjection
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        services.AddSingleton<ProjectDtoMapper>();
-        services.AddSingleton<ProjectsDtoMapper>();
-        services.AddSingleton<IssueDtoMapper>();
-        services.AddSingleton<IssuesDtoMapper>();
+        services.AddMappers(assembly);
+
+        return services;
+    }
+
+    private static IServiceCollection AddMappers(this IServiceCollection services, Assembly assembly)
+    {
+        var mappers = assembly.GetTypes().Where(t =>
+            t.IsClass &&
+            !t.IsAbstract &&
+            t.Name.EndsWith("Mapper"));
+
+        foreach (var mapper in mappers)
+        {
+            services.AddSingleton(mapper);
+        }
 
         return services;
     }

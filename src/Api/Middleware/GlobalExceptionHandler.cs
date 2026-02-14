@@ -14,7 +14,7 @@ internal class GlobalExceptionHandler(
     {
         switch (exception)
         {
-            case ProjectNotFoundException or IssueNotFoundException:
+            case ProjectNotFoundException or IssueNotFoundException or UserNotFoundException:
                 httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                 break;
             case AssigneeNotFoundException or ParentIssueNotFoundException:

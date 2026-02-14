@@ -1,5 +1,6 @@
 using ProjectTracker.Api.Endpoints.Issues;
 using ProjectTracker.Api.Endpoints.Projects;
+using UserTracker.Api.Endpoints.Users;
 
 namespace ProjectTracker.Api.Endpoints;
 
@@ -11,7 +12,14 @@ internal static class EndpointNames
 
 internal static class Endpoints
 {
-    public static void MapProjects(this IEndpointRouteBuilder app)
+    public static void MapAllEndpoints(this IEndpointRouteBuilder app)
+    {
+        app.MapProjects();
+        app.MapIssues();
+        app.MapUsers();
+    }
+
+    private static void MapProjects(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/projects")
             .WithTags("Projects");
@@ -23,7 +31,7 @@ internal static class Endpoints
         group.MapDeleteProject();
     }
 
-    public static void MapIssues(this IEndpointRouteBuilder app)
+    private static void MapIssues(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/projects/{projectId:guid}/issues")
             .WithTags("Issues");
@@ -33,5 +41,14 @@ internal static class Endpoints
         group.MapCreateIssue();
         group.MapUpdateIssue();
         group.MapDeleteIssue();
+    }
+
+    private static void MapUsers(this IEndpointRouteBuilder app)
+    {
+        var group = app.MapGroup("/users")
+            .WithTags("Users");
+
+        group.MapGetUser();
+        group.MapGetUsers();
     }
 }

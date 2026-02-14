@@ -18,6 +18,7 @@ public class Project : AuditableEntity
         Key = key;
         Name = name;
         Owner = owner;
+        OwnerId = owner.Id;
         Members.Add(owner);
         Description = description;
         CreatedOn = DateTime.UtcNow; // TODO: move to DbContext
