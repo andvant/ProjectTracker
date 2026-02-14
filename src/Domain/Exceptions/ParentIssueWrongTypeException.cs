@@ -1,5 +1,3 @@
-using ProjectTracker.Domain.Enums;
-
 namespace ProjectTracker.Domain.Exceptions;
 
 public class ParentIssueWrongTypeException : DomainException

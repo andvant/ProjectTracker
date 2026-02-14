@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using ProjectTracker.Domain.Enums;
 
 namespace ProjectTracker.Application.Features.Issues.UpdateIssue;
 

@@ -1,5 +1,3 @@
-using ProjectTracker.Domain.Enums;
-
 namespace ProjectTracker.Application.Features.Issues.Common;
 
 public record IssueDto(
@@ -9,8 +7,15 @@ public record IssueDto(
     string? Description,
     Guid ReporterId,
     Guid ProjectId,
-    DateTime CreatedOn,
-    DateTime UpdatedOn,
     Guid? AssigneeId,
     IssueStatus Status,
-    IssuePriority Priority);
+    IssueType Type,
+    IssuePriority Priority,
+    DateTime? DueDate,
+    int? EstimationMinutes,
+    Guid? ParentIssueId,
+    Guid CreatedBy,
+    DateTime CreatedOn,
+    Guid UpdatedBy,
+    DateTime UpdatedOn
+);

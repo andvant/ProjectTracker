@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 using ProjectTracker.Application.Features.Issues.Common;
-using ProjectTracker.Domain.Enums;
 
 namespace ProjectTracker.Application.Features.Issues.CreateIssue;
 

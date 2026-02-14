@@ -1,5 +1,3 @@
-using ProjectTracker.Domain.Enums;
-
 namespace ProjectTracker.Domain.Entities;
 
 public class Project : AuditableEntity
