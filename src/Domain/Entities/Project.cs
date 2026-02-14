@@ -26,15 +26,29 @@ public class Project : AuditableEntity
         CreatedOn = DateTime.UtcNow; // TODO: move to DbContext
     }
 
-    public Issue CreateIssue(int number, string title, User reporter,
-        User? assignee, IssueType? type, IssuePriority? priority)
+    public Issue CreateIssue(
+        int number,
+        string title,
+        User reporter,
+        User? assignee,
+        IssueType? type,
+        IssuePriority? priority,
+        Issue? parentIssue,
+        DateTime? dueDate,
+        int? estimationMinutes)
     {
-        if (assignee is not null && !Members.Select(u => u.Id).Contains(assignee.Id))
-        {
-            throw new AssigneeNotMemberException(assignee.Id);
-        }
+        var issue = new Issue(
+            this,
+            number,
+            title,
+            reporter,
+            assignee,
+            type,
+            priority,
+            parentIssue,
+            dueDate,
+            estimationMinutes);
 
-        var issue = new Issue(this, number, title, reporter, assignee, type, priority);
         Issues.Add(issue);
 
         return issue;

@@ -15,7 +15,7 @@ public class ProjectTests
     {
         var project = new Project("TP", "Test Project", owner, "test desc");
 
-        var issue = project.CreateIssue(1, "test", owner, null, null, null);
+        var issue = project.CreateIssue(1, "test", owner, null, null, null, null, null, null);
 
         issue.ShouldNotBeNull();
         issue.Project.ShouldBe(project);
@@ -34,7 +34,7 @@ public class ProjectTests
         var project = new Project("TP", "Test Project", owner, "test desc");
         project.Members.Add(memberAssignee);
 
-        var issue = project.CreateIssue(1, "test", owner, memberAssignee, null, null);
+        var issue = project.CreateIssue(1, "test", owner, memberAssignee, null, null, null, null, null);
 
         issue.Assignee.ShouldBe(memberAssignee);
     }
@@ -46,7 +46,7 @@ public class ProjectTests
         var project = new Project("TP", "Test Project", owner, "test desc");
 
         var exception = Should.Throw<AssigneeNotMemberException>(() =>
-            project.CreateIssue(1, "test", owner, nonMemberAssignee, null, null));
+            project.CreateIssue(1, "test", owner, nonMemberAssignee, null, null, null, null, null));
 
         exception.AssigneeId.ShouldBe(nonMemberAssignee.Id);
     }

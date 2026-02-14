@@ -27,8 +27,8 @@ public static class DependencyInjection
             new("P2", "Project Two", user, "Description of Project Two")
         };
 
-        projects[0].CreateIssue(1, "Issue One", user, null, IssueType.Task, IssuePriority.Normal);
-        projects[0].CreateIssue(2, "Issue Two", user, user, IssueType.Bug, IssuePriority.Critical);
+        projects[0].CreateIssue(1, "Issue One", user, null, IssueType.Task, IssuePriority.Normal, null, null, null);
+        projects[0].CreateIssue(2, "Issue Two", user, user, IssueType.Bug, IssuePriority.Critical, null, null, null);
 
         return projects;
     }

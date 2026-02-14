@@ -5,7 +5,14 @@ using ProjectTracker.Domain.Enums;
 
 namespace ProjectTracker.Api.Endpoints.Issues;
 
-public record CreateIssueRequest(string Title, Guid? AssigneeId, IssueType? Type, IssuePriority? Priority);
+public record CreateIssueRequest(
+    string Title,
+    Guid? AssigneeId,
+    IssueType? Type,
+    IssuePriority? Priority,
+    Guid? ParentIssueId,
+    DateTime? DueDate,
+    int? EstimationMinutes);
 
 internal static class CreateIssueEndpoint
 {
@@ -19,8 +26,16 @@ internal static class CreateIssueEndpoint
             ISender sender,
             CancellationToken ct) =>
         {
-            var command = new CreateIssueCommand(projectId, request.Title, user,
-                request.AssigneeId, request.Type, request.Priority);
+            var command = new CreateIssueCommand(
+                projectId,
+                request.Title,
+                user,
+                request.AssigneeId,
+                request.Type,
+                request.Priority,
+                request.ParentIssueId,
+                request.DueDate,
+                request.EstimationMinutes);
 
             var issue = await sender.Send(command, ct);
 

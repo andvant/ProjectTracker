@@ -4,8 +4,16 @@ using ProjectTracker.Domain.Enums;
 
 namespace ProjectTracker.Application.Features.Issues.CreateIssue;
 
-public record CreateIssueCommand(Guid ProjectId, string Title, User Reporter,
-    Guid? AssigneeId, IssueType? Type, IssuePriority? Priority) : IRequest<IssueDto>;
+public record CreateIssueCommand(
+    Guid ProjectId,
+    string Title,
+    User Reporter,
+    Guid? AssigneeId,
+    IssueType? Type,
+    IssuePriority? Priority,
+    Guid? ParentIssueId,
+    DateTime? DueDate,
+    int? EstimationMinutes) : IRequest<IssueDto>;
 
 internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, IssueDto>
 {
@@ -39,15 +47,30 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
         }
 
         User? assignee = null;
+        Issue? parentIssue = null;
 
-        if (command.AssigneeId != null)
+        if (command.AssigneeId.HasValue)
         {
             assignee = _users.FirstOrDefault(u => u.Id == command.AssigneeId.Value)
                 ?? throw new AssigneeNotFoundException(command.AssigneeId.Value);
         }
 
-        var issue = project.CreateIssue(nextIssueNumber, command.Title, command.Reporter,
-            assignee, command.Type, command.Priority);
+        if (command.ParentIssueId.HasValue)
+        {
+            parentIssue = _projects.SelectMany(p => p.Issues).FirstOrDefault(i => i.Id == command.ParentIssueId.Value)
+                ?? throw new ParentIssueNotFoundException(command.ParentIssueId.Value);
+        }
+
+        var issue = project.CreateIssue(
+            nextIssueNumber,
+            command.Title,
+            command.Reporter,
+            assignee,
+            command.Type,
+            command.Priority,
+            parentIssue,
+            command.DueDate,
+            command.EstimationMinutes);
 
         _logger.LogInformation(
             "Created issue with id '{Id}', key '{Key}', title '{Title}'",
@@ -64,5 +87,8 @@ public class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
         RuleFor(c => c.Title).MaximumLength(100).NotEmpty();
         RuleFor(c => c.Type).IsInEnum();
         RuleFor(c => c.Priority).IsInEnum();
+        RuleFor(c => c.DueDate).GreaterThanOrEqualTo(DateTime.UtcNow).When(c => c.DueDate.HasValue)
+            .WithMessage("Due date must be in the future.");
+        RuleFor(c => c.EstimationMinutes).GreaterThanOrEqualTo(0).When(c => c.EstimationMinutes.HasValue);
     }
 }

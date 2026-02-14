@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ProjectTracker.Application.Exceptions;
+using ProjectTracker.Domain.Common;
 using ProjectTracker.Domain.Exceptions;
 
 namespace ProjectTracker.Api.Middleware;
@@ -16,11 +17,15 @@ internal class GlobalExceptionHandler(
             case ProjectNotFoundException or IssueNotFoundException:
                 httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                 break;
-            case AssigneeNotFoundException:
+            case AssigneeNotFoundException or ParentIssueNotFoundException:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 break;
             case AssigneeNotMemberException:
                 httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+                break;
+            case ApplicationException or DomainException:
+                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                logger.LogWarning(exception, "An unhandled Application or Domain exception occurred");
                 break;
             default:
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
