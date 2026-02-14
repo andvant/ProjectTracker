@@ -8,9 +8,9 @@ public class Project : AuditableEntity
     public Guid OwnerId { get; private set; }
     public User Owner { get; private set; }
 
-    public List<Attachment> Attachments { get; private set; } = new();
-    public List<User> Members { get; private set; } = new();
-    public List<Issue> Issues { get; private set; } = new();
+    public ICollection<Attachment> Attachments { get; private set; } = new List<Attachment>();
+    public ICollection<User> Members { get; private set; } = new List<User>();
+    public ICollection<Issue> Issues { get; private set; } = new List<Issue>();
 
     public Project(string key, string name, User owner, string? description)
     {
@@ -67,20 +67,17 @@ public class Project : AuditableEntity
 
     public void AddMember(User member)
     {
-        if (!Members.Select(w => w.Id).Contains(member.Id))
-        {
-            Members.Add(member);
-        }
+        Members.AddIfNotThere(member);
     }
 
     public void RemoveMember(User member)
     {
-        Members.RemoveAll(w => w.Id == member.Id);
+        Members.RemoveIfExists(member);
     }
 
     public void TransferOwnership(User newOwner)
     {
-        if (!Members.Select(w => w.Id).Contains(newOwner.Id))
+        if (!Members.Any(u => u.Id == newOwner.Id))
         {
             throw new NewOwnerNotMemberException(newOwner.Id);
         }

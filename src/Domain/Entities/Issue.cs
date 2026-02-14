@@ -19,9 +19,9 @@ public class Issue : AuditableEntity
     public Guid? ParentIssueId { get; private set; }
     public Issue? ParentIssue { get; private set; }
 
-    public List<Issue> ChildIssues { get; private set; } = new();
-    public List<Attachment> Attachments { get; set; } = new();
-    public List<User> Watchers { get; private set; } = new();
+    public ICollection<Issue> ChildIssues { get; private set; } = new List<Issue>();
+    public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
+    public ICollection<User> Watchers { get; private set; } = new List<User>();
 
     internal Issue(
         Project project,
@@ -56,6 +56,9 @@ public class Issue : AuditableEntity
         ParentIssue = parentIssue;
         ParentIssueId = parentIssue?.Id;
         parentIssue?.ChildIssues.Add(this);
+        Watchers.Add(reporter);
+        Watchers.AddIfNotNull(assignee);
+
         CreatedOn = DateTime.UtcNow; // TODO: move to DbContext
     }
 
@@ -82,20 +85,17 @@ public class Issue : AuditableEntity
 
     public void AddWatcher(User watcher)
     {
-        if (!Project.Members.Select(u => u.Id).Contains(watcher.Id))
+        if (!Project.Members.Any(u => u.Id == watcher.Id))
         {
             throw new WatcherNotMemberException(watcher.Id);
         }
 
-        if (!Watchers.Select(w => w.Id).Contains(watcher.Id))
-        {
-            Watchers.Add(watcher);
-        }
+        Watchers.AddIfNotThere(watcher);
     }
 
     public void RemoveWatcher(User watcher)
     {
-        Watchers.RemoveAll(w => w.Id == watcher.Id);
+        Watchers.RemoveIfExists(watcher);
     }
 
     private void ValidateDetails(
@@ -105,7 +105,7 @@ public class Issue : AuditableEntity
         int? estimationMinutes,
         Issue? parentIssue)
     {
-        if (assignee is not null && !project.Members.Select(u => u.Id).Contains(assignee.Id))
+        if (assignee is not null && !project.Members.Any(u => u.Id == assignee.Id))
         {
             throw new AssigneeNotMemberException(assignee.Id);
         }
