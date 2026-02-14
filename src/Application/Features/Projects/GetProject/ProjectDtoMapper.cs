@@ -1,6 +1,6 @@
 using Riok.Mapperly.Abstractions;
 
-namespace ProjectTracker.Application.Features.Projects.Common;
+namespace ProjectTracker.Application.Features.Projects.GetProject;
 
 [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 internal partial class ProjectDtoMapper

@@ -1,5 +1,5 @@
-using ProjectTracker.Application.Features.Issues.Common;
 using ProjectTracker.Application.Features.Issues.CreateIssue;
+using ProjectTracker.Application.Features.Issues.GetIssue;
 using ProjectTracker.Domain.Entities;
 using ProjectTracker.Domain.Enums;
 

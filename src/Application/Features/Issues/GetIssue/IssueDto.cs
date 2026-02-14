@@ -1,4 +1,6 @@
-namespace ProjectTracker.Application.Features.Issues.Common;
+using ProjectTracker.Application.Features.Users.GetUsers;
+
+namespace ProjectTracker.Application.Features.Issues.GetIssue;
 
 public record IssueDto(
     Guid Id,
@@ -17,5 +19,6 @@ public record IssueDto(
     Guid CreatedBy,
     DateTime CreatedOn,
     Guid UpdatedBy,
-    DateTime UpdatedOn
+    DateTime UpdatedOn,
+    IReadOnlyCollection<UsersDto> Watchers
 );

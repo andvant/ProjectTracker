@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using ProjectTracker.Application.Features.Projects.Common;
+using ProjectTracker.Application.Features.Projects.GetProject;
 
 namespace ProjectTracker.Application.Features.Projects.CreateProject;
 

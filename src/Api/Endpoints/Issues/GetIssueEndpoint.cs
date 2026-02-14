@@ -1,4 +1,3 @@
-using ProjectTracker.Application.Features.Issues.Common;
 using ProjectTracker.Application.Features.Issues.GetIssue;
 
 namespace ProjectTracker.Api.Endpoints.Issues;

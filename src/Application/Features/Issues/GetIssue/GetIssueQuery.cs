@@ -1,5 +1,3 @@
-using ProjectTracker.Application.Features.Issues.Common;
-
 namespace ProjectTracker.Application.Features.Issues.GetIssue;
 
 public record GetIssueQuery(Guid ProjectId, Guid IssueId) : IRequest<IssueDto>;
