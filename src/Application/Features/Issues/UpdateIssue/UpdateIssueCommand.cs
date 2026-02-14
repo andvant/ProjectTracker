@@ -43,7 +43,7 @@ public class UpdateIssueCommandValidator : AbstractValidator<UpdateIssueCommand>
 {
     public UpdateIssueCommandValidator()
     {
-        RuleFor(c => c.Title).MaximumLength(100).NotEmpty();
+        RuleFor(c => c.Title).Must(Title.IsValid).WithMessage(Title.ValidationMessage);
         RuleFor(c => c.Status).IsInEnum();
         RuleFor(c => c.Priority).IsInEnum();
     }

@@ -34,6 +34,6 @@ public class UpdateProjectCommandValidator : AbstractValidator<UpdateProjectComm
 {
     public UpdateProjectCommandValidator()
     {
-        RuleFor(c => c.Name).MaximumLength(100).NotEmpty();
+        RuleFor(c => c.Name).Must(Title.IsValid).WithMessage(Title.ValidationMessage);
     }
 }

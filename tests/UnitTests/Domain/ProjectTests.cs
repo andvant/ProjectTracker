@@ -20,7 +20,7 @@ public class ProjectTests
         issue.ShouldNotBeNull();
         issue.Project.ShouldBe(project);
         issue.Key.Number.ShouldBe(1);
-        issue.Title.ShouldBe("test");
+        issue.Title.ToString().ShouldBe("test");
         issue.Reporter.ShouldBe(owner);
         issue.Type.ShouldBe(IssueType.Task);
         issue.Priority.ShouldBe(IssuePriority.Normal);

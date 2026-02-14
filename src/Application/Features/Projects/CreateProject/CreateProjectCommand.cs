@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 using ProjectTracker.Application.Features.Projects.Common;
-using ProjectTracker.Domain.ValueObjects;
 
 namespace ProjectTracker.Application.Features.Projects.CreateProject;
 
@@ -40,7 +39,7 @@ public class CreateProjectCommandValidator : AbstractValidator<CreateProjectComm
 {
     public CreateProjectCommandValidator()
     {
-        RuleFor(c => c.Name).MaximumLength(100).NotEmpty();
+        RuleFor(c => c.Name).Must(Title.IsValid).WithMessage(Title.ValidationMessage);
         RuleFor(c => c.Key).Must(ProjectKey.IsValid).WithMessage(ProjectKey.ValidationMessage);
     }
 }

@@ -30,6 +30,7 @@ public record ProjectKey
         return Pattern.IsMatch(key);
     }
 
+    public static implicit operator ProjectKey(string key) => new ProjectKey(key);
     public static implicit operator string(ProjectKey key) => key.Value;
     public override string ToString() => Value;
 }

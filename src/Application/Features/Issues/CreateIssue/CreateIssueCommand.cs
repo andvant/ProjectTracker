@@ -84,7 +84,7 @@ public class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
 {
     public CreateIssueCommandValidator()
     {
-        RuleFor(c => c.Title).MaximumLength(100).NotEmpty();
+        RuleFor(c => c.Title).Must(Title.IsValid).WithMessage(Title.ValidationMessage);
         RuleFor(c => c.Type).IsInEnum();
         RuleFor(c => c.Priority).IsInEnum();
         RuleFor(c => c.DueDate).GreaterThanOrEqualTo(DateTime.UtcNow).When(c => c.DueDate.HasValue)
