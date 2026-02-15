@@ -15,6 +15,8 @@ public static class DependencyInjection
         services.AddSingleton(projects);
         services.AddSingleton(users[0]);
 
+        services.AddSingleton(TimeProvider.System);
+
         return services;
     }
 
@@ -27,17 +29,17 @@ public static class DependencyInjection
         };
 
         projects[0].CreateIssue(1, "Issue One", "Description of Issue One",
-            user, null, IssueType.Task, IssuePriority.Normal, null, null, null);
+            user, null, IssueType.Task, IssuePriority.Normal, null, null, DateTimeOffset.UtcNow, null);
         projects[0].CreateIssue(2, "Issue Two", "Description of Issue Two",
-            user, user, IssueType.Bug, IssuePriority.Critical, null, null, null);
+            user, user, IssueType.Bug, IssuePriority.Critical, null, null, DateTimeOffset.UtcNow, null);
 
         return projects;
     }
 
     private static List<User> GetUsers() => new List<User>()
     {
-        new("Test User 1", "test.1@example.com", DateTime.UtcNow.AddDays(-3)),
-        new("Test User 2", "test.2@example.com", DateTime.UtcNow.AddDays(-2)),
-        new("Test User 3", "test.3@example.com", DateTime.UtcNow.AddDays(-1)),
+        new("Test User 1", "test.1@example.com", DateTimeOffset.UtcNow.AddDays(-3)),
+        new("Test User 2", "test.2@example.com", DateTimeOffset.UtcNow.AddDays(-2)),
+        new("Test User 3", "test.3@example.com", DateTimeOffset.UtcNow.AddDays(-1)),
     };
 }

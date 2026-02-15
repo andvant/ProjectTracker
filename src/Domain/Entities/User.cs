@@ -4,9 +4,9 @@ public class User : Entity
 {
     public string Name { get; private set; }
     public string Email { get; private set; }
-    public DateTime RegistrationDate { get; private set; }
+    public DateTimeOffset RegistrationDate { get; private set; }
 
-    public User(string name, string email, DateTime registrationDate)
+    public User(string name, string email, DateTimeOffset registrationDate)
     {
         Id = Guid.CreateVersion7();
         Name = name;

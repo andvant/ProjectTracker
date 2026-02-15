@@ -10,22 +10,25 @@ public record UpdateIssueCommand(
     Guid? AssigneeId,
     IssueStatus Status,
     IssuePriority Priority,
-    DateTime? DueDate,
+    DateTimeOffset? DueDate,
     int? EstimationMinutes) : IRequest;
 
 internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
 {
     private readonly List<Project> _projects;
     private readonly List<User> _users;
+    private readonly TimeProvider _timeProvider;
     private readonly ILogger<UpdateIssueCommandHandler> _logger;
 
     public UpdateIssueCommandHandler(
         List<Project> projects,
         List<User> users,
+        TimeProvider timeProvider,
         ILogger<UpdateIssueCommandHandler> logger)
     {
         _projects = projects;
         _users = users;
+        _timeProvider = timeProvider;
         _logger = logger;
     }
 
@@ -56,6 +59,7 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
             command.Status,
             command.Priority,
             command.DueDate,
+            _timeProvider.GetUtcNow(),
             command.EstimationMinutes);
 
         _logger.LogInformation(
@@ -66,12 +70,12 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
 
 public class UpdateIssueCommandValidator : AbstractValidator<UpdateIssueCommand>
 {
-    public UpdateIssueCommandValidator()
+    public UpdateIssueCommandValidator(TimeProvider timeProvider)
     {
         RuleFor(c => c.Title).Must(Title.IsValid).WithMessage(Title.ValidationMessage);
         RuleFor(c => c.Status).IsInEnum();
         RuleFor(c => c.Priority).IsInEnum();
-        RuleFor(c => c.DueDate).GreaterThanOrEqualTo(DateTime.UtcNow).When(c => c.DueDate.HasValue)
+        RuleFor(c => c.DueDate).GreaterThanOrEqualTo(timeProvider.GetUtcNow()).When(c => c.DueDate.HasValue)
             .WithMessage("Due date must be in the future.");
         RuleFor(c => c.EstimationMinutes).GreaterThanOrEqualTo(0).When(c => c.EstimationMinutes.HasValue);
     }

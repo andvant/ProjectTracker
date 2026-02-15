@@ -11,8 +11,15 @@ using Xunit;
 
 namespace ProjectTracker.UnitTests.Application;
 
+public class FakeTimeProvider(DateTimeOffset utcNow) : TimeProvider
+{
+    public override DateTimeOffset GetUtcNow() => utcNow;
+}
+
 public class CreateIssueCommandTests
 {
+    private readonly FakeTimeProvider _timeProvider = new(DateTimeOffset.UtcNow);
+
     [Theory]
     [AutoData]
     public async Task Create_issue_and_return_dto(User user)
@@ -28,7 +35,7 @@ public class CreateIssueCommandTests
         var logger = Substitute.For<ILogger<CreateIssueCommandHandler>>();
 
         var command = new CreateIssueCommand(project.Id, "test issue", "test desc", user, user.Id, null, null, null, null, null);
-        var handler = new CreateIssueCommandHandler(projects, users, mapper, logger);
+        var handler = new CreateIssueCommandHandler(projects, users, mapper, _timeProvider, logger);
 
         var result = await handler.Handle(command, TestContext.Current.CancellationToken);
 
@@ -54,7 +61,7 @@ public class CreateIssueCommandTests
         var logger = Substitute.For<ILogger<CreateIssueCommandHandler>>();
 
         var command = new CreateIssueCommand(project.Id, "test issue", "test desc", user, missingAssigneeId, null, null, null, null, null);
-        var handler = new CreateIssueCommandHandler(projects, users, mapper, logger);
+        var handler = new CreateIssueCommandHandler(projects, users, mapper, _timeProvider, logger);
 
         var exception = await Should.ThrowAsync<AssigneeNotFoundException>(() =>
             handler.Handle(command, TestContext.Current.CancellationToken));
@@ -67,7 +74,7 @@ public class CreateIssueCommandTests
     [InlineAutoData(null)]
     public async Task Validator_fails_if_invalid_title(string? title, User user)
     {
-        var validator = new CreateIssueCommandValidator();
+        var validator = new CreateIssueCommandValidator(_timeProvider);
         var command = new CreateIssueCommand(Guid.NewGuid(), title!, "test desc", user, null, null, null, null, null, null);
 
         var result = await validator.ValidateAsync(command, TestContext.Current.CancellationToken);
@@ -80,7 +87,7 @@ public class CreateIssueCommandTests
     [AutoData]
     public async Task Validator_passes_if_valid_title(User user)
     {
-        var validator = new CreateIssueCommandValidator();
+        var validator = new CreateIssueCommandValidator(_timeProvider);
         var command = new CreateIssueCommand(Guid.NewGuid(), "valid title", "test desc", user, null, null, null, null, null, null);
 
         var result = await validator.ValidateAsync(command, TestContext.Current.CancellationToken);
@@ -93,7 +100,7 @@ public class CreateIssueCommandTests
     [InlineAutoData((IssueType)(-1))]
     public async Task Validator_fails_if_invalid_type(IssueType type, User user)
     {
-        var validator = new CreateIssueCommandValidator();
+        var validator = new CreateIssueCommandValidator(_timeProvider);
         var command = new CreateIssueCommand(Guid.NewGuid(), "valid title", "test desc", user, null, type, null, null, null, null);
 
         var result = await validator.ValidateAsync(command, TestContext.Current.CancellationToken);
@@ -107,7 +114,7 @@ public class CreateIssueCommandTests
     [InlineAutoData((IssuePriority)(-1))]
     public async Task Validator_fails_if_invalid_priority(IssuePriority priority, User user)
     {
-        var validator = new CreateIssueCommandValidator();
+        var validator = new CreateIssueCommandValidator(_timeProvider);
         var command = new CreateIssueCommand(Guid.NewGuid(), "valid title", "test desc", user, null, null, priority, null, null, null);
 
         var result = await validator.ValidateAsync(command, TestContext.Current.CancellationToken);

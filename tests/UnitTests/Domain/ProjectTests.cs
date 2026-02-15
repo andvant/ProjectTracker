@@ -9,13 +9,16 @@ namespace ProjectTracker.UnitTests.Domain;
 
 public class ProjectTests
 {
+    private readonly DateTimeOffset _currentTime = DateTimeOffset.UtcNow;
+
     [Theory]
     [AutoData]
     public void Create_issue_without_assignee(User owner)
     {
         var project = new Project("TP", "Test Project", owner, "test desc");
 
-        var issue = project.CreateIssue(1, "test", "test desc", owner, null, null, null, null, null, null);
+        var issue = project.CreateIssue(1, "test", "test desc", owner,
+            null, null, null, null, null, _currentTime, null);
 
         issue.ShouldNotBeNull();
         issue.Project.ShouldBe(project);
@@ -34,7 +37,8 @@ public class ProjectTests
         var project = new Project("TP", "Test Project", owner, "test desc");
         project.Members.Add(memberAssignee);
 
-        var issue = project.CreateIssue(1, "test", "test desc", owner, memberAssignee, null, null, null, null, null);
+        var issue = project.CreateIssue(1, "test", "test desc", owner, memberAssignee,
+            null, null, null, null, _currentTime, null);
 
         issue.Assignee.ShouldBe(memberAssignee);
     }
@@ -46,7 +50,8 @@ public class ProjectTests
         var project = new Project("TP", "Test Project", owner, "test desc");
 
         var exception = Should.Throw<AssigneeNotMemberException>(() =>
-            project.CreateIssue(1, "test", "test desc", owner, nonMemberAssignee, null, null, null, null, null));
+            project.CreateIssue(1, "test", "test desc", owner, nonMemberAssignee,
+                null, null, null, null, _currentTime, null));
 
         exception.AssigneeId.ShouldBe(nonMemberAssignee.Id);
     }

@@ -10,6 +10,5 @@ public class Attachment : AuditableEntity
         Id = Guid.CreateVersion7();
         Name = name;
         StorageKey = storageKey;
-        CreatedOn = DateTime.UtcNow; // TODO: move to DbContext
     }
 }

@@ -14,7 +14,7 @@ public class Issue : AuditableEntity
     public IssueStatus Status { get; private set; }
     public IssueType Type { get; private set; }
     public IssuePriority Priority { get; private set; }
-    public DateTime? DueDate { get; private set; }
+    public DateTimeOffset? DueDate { get; private set; }
     public int? EstimationMinutes { get; private set; }
     public Guid? ParentIssueId { get; private set; }
     public Issue? ParentIssue { get; private set; }
@@ -33,10 +33,11 @@ public class Issue : AuditableEntity
         IssueType? type,
         IssuePriority? priority,
         Issue? parentIssue,
-        DateTime? dueDate,
+        DateTimeOffset? dueDate,
+        DateTimeOffset currentTime,
         int? estimationMinutes)
     {
-        ValidateDetails(project, assignee, dueDate, estimationMinutes, parentIssue);
+        ValidateDetails(project, assignee, dueDate, currentTime, estimationMinutes, parentIssue);
 
         Id = Guid.CreateVersion7();
         Key = new IssueKey(project.Key, number);
@@ -58,8 +59,6 @@ public class Issue : AuditableEntity
         parentIssue?.ChildIssues.Add(this);
         Watchers.Add(reporter);
         Watchers.AddIfNotNull(assignee);
-
-        CreatedOn = DateTime.UtcNow; // TODO: move to DbContext
     }
 
     public void UpdateDetails(
@@ -68,10 +67,11 @@ public class Issue : AuditableEntity
         User? assignee,
         IssueStatus status,
         IssuePriority priority,
-        DateTime? dueDate,
+        DateTimeOffset? dueDate,
+        DateTimeOffset currentTime,
         int? estimationMinutes)
     {
-        ValidateDetails(Project, assignee, dueDate, estimationMinutes, null);
+        ValidateDetails(Project, assignee, dueDate, currentTime, estimationMinutes, null);
 
         Title = title;
         Description = description;
@@ -101,7 +101,8 @@ public class Issue : AuditableEntity
     private void ValidateDetails(
         Project project,
         User? assignee,
-        DateTime? dueDate,
+        DateTimeOffset? dueDate,
+        DateTimeOffset currentTime,
         int? estimationMinutes,
         Issue? parentIssue)
     {
@@ -109,7 +110,7 @@ public class Issue : AuditableEntity
         {
             throw new AssigneeNotMemberException(assignee.Id);
         }
-        if (dueDate.HasValue && dueDate < DateTime.UtcNow) // TODO: inject TimeProvider
+        if (dueDate.HasValue && dueDate < currentTime)
         {
             throw new PastDueDateException(dueDate.Value);
         }

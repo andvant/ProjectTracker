@@ -21,7 +21,6 @@ public class Project : AuditableEntity
         OwnerId = owner.Id;
         Members.Add(owner);
         Description = description;
-        CreatedOn = DateTime.UtcNow; // TODO: move to DbContext
     }
 
     public Issue CreateIssue(
@@ -33,7 +32,8 @@ public class Project : AuditableEntity
         IssueType? type,
         IssuePriority? priority,
         Issue? parentIssue,
-        DateTime? dueDate,
+        DateTimeOffset? dueDate,
+        DateTimeOffset currentTime,
         int? estimationMinutes)
     {
         var issue = new Issue(
@@ -47,6 +47,7 @@ public class Project : AuditableEntity
             priority,
             parentIssue,
             dueDate,
+            currentTime,
             estimationMinutes);
 
         Issues.Add(issue);

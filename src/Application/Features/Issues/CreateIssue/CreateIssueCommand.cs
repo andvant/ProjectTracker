@@ -12,7 +12,7 @@ public record CreateIssueCommand(
     IssueType? Type,
     IssuePriority? Priority,
     Guid? ParentIssueId,
-    DateTime? DueDate,
+    DateTimeOffset? DueDate,
     int? EstimationMinutes) : IRequest<IssueDto>;
 
 internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, IssueDto>
@@ -20,17 +20,20 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
     private readonly List<Project> _projects;
     private readonly List<User> _users;
     private readonly IssueDtoMapper _mapper;
+    private readonly TimeProvider _timeProvider;
     private readonly ILogger<CreateIssueCommandHandler> _logger;
 
     public CreateIssueCommandHandler(
         List<Project> projects,
         List<User> users,
         IssueDtoMapper mapper,
+        TimeProvider timeProvider,
         ILogger<CreateIssueCommandHandler> logger)
     {
         _projects = projects;
         _users = users;
         _mapper = mapper;
+        _timeProvider = timeProvider;
         _logger = logger;
     }
 
@@ -71,6 +74,7 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
             command.Priority,
             parentIssue,
             command.DueDate,
+            _timeProvider.GetUtcNow(),
             command.EstimationMinutes);
 
         _logger.LogInformation(
@@ -83,12 +87,12 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
 
 public class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
 {
-    public CreateIssueCommandValidator()
+    public CreateIssueCommandValidator(TimeProvider timeProvider)
     {
         RuleFor(c => c.Title).Must(Title.IsValid).WithMessage(Title.ValidationMessage);
         RuleFor(c => c.Type).IsInEnum();
         RuleFor(c => c.Priority).IsInEnum();
-        RuleFor(c => c.DueDate).GreaterThanOrEqualTo(DateTime.UtcNow).When(c => c.DueDate.HasValue)
+        RuleFor(c => c.DueDate).GreaterThanOrEqualTo(timeProvider.GetUtcNow()).When(c => c.DueDate.HasValue)
             .WithMessage("Due date must be in the future.");
         RuleFor(c => c.EstimationMinutes).GreaterThanOrEqualTo(0).When(c => c.EstimationMinutes.HasValue);
     }

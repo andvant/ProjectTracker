@@ -13,12 +13,12 @@ public record IssueDto(
     IssueStatus Status,
     IssueType Type,
     IssuePriority Priority,
-    DateTime? DueDate,
+    DateTimeOffset? DueDate,
     int? EstimationMinutes,
     Guid? ParentIssueId,
     Guid CreatedBy,
-    DateTime CreatedOn,
+    DateTimeOffset CreatedOn,
     Guid UpdatedBy,
-    DateTime UpdatedOn,
+    DateTimeOffset UpdatedOn,
     IReadOnlyCollection<UsersDto> Watchers
 );

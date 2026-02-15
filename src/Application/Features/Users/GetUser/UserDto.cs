@@ -4,5 +4,5 @@ public record UserDto(
     Guid Id,
     string Name,
     string Email,
-    DateTime RegistrationDate
+    DateTimeOffset RegistrationDate
 );
