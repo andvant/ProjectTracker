@@ -2,26 +2,26 @@ namespace ProjectTracker.Domain.Entities;
 
 public class Issue : AuditableEntity
 {
-    public IssueKey Key { get; private set; }
+    public IssueKey Key { get; }
     public Title Title { get; private set; }
     public string? Description { get; private set; }
-    public Guid ReporterId { get; private set; }
-    public User Reporter { get; private set; }
-    public Guid ProjectId { get; private set; }
-    public Project Project { get; private set; }
+    public Guid ReporterId { get; }
+    public User Reporter { get; }
+    public Guid ProjectId { get; }
+    public Project Project { get; }
     public Guid? AssigneeId { get; private set; }
     public User? Assignee { get; private set; }
     public IssueStatus Status { get; private set; }
-    public IssueType Type { get; private set; }
+    public IssueType Type { get; }
     public IssuePriority Priority { get; private set; }
     public DateTimeOffset? DueDate { get; private set; }
     public int? EstimationMinutes { get; private set; }
-    public Guid? ParentIssueId { get; private set; }
-    public Issue? ParentIssue { get; private set; }
+    public Guid? ParentIssueId { get; }
+    public Issue? ParentIssue { get; }
 
-    public ICollection<Issue> ChildIssues { get; private set; } = new List<Issue>();
-    public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
-    public ICollection<User> Watchers { get; private set; } = new List<User>();
+    public ICollection<User> Watchers { get; } = new List<User>();
+    public ICollection<Issue> ChildIssues { get; } = new List<Issue>();
+    public ICollection<Attachment> Attachments { get; } = new List<Attachment>();
 
     internal Issue(
         Project project,
@@ -39,7 +39,6 @@ public class Issue : AuditableEntity
     {
         ValidateDetails(project, assignee, dueDate, currentTime, estimationMinutes, parentIssue);
 
-        Id = Guid.CreateVersion7();
         Key = new IssueKey(project.Key, number);
         Title = title;
         Description = description;

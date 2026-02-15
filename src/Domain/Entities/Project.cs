@@ -2,19 +2,18 @@ namespace ProjectTracker.Domain.Entities;
 
 public class Project : AuditableEntity
 {
-    public ProjectKey Key { get; private set; }
+    public ProjectKey Key { get; }
     public Title Name { get; private set; }
     public string? Description { get; private set; }
     public Guid OwnerId { get; private set; }
     public User Owner { get; private set; }
 
-    public ICollection<Attachment> Attachments { get; private set; } = new List<Attachment>();
-    public ICollection<User> Members { get; private set; } = new List<User>();
-    public ICollection<Issue> Issues { get; private set; } = new List<Issue>();
+    public ICollection<User> Members { get; } = new List<User>();
+    public ICollection<Issue> Issues { get; } = new List<Issue>();
+    public ICollection<Attachment> Attachments { get; } = new List<Attachment>();
 
     public Project(string key, string name, User owner, string? description)
     {
-        Id = Guid.CreateVersion7();
         Key = key;
         Name = name;
         Owner = owner;
