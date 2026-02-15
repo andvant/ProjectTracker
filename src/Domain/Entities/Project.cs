@@ -67,12 +67,12 @@ public class Project : AuditableEntity
 
     public void AddMember(User member)
     {
-        Members.AddIfNotThere(member);
+        Members.AddIfNotPresent(member);
     }
 
     public void RemoveMember(User member)
     {
-        Members.RemoveIfExists(member);
+        Members.RemoveIfPresent(member);
     }
 
     public void TransferOwnership(User newOwner)

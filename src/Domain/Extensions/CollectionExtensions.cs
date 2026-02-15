@@ -10,7 +10,7 @@ public static class CollectionExtensions
         }
     }
 
-    public static void AddIfNotThere<T>(this ICollection<T> collection, T item) where T : Entity
+    public static void AddIfNotPresent<T>(this ICollection<T> collection, T item) where T : Entity
     {
         if (!collection.Any(e => e.Id == item.Id))
         {
@@ -18,7 +18,7 @@ public static class CollectionExtensions
         }
     }
 
-    public static void RemoveIfExists<T>(this ICollection<T> collection, T item) where T : Entity
+    public static void RemoveIfPresent<T>(this ICollection<T> collection, T item) where T : Entity
     {
         var existing = collection.FirstOrDefault(e => e.Id == item.Id);
 

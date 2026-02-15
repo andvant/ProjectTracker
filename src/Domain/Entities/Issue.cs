@@ -89,12 +89,12 @@ public class Issue : AuditableEntity
             throw new WatcherNotMemberException(watcher.Id);
         }
 
-        Watchers.AddIfNotThere(watcher);
+        Watchers.AddIfNotPresent(watcher);
     }
 
     public void RemoveWatcher(User watcher)
     {
-        Watchers.RemoveIfExists(watcher);
+        Watchers.RemoveIfPresent(watcher);
     }
 
     private void ValidateDetails(
