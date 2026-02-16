@@ -1,6 +1,5 @@
 using ProjectTracker.Application.Features.Projects.CreateProject;
 using ProjectTracker.Application.Features.Projects.GetProject;
-using ProjectTracker.Domain.Entities;
 
 namespace ProjectTracker.Api.Endpoints.Projects;
 
@@ -13,11 +12,10 @@ internal static class CreateProjectEndpoint
         // POST /projects
         app.MapPost("/", async (
             CreateProjectRequest request,
-            User user,
             ISender sender,
             CancellationToken ct) =>
         {
-            var command = new CreateProjectCommand(request.Key, request.Name, user, request.Description);
+            var command = new CreateProjectCommand(request.Key, request.Name, request.Description);
 
             var project = await sender.Send(command, ct);
 

@@ -2,9 +2,15 @@ namespace ProjectTracker.Domain.Entities;
 
 public class User : Entity
 {
-    public string Name { get; }
-    public string Email { get; }
-    public DateTimeOffset RegistrationDate { get; }
+    public string Name { get; private set; }
+    public string Email { get; private set; }
+    public DateTimeOffset RegistrationDate { get; private set; }
+
+    protected User()
+    {
+        Name = null!;
+        Email = null!;
+    }
 
     public User(string name, string email, DateTimeOffset registrationDate)
     {

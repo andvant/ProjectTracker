@@ -6,23 +6,20 @@ public record AddWatcherCommand(Guid ProjectId, Guid IssueId, Guid WatcherId) : 
 
 internal class AddWatcherCommandHandler : IRequestHandler<AddWatcherCommand>
 {
-    private readonly List<Project> _projects;
-    private readonly List<User> _users;
+    private readonly IApplicationDbContext _context;
     private readonly ILogger<AddWatcherCommandHandler> _logger;
 
     public AddWatcherCommandHandler(
-        List<Project> projects,
-        List<User> users,
+        IApplicationDbContext context,
         ILogger<AddWatcherCommandHandler> logger)
     {
-        _projects = projects;
-        _users = users;
+        _context = context;
         _logger = logger;
     }
 
     public async Task Handle(AddWatcherCommand command, CancellationToken ct)
     {
-        var project = _projects.FirstOrDefault(p => p.Id == command.ProjectId);
+        var project = _context.Projects.FirstOrDefault(p => p.Id == command.ProjectId);
 
         if (project is null)
         {
@@ -32,10 +29,12 @@ internal class AddWatcherCommandHandler : IRequestHandler<AddWatcherCommand>
         var issue = project.Issues.FirstOrDefault(i => i.Id == command.IssueId)
             ?? throw new IssueNotFoundException(command.IssueId);
 
-        var watcher = _users.FirstOrDefault(u => u.Id == command.WatcherId)
+        var watcher = _context.Users.FirstOrDefault(u => u.Id == command.WatcherId)
             ?? throw new WatcherNotFoundException(command.WatcherId);
 
         issue.AddWatcher(watcher);
+
+        await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
             "Added watcher '{WatcherId}' to issue '{IssueId}'",

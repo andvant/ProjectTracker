@@ -6,23 +6,25 @@ public record DeleteProjectCommand(Guid Id) : IRequest;
 
 internal class DeleteProjectCommandHandler : IRequestHandler<DeleteProjectCommand>
 {
-    private readonly List<Project> _projects;
+    private readonly IApplicationDbContext _context;
     private readonly ILogger<DeleteProjectCommandHandler> _logger;
 
     public DeleteProjectCommandHandler(
-        List<Project> projects,
+        IApplicationDbContext context,
         ILogger<DeleteProjectCommandHandler> logger)
     {
-        _projects = projects;
+        _context = context;
         _logger = logger;
     }
 
     public async Task Handle(DeleteProjectCommand command, CancellationToken ct)
     {
-        var project = _projects.FirstOrDefault(p => p.Id == command.Id)
+        var project = _context.Projects.FirstOrDefault(p => p.Id == command.Id)
             ?? throw new ProjectNotFoundException(command.Id);
 
-        _projects.Remove(project);
+        _context.Projects.Remove(project);
+
+        await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
             "Deleted project {Id} with key {Key}, name {Name}",

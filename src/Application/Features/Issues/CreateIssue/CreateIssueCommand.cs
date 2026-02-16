@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProjectTracker.Application.Features.Issues.GetIssue;
 
@@ -7,7 +8,6 @@ public record CreateIssueCommand(
     Guid ProjectId,
     string Title,
     string? Description,
-    User Reporter,
     Guid? AssigneeId,
     IssueType? Type,
     IssuePriority? Priority,
@@ -17,21 +17,21 @@ public record CreateIssueCommand(
 
 internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, IssueDto>
 {
-    private readonly List<Project> _projects;
-    private readonly List<User> _users;
+    private readonly IApplicationDbContext _context;
+    private readonly User _currentUser;
     private readonly IssueDtoMapper _mapper;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<CreateIssueCommandHandler> _logger;
 
     public CreateIssueCommandHandler(
-        List<Project> projects,
-        List<User> users,
+        IApplicationDbContext context,
+        User currentUser,
         IssueDtoMapper mapper,
         TimeProvider timeProvider,
         ILogger<CreateIssueCommandHandler> logger)
     {
-        _projects = projects;
-        _users = users;
+        _context = context;
+        _currentUser = currentUser;
         _mapper = mapper;
         _timeProvider = timeProvider;
         _logger = logger;
@@ -39,10 +39,11 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
 
     public async Task<IssueDto> Handle(CreateIssueCommand command, CancellationToken ct)
     {
-        var issues = _projects.SelectMany(p => p.Issues).ToList();
-        var nextIssueNumber = issues.Any() ? issues.Max(i => i.Key.Number) + 1 : 1;
+        var reporter = await GetCurrentUser();
 
-        var project = _projects.FirstOrDefault(p => p.Id == command.ProjectId);
+        var project = _context.Projects
+            .Include(p => p.Members)
+            .FirstOrDefault(p => p.Id == command.ProjectId);
 
         if (project is null)
         {
@@ -54,21 +55,23 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
 
         if (command.AssigneeId.HasValue)
         {
-            assignee = _users.FirstOrDefault(u => u.Id == command.AssigneeId.Value)
+            assignee = _context.Users.FirstOrDefault(u => u.Id == command.AssigneeId.Value)
                 ?? throw new AssigneeNotFoundException(command.AssigneeId.Value);
         }
 
         if (command.ParentIssueId.HasValue)
         {
-            parentIssue = _projects.SelectMany(p => p.Issues).FirstOrDefault(i => i.Id == command.ParentIssueId.Value)
+            parentIssue = _context.Projects.SelectMany(p => p.Issues).FirstOrDefault(i => i.Id == command.ParentIssueId.Value)
                 ?? throw new ParentIssueNotFoundException(command.ParentIssueId.Value);
         }
+
+        var nextIssueNumber = await GetNextIssueNumber();
 
         var issue = project.CreateIssue(
             nextIssueNumber,
             command.Title,
             command.Description,
-            command.Reporter,
+            reporter,
             assignee,
             command.Type,
             command.Priority,
@@ -77,11 +80,32 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
             _timeProvider.GetUtcNow(),
             command.EstimationMinutes);
 
+        await _context.SaveChangesAsync(ct);
+
         _logger.LogInformation(
             "Created issue with id '{Id}', key '{Key}', title '{Title}'",
             issue.Id, issue.Key, issue.Title);
 
         return _mapper.ToDto(issue);
+    }
+
+    private async Task<User> GetCurrentUser()
+    {
+        var currentUser = await _context.Users.FirstOrDefaultAsync();
+
+        if (currentUser is null)
+        {
+            _context.Users.Add(_currentUser);
+            currentUser = _currentUser;
+        }
+
+        return currentUser;
+    }
+
+    private async Task<int> GetNextIssueNumber()
+    {
+        var issues = _context.Projects.SelectMany(p => p.Issues);
+        return (await issues.AnyAsync()) ? (await issues.MaxAsync(i => i.Number)) + 1 : 1;
     }
 }
 

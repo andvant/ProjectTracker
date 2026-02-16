@@ -4,19 +4,19 @@ public record GetProjectsQuery : IRequest<List<ProjectsDto>>;
 
 internal class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, List<ProjectsDto>>
 {
-    private readonly List<Project> _projects;
+    private readonly IApplicationDbContext _context;
     private readonly ProjectsDtoMapper _mapper;
 
     public GetProjectsQueryHandler(
-        List<Project> projects,
+        IApplicationDbContext context,
         ProjectsDtoMapper mapper)
     {
-        _projects = projects;
+        _context = context;
         _mapper = mapper;
     }
 
     public async Task<List<ProjectsDto>> Handle(GetProjectsQuery query, CancellationToken ct)
     {
-        return _projects.Select(_mapper.ToDto).ToList();
+        return _context.Projects.Select(_mapper.ToDto).ToList();
     }
 }

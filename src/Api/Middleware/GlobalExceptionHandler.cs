@@ -29,9 +29,13 @@ internal class GlobalExceptionHandler(
                 AssigneeNotMemberException:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 break;
+            case // problem with body
+                ProjectKeyAlreadyExistsException:
+                httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+                break;
             case ApplicationException or DomainException:
-                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                logger.LogWarning(exception, "An unhandled Application or Domain exception occurred");
+                httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                logger.LogError(exception, "An unhandled Application or Domain exception occurred");
                 break;
             default:
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
@@ -45,8 +49,8 @@ internal class GlobalExceptionHandler(
             Exception = exception,
             ProblemDetails = new ProblemDetails()
             {
-                Title = exception.Message,
-                Detail = exception.StackTrace, // TODO: remove in production env
+                Title = $"{exception.Message}; InnerException: {exception.InnerException?.Message}",
+                Detail = exception.ToString(), // TODO: remove in production env
                 Status = httpContext.Response.StatusCode,
             }
         };

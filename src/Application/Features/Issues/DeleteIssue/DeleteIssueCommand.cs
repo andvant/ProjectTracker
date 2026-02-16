@@ -6,20 +6,20 @@ public record DeleteIssueCommand(Guid ProjectId, Guid IssueId) : IRequest;
 
 internal class DeleteIssueCommandHandler : IRequestHandler<DeleteIssueCommand>
 {
-    private readonly List<Project> _projects;
+    private readonly IApplicationDbContext _context;
     private readonly ILogger<DeleteIssueCommandHandler> _logger;
 
     public DeleteIssueCommandHandler(
-        List<Project> projects,
+        IApplicationDbContext context,
         ILogger<DeleteIssueCommandHandler> logger)
     {
-        _projects = projects;
+        _context = context;
         _logger = logger;
     }
 
     public async Task Handle(DeleteIssueCommand command, CancellationToken ct)
     {
-        var project = _projects.FirstOrDefault(p => p.Id == command.ProjectId);
+        var project = _context.Projects.FirstOrDefault(p => p.Id == command.ProjectId);
 
         if (project is null)
         {
@@ -30,6 +30,8 @@ internal class DeleteIssueCommandHandler : IRequestHandler<DeleteIssueCommand>
             ?? throw new IssueNotFoundException(command.IssueId);
 
         project.RemoveIssue(issue);
+
+        await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
             "Deleted issue with id '{Id}', key '{Key}', title '{Name}'",

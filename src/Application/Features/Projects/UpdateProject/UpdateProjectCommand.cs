@@ -6,23 +6,25 @@ public record UpdateProjectCommand(Guid Id, string Name, string? Description) : 
 
 internal class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand>
 {
-    private readonly List<Project> _projects;
+    private readonly IApplicationDbContext _context;
     private readonly ILogger<UpdateProjectCommandHandler> _logger;
 
     public UpdateProjectCommandHandler(
-        List<Project> projects,
+        IApplicationDbContext context,
         ILogger<UpdateProjectCommandHandler> logger)
     {
-        _projects = projects;
+        _context = context;
         _logger = logger;
     }
 
     public async Task Handle(UpdateProjectCommand command, CancellationToken ct)
     {
-        var project = _projects.FirstOrDefault(p => p.Id == command.Id)
+        var project = _context.Projects.FirstOrDefault(p => p.Id == command.Id)
             ?? throw new ProjectNotFoundException(command.Id);
 
         project.UpdateDetails(command.Name, command.Description);
+
+        await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
             "Updated project {Id} with key {Key}, name {Name}",

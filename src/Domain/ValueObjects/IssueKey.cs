@@ -16,6 +16,19 @@ public record IssueKey
         Number = number;
     }
 
+    public static IssueKey Parse(string key)
+    {
+        try
+        {
+            var split = key.Split('-');
+            return new IssueKey(split[0], int.Parse(split[1]));
+        }
+        catch
+        {
+            throw new Exception($"Failed to parse the issue key: {key}");
+        }
+    }
+
     public static implicit operator string(IssueKey key) => key.ToString();
     public override string ToString() => $"{ProjectKey}-{Number}";
 }

@@ -6,23 +6,20 @@ public record RemoveWatcherCommand(Guid ProjectId, Guid IssueId, Guid WatcherId)
 
 internal class RemoveWatcherCommandHandler : IRequestHandler<RemoveWatcherCommand>
 {
-    private readonly List<Project> _projects;
-    private readonly List<User> _users;
+    private readonly IApplicationDbContext _context;
     private readonly ILogger<RemoveWatcherCommandHandler> _logger;
 
     public RemoveWatcherCommandHandler(
-        List<Project> projects,
-        List<User> users,
+        IApplicationDbContext context,
         ILogger<RemoveWatcherCommandHandler> logger)
     {
-        _projects = projects;
-        _users = users;
+        _context = context;
         _logger = logger;
     }
 
     public async Task Handle(RemoveWatcherCommand command, CancellationToken ct)
     {
-        var project = _projects.FirstOrDefault(p => p.Id == command.ProjectId);
+        var project = _context.Projects.FirstOrDefault(p => p.Id == command.ProjectId);
 
         if (project is null)
         {
@@ -32,10 +29,12 @@ internal class RemoveWatcherCommandHandler : IRequestHandler<RemoveWatcherComman
         var issue = project.Issues.FirstOrDefault(i => i.Id == command.IssueId)
             ?? throw new IssueNotFoundException(command.IssueId);
 
-        var watcher = _users.FirstOrDefault(u => u.Id == command.WatcherId)
+        var watcher = _context.Users.FirstOrDefault(u => u.Id == command.WatcherId)
             ?? throw new WatcherNotFoundException(command.WatcherId);
 
         issue.RemoveWatcher(watcher);
+
+        await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
             "Removed watcher '{WatcherId}' from issue '{IssueId}'",

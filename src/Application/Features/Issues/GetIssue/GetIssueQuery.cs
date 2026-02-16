@@ -4,20 +4,20 @@ public record GetIssueQuery(Guid ProjectId, Guid IssueId) : IRequest<IssueDto>;
 
 internal class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto>
 {
-    private readonly List<Project> _projects;
+    private readonly IApplicationDbContext _context;
     private readonly IssueDtoMapper _mapper;
 
     public GetIssueQueryHandler(
-        List<Project> projects,
+        IApplicationDbContext context,
         IssueDtoMapper mapper)
     {
-        _projects = projects;
+        _context = context;
         _mapper = mapper;
     }
 
     public async Task<IssueDto> Handle(GetIssueQuery query, CancellationToken ct)
     {
-        var project = _projects.FirstOrDefault(p => p.Id == query.ProjectId);
+        var project = _context.Projects.FirstOrDefault(p => p.Id == query.ProjectId);
 
         if (project is null)
         {

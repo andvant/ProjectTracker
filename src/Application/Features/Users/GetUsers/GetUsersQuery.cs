@@ -4,19 +4,19 @@ public record GetUsersQuery : IRequest<List<UsersDto>>;
 
 internal class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<UsersDto>>
 {
-    private readonly List<User> _users;
+    private readonly IApplicationDbContext _context;
     private readonly UsersDtoMapper _mapper;
 
     public GetUsersQueryHandler(
-        List<User> users,
+        IApplicationDbContext context,
         UsersDtoMapper mapper)
     {
-        _users = users;
+        _context = context;
         _mapper = mapper;
     }
 
     public async Task<List<UsersDto>> Handle(GetUsersQuery query, CancellationToken ct)
     {
-        return _users.Select(_mapper.ToDto).ToList();
+        return _context.Users.Select(_mapper.ToDto).ToList();
     }
 }

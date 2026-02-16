@@ -1,6 +1,5 @@
 using ProjectTracker.Application.Features.Issues.CreateIssue;
 using ProjectTracker.Application.Features.Issues.GetIssue;
-using ProjectTracker.Domain.Entities;
 using ProjectTracker.Domain.Enums;
 
 namespace ProjectTracker.Api.Endpoints.Issues;
@@ -23,7 +22,6 @@ internal static class CreateIssueEndpoint
         app.MapPost("/", async (
             Guid projectId,
             CreateIssueRequest request,
-            User user,
             ISender sender,
             CancellationToken ct) =>
         {
@@ -31,7 +29,6 @@ internal static class CreateIssueEndpoint
                 projectId,
                 request.Title,
                 request.Description,
-                user,
                 request.AssigneeId,
                 request.Type,
                 request.Priority,

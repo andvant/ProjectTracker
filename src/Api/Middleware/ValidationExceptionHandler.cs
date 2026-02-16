@@ -26,7 +26,7 @@ internal class ValidationExceptionHandler(IProblemDetailsService problemDetailsS
         {
             HttpContext = httpContext,
             Exception = exception,
-            ProblemDetails = new ProblemDetails()
+            ProblemDetails = new ValidationProblemDetails()
             {
                 Title = "One or more validation errors occurred.",
                 Status = httpContext.Response.StatusCode,

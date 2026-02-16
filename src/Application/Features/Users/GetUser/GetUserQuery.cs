@@ -4,20 +4,20 @@ public record GetUserQuery(Guid Id) : IRequest<UserDto>;
 
 internal class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDto>
 {
-    private readonly List<User> _users;
+    private readonly IApplicationDbContext _context;
     private readonly UserDtoMapper _mapper;
 
     public GetUserQueryHandler(
-        List<User> users,
+        IApplicationDbContext context,
         UserDtoMapper mapper)
     {
-        _users = users;
+        _context = context;
         _mapper = mapper;
     }
 
     public async Task<UserDto> Handle(GetUserQuery query, CancellationToken ct)
     {
-        var user = _users.FirstOrDefault(u => u.Id == query.Id)
+        var user = _context.Users.FirstOrDefault(u => u.Id == query.Id)
             ?? throw new UserNotFoundException(query.Id);
 
         return _mapper.ToDto(user);

@@ -6,3 +6,4 @@
 .vs/
 node_modules/
 txts/
+testdatabase.db*

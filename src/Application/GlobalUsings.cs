@@ -1,5 +1,6 @@
 global using FluentValidation;
 global using MediatR;
+global using ProjectTracker.Application.Common;
 global using ProjectTracker.Application.Exceptions;
 global using ProjectTracker.Domain.Entities;
 global using ProjectTracker.Domain.Enums;

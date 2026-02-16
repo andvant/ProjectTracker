@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ProjectTracker.Application.Common;
 using ProjectTracker.Domain.Entities;
 using ProjectTracker.Domain.Enums;
 
@@ -9,13 +11,18 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         var users = GetUsers();
-        var projects = GetProjects(users[0]);
+        //var projects = GetProjects(users[0]);
 
-        services.AddSingleton(users);
-        services.AddSingleton(projects);
+        //services.AddSingleton(users);
+        //services.AddSingleton(projects);
         services.AddSingleton(users[0]);
 
         services.AddSingleton(TimeProvider.System);
+
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlite("Data Source=testdatabase.db"));
+
+        services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         return services;
     }

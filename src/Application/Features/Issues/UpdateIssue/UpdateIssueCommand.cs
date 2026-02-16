@@ -15,26 +15,23 @@ public record UpdateIssueCommand(
 
 internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
 {
-    private readonly List<Project> _projects;
-    private readonly List<User> _users;
+    private readonly IApplicationDbContext _context;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<UpdateIssueCommandHandler> _logger;
 
     public UpdateIssueCommandHandler(
-        List<Project> projects,
-        List<User> users,
+        IApplicationDbContext context,
         TimeProvider timeProvider,
         ILogger<UpdateIssueCommandHandler> logger)
     {
-        _projects = projects;
-        _users = users;
+        _context = context;
         _timeProvider = timeProvider;
         _logger = logger;
     }
 
     public async Task Handle(UpdateIssueCommand command, CancellationToken ct)
     {
-        var project = _projects.FirstOrDefault(p => p.Id == command.ProjectId);
+        var project = _context.Projects.FirstOrDefault(p => p.Id == command.ProjectId);
 
         if (project is null)
         {
@@ -48,7 +45,7 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
 
         if (command.AssigneeId.HasValue)
         {
-            assignee = _users.FirstOrDefault(u => u.Id == command.AssigneeId.Value)
+            assignee = _context.Users.FirstOrDefault(u => u.Id == command.AssigneeId.Value)
                 ?? throw new AssigneeNotFoundException(command.AssigneeId.Value);
         }
 
@@ -61,6 +58,8 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
             command.DueDate,
             _timeProvider.GetUtcNow(),
             command.EstimationMinutes);
+
+        await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
             "Updated project {Id} with key {Key}, name {Name}",

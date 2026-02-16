@@ -1,5 +1,4 @@
 using ProjectTracker.Application.Features.Users.GetUser;
-using ProjectTracker.Domain.Entities;
 
 namespace UserTracker.Api.Endpoints.Users;
 
@@ -11,7 +10,6 @@ internal static class GetUserEndpoint
         app.MapGet("/{userId}", async (
             Guid userId,
             ISender sender,
-            List<User> users,
             CancellationToken ct) =>
         {
             var query = new GetUserQuery(userId);
