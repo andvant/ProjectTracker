@@ -4,9 +4,11 @@ using Riok.Mapperly.Abstractions;
 namespace ProjectTracker.Application.Features.Issues.GetIssue;
 
 [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
-internal partial class IssueDtoMapper
+internal static partial class IssueDtoMapper
 {
-    public partial IssueDto ToDto(Issue source);
+    public static partial IssueDto ToDto(this Issue source);
+
+    public static partial IQueryable<IssueDto> ProjectToDto(this IQueryable<Issue> query);
 
     private static UsersDto MapWatchers(IssueWatcher watcher) =>
         new(watcher.User.Id, watcher.User.Name);

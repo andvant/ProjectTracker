@@ -18,23 +18,6 @@ public static class DependencyInjection
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        services.AddMappers(assembly);
-
-        return services;
-    }
-
-    private static IServiceCollection AddMappers(this IServiceCollection services, Assembly assembly)
-    {
-        var mappers = assembly.GetTypes().Where(t =>
-            t.IsClass &&
-            !t.IsAbstract &&
-            t.Name.EndsWith("Mapper"));
-
-        foreach (var mapper in mappers)
-        {
-            services.AddSingleton(mapper);
-        }
-
         return services;
     }
 }

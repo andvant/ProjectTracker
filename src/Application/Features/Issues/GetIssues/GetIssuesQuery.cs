@@ -7,27 +7,25 @@ public record GetIssuesQuery(Guid ProjectId) : IRequest<List<IssuesDto>>;
 internal class GetIssuesQueryHandler : IRequestHandler<GetIssuesQuery, List<IssuesDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IssuesDtoMapper _mapper;
 
-    public GetIssuesQueryHandler(
-        IApplicationDbContext context,
-        IssuesDtoMapper mapper)
+    public GetIssuesQueryHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<List<IssuesDto>> Handle(GetIssuesQuery query, CancellationToken ct)
     {
-        var project = _context.Projects
-            .Include(p => p.Issues)
-            .FirstOrDefault(p => p.Id == query.ProjectId);
+        var projectExists = await _context.Projects.AnyAsync(p => p.Id == query.ProjectId);
 
-        if (project is null)
+        if (!projectExists)
         {
             throw new ProjectNotFoundException(query.ProjectId);
         }
 
-        return project.Issues.Select(_mapper.ToDto).ToList();
+        return await _context.Projects
+            .Where(p => p.Id == query.ProjectId)
+            .SelectMany(p => p.Issues)
+            .ProjectToDto()
+            .ToListAsync(ct);
     }
 }

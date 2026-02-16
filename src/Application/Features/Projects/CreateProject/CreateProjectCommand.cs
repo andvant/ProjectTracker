@@ -10,20 +10,17 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
 {
     private readonly IApplicationDbContext _context;
     private readonly User _currentUser;
-    private readonly ProjectDtoMapper _mapper;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<CreateProjectCommandHandler> _logger;
 
     public CreateProjectCommandHandler(
         IApplicationDbContext context,
         User currentUser,
-        ProjectDtoMapper mapper,
         TimeProvider timeProvider,
         ILogger<CreateProjectCommandHandler> logger)
     {
         _context = context;
         _currentUser = currentUser;
-        _mapper = mapper;
         _timeProvider = timeProvider;
         _logger = logger;
     }
@@ -44,7 +41,7 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
             "Created project {Id} with key {Key}, name {Name}",
             project.Id, project.Key, project.Name);
 
-        return _mapper.ToDto(project);
+        return project.ToDto();
     }
 
     private async Task ValidateUniqueProjectKey(string key)

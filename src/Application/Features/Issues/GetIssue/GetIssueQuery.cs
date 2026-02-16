@@ -5,14 +5,10 @@ public record GetIssueQuery(Guid ProjectId, Guid IssueId) : IRequest<IssueDto>;
 internal class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IssueDtoMapper _mapper;
 
-    public GetIssueQueryHandler(
-        IApplicationDbContext context,
-        IssueDtoMapper mapper)
+    public GetIssueQueryHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<IssueDto> Handle(GetIssueQuery query, CancellationToken ct)
@@ -27,6 +23,6 @@ internal class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto>
         var issue = project.Issues.FirstOrDefault(i => i.Id == query.IssueId)
             ?? throw new IssueNotFoundException(query.IssueId);
 
-        return _mapper.ToDto(issue);
+        return issue.ToDto();
     }
 }

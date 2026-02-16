@@ -19,20 +19,17 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
 {
     private readonly IApplicationDbContext _context;
     private readonly User _currentUser;
-    private readonly IssueDtoMapper _mapper;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<CreateIssueCommandHandler> _logger;
 
     public CreateIssueCommandHandler(
         IApplicationDbContext context,
         User currentUser,
-        IssueDtoMapper mapper,
         TimeProvider timeProvider,
         ILogger<CreateIssueCommandHandler> logger)
     {
         _context = context;
         _currentUser = currentUser;
-        _mapper = mapper;
         _timeProvider = timeProvider;
         _logger = logger;
     }
@@ -86,7 +83,7 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
             "Created issue with id '{Id}', key '{Key}', title '{Title}'",
             issue.Id, issue.Key, issue.Title);
 
-        return _mapper.ToDto(issue);
+        return issue.ToDto();
     }
 
     private async Task<User> GetCurrentUser()
