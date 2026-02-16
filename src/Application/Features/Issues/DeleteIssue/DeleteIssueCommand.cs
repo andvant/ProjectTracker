@@ -19,7 +19,7 @@ internal class DeleteIssueCommandHandler : IRequestHandler<DeleteIssueCommand>
 
     public async Task Handle(DeleteIssueCommand command, CancellationToken ct)
     {
-        var project = _context.Projects.FirstOrDefault(p => p.Id == command.ProjectId);
+        var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct);
 
         if (project is null)
         {

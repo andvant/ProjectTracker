@@ -19,10 +19,10 @@ internal class TransferOwnershipCommandHandler : IRequestHandler<TransferOwnersh
 
     public async Task Handle(TransferOwnershipCommand command, CancellationToken ct)
     {
-        var project = _context.Projects.FirstOrDefault(p => p.Id == command.ProjectId)
+        var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
             ?? throw new ProjectNotFoundException(command.ProjectId);
 
-        var newOwner = _context.Users.FirstOrDefault(u => u.Id == command.NewOwnerId)
+        var newOwner = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.NewOwnerId, ct)
             ?? throw new NewOwnerNotFoundException(command.NewOwnerId);
 
         project.TransferOwnership(newOwner);

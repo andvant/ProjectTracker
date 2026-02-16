@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace ProjectTracker.Application.Features.Users.GetUsers;
 
 public record GetUsersQuery : IRequest<List<UsersDto>>;

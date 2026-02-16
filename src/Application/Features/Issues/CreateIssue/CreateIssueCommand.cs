@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProjectTracker.Application.Features.Issues.GetIssue;
 
@@ -36,11 +35,11 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
 
     public async Task<IssueDto> Handle(CreateIssueCommand command, CancellationToken ct)
     {
-        var reporter = await GetCurrentUser();
+        var reporter = await GetCurrentUser(ct);
 
-        var project = _context.Projects
+        var project = await _context.Projects
             .Include(p => p.Members)
-            .FirstOrDefault(p => p.Id == command.ProjectId);
+            .FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct);
 
         if (project is null)
         {
@@ -52,17 +51,18 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
 
         if (command.AssigneeId.HasValue)
         {
-            assignee = _context.Users.FirstOrDefault(u => u.Id == command.AssigneeId.Value)
+            assignee = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.AssigneeId.Value, ct)
                 ?? throw new AssigneeNotFoundException(command.AssigneeId.Value);
         }
 
         if (command.ParentIssueId.HasValue)
         {
-            parentIssue = _context.Projects.SelectMany(p => p.Issues).FirstOrDefault(i => i.Id == command.ParentIssueId.Value)
+            parentIssue = await _context.Projects.SelectMany(p => p.Issues)
+                .FirstOrDefaultAsync(i => i.Id == command.ParentIssueId.Value, ct)
                 ?? throw new ParentIssueNotFoundException(command.ParentIssueId.Value);
         }
 
-        var nextIssueNumber = await GetNextIssueNumber();
+        var nextIssueNumber = await GetNextIssueNumber(ct);
 
         var issue = project.CreateIssue(
             nextIssueNumber,
@@ -86,9 +86,9 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
         return issue.ToDto();
     }
 
-    private async Task<User> GetCurrentUser()
+    private async Task<User> GetCurrentUser(CancellationToken ct)
     {
-        var currentUser = await _context.Users.FirstOrDefaultAsync();
+        var currentUser = await _context.Users.FirstOrDefaultAsync(ct);
 
         if (currentUser is null)
         {
@@ -99,10 +99,13 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
         return currentUser;
     }
 
-    private async Task<int> GetNextIssueNumber()
+    private async Task<int> GetNextIssueNumber(CancellationToken ct)
     {
         var issues = _context.Projects.SelectMany(p => p.Issues);
-        return (await issues.AnyAsync()) ? (await issues.MaxAsync(i => i.Number)) + 1 : 1;
+
+        return (await issues.AnyAsync(ct))
+            ? (await issues.MaxAsync(i => i.Number, ct)) + 1
+            : 1;
     }
 }
 

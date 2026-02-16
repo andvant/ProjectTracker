@@ -22,10 +22,10 @@ internal class AddMemberCommandHandler : IRequestHandler<AddMemberCommand>
 
     public async Task Handle(AddMemberCommand command, CancellationToken ct)
     {
-        var project = _context.Projects.FirstOrDefault(p => p.Id == command.ProjectId)
+        var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
             ?? throw new ProjectNotFoundException(command.ProjectId);
 
-        var member = _context.Users.FirstOrDefault(u => u.Id == command.MemberId)
+        var member = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.MemberId, ct)
             ?? throw new MemberNotFoundException(command.MemberId);
 
         project.AddMember(member, _timeProvider.GetUtcNow());

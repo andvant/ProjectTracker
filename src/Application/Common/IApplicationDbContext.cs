@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace ProjectTracker.Application.Common;
 
 public interface IApplicationDbContext

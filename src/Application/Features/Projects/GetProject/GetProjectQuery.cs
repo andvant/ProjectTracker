@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace ProjectTracker.Application.Features.Projects.GetProject;
 
 public record GetProjectQuery(Guid Id) : IRequest<ProjectDto>;

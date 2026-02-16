@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProjectTracker.Application.Features.Projects.GetProject;
 
@@ -27,9 +26,9 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
 
     public async Task<ProjectDto> Handle(CreateProjectCommand command, CancellationToken ct)
     {
-        await ValidateUniqueProjectKey(command.Key);
+        await ValidateUniqueProjectKey(command.Key, ct);
 
-        var owner = await GetCurrentUser();
+        var owner = await GetCurrentUser(ct);
 
         var project = new Project(command.Key, command.Name, owner, command.Description, _timeProvider.GetUtcNow());
 
@@ -44,17 +43,17 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
         return project.ToDto();
     }
 
-    private async Task ValidateUniqueProjectKey(string key)
+    private async Task ValidateUniqueProjectKey(string key, CancellationToken ct)
     {
-        if (await _context.Projects.AnyAsync(p => p.Key == key))
+        if (await _context.Projects.AnyAsync(p => p.Key == key, ct))
         {
             throw new ProjectKeyAlreadyExistsException(key);
         }
     }
 
-    private async Task<User> GetCurrentUser()
+    private async Task<User> GetCurrentUser(CancellationToken ct)
     {
-        var currentUser = await _context.Users.FirstOrDefaultAsync();
+        var currentUser = await _context.Users.FirstOrDefaultAsync(ct);
 
         if (currentUser is null)
         {
