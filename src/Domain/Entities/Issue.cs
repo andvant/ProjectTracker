@@ -21,7 +21,7 @@ public class Issue : AuditableEntity
     public Issue? ParentIssue { get; private set; }
 
     public ICollection<IssueWatcher> Watchers { get; private set; }
-    public ICollection<Issue> ChildIssues { get; private set; }
+    public IReadOnlyCollection<Issue> ChildIssues { get; private set; }
     public ICollection<Attachment> Attachments { get; private set; }
 
     // For EF Core

@@ -6,9 +6,9 @@ public class User : Entity
     public string Email { get; private set; }
     public DateTimeOffset RegistrationDate { get; private set; }
 
-    public ICollection<ProjectMember> Projects { get; private set; }
-    public ICollection<Issue> AssignedIssues { get; private set; }
-    public ICollection<IssueWatcher> WatchedIssues { get; private set; }
+    public IReadOnlyCollection<ProjectMember> Projects { get; private set; }
+    public IReadOnlyCollection<Issue> AssignedIssues { get; private set; }
+    public IReadOnlyCollection<IssueWatcher> WatchedIssues { get; private set; }
 
     // For EF Core
     protected User()
