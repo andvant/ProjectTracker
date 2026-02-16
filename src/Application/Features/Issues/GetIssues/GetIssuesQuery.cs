@@ -20,7 +20,7 @@ internal class GetIssuesQueryHandler : IRequestHandler<GetIssuesQuery, List<Issu
             throw new ProjectNotFoundException(query.ProjectId);
         }
 
-        return await _context.Projects
+        return await _context.Projects.AsNoTracking()
             .Where(p => p.Id == query.ProjectId)
             .SelectMany(p => p.Issues)
             .ProjectToDto()

@@ -13,7 +13,7 @@ internal class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserDto>
 
     public async Task<UserDto> Handle(GetUserQuery query, CancellationToken ct)
     {
-        return await _context.Users
+        return await _context.Users.AsNoTracking()
             .Where(u => u.Id == query.Id)
             .ProjectToDto()
             .FirstOrDefaultAsync(ct) ?? throw new UserNotFoundException(query.Id);

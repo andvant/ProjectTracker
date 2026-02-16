@@ -12,7 +12,7 @@ internal class GetProjectQueryHandler : IRequestHandler<GetProjectQuery, Project
     }
 
     public async Task<ProjectDto> Handle(GetProjectQuery query, CancellationToken ct) =>
-        await _context.Projects
+        await _context.Projects.AsNoTracking()
             .Where(p => p.Id == query.Id)
             .ProjectToDto()
             .FirstOrDefaultAsync(ct) ?? throw new ProjectNotFoundException(query.Id);

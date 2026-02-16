@@ -12,5 +12,5 @@ internal class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<UsersD
     }
 
     public Task<List<UsersDto>> Handle(GetUsersQuery query, CancellationToken ct) =>
-        _context.Users.ProjectToDto().ToListAsync(ct);
+        _context.Users.AsNoTracking().ProjectToDto().ToListAsync(ct);
 }
