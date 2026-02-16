@@ -1,6 +1,5 @@
 using AutoFixture.Xunit3;
 using ProjectTracker.Application.Features.Issues.CreateIssue;
-using ProjectTracker.Domain.Entities;
 using ProjectTracker.Domain.Enums;
 using Shouldly;
 using Xunit;

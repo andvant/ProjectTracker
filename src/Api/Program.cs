@@ -3,6 +3,7 @@ using ProjectTracker.Api.Endpoints;
 using ProjectTracker.Api.Middleware;
 using ProjectTracker.Application;
 using ProjectTracker.Infrastructure;
+using ProjectTracker.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 

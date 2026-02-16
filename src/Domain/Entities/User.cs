@@ -6,6 +6,10 @@ public class User : Entity
     public string Email { get; private set; }
     public DateTimeOffset RegistrationDate { get; private set; }
 
+    public ICollection<Project> Projects { get; private set; } = new List<Project>();
+    public ICollection<Issue> AssignedIssues { get; private set; } = new List<Issue>();
+    public ICollection<Issue> WatchedIssues { get; private set; } = new List<Issue>();
+
     protected User()
     {
         Name = null!;

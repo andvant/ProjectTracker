@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProjectTracker.Application.Common;
 using ProjectTracker.Domain.Entities;
 using ProjectTracker.Domain.Enums;
+using ProjectTracker.Infrastructure.Database;
 
 namespace ProjectTracker.Infrastructure;
 
@@ -19,8 +20,9 @@ public static class DependencyInjection
 
         services.AddSingleton(TimeProvider.System);
 
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlite("Data Source=testdatabase.db"));
+        services.AddDbContext<ApplicationDbContext>(options => options
+            .UseSqlite("Data Source=testdatabase.db")
+            .UseSnakeCaseNamingConvention());
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
