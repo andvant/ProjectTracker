@@ -13,16 +13,18 @@ internal class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto>
 
     public async Task<IssueDto> Handle(GetIssueQuery query, CancellationToken ct)
     {
-        var project = _context.Projects.FirstOrDefault(p => p.Id == query.ProjectId);
+        var projectExists = await _context.Projects.AnyAsync(p => p.Id == query.ProjectId, ct);
 
-        if (project is null)
+        if (!projectExists)
         {
             throw new ProjectNotFoundException(query.ProjectId);
         }
 
-        var issue = project.Issues.FirstOrDefault(i => i.Id == query.IssueId)
+        return await _context.Projects
+            .SelectMany(p => p.Issues)
+            .Where(i => i.Id == query.IssueId)
+            .ProjectToDto()
+            .FirstOrDefaultAsync(ct)
             ?? throw new IssueNotFoundException(query.IssueId);
-
-        return issue.ToDto();
     }
 }

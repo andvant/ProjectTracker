@@ -15,7 +15,7 @@ internal class GetIssuesQueryHandler : IRequestHandler<GetIssuesQuery, List<Issu
 
     public async Task<List<IssuesDto>> Handle(GetIssuesQuery query, CancellationToken ct)
     {
-        var projectExists = await _context.Projects.AnyAsync(p => p.Id == query.ProjectId);
+        var projectExists = await _context.Projects.AnyAsync(p => p.Id == query.ProjectId, ct);
 
         if (!projectExists)
         {

@@ -6,14 +6,18 @@ public class User : Entity
     public string Email { get; private set; }
     public DateTimeOffset RegistrationDate { get; private set; }
 
-    public ICollection<ProjectMember> Projects { get; private set; } = new List<ProjectMember>();
-    public ICollection<Issue> AssignedIssues { get; private set; } = new List<Issue>();
-    public ICollection<IssueWatcher> WatchedIssues { get; private set; } = new List<IssueWatcher>();
+    public ICollection<ProjectMember> Projects { get; private set; }
+    public ICollection<Issue> AssignedIssues { get; private set; }
+    public ICollection<IssueWatcher> WatchedIssues { get; private set; }
 
+    // For EF Core
     protected User()
     {
         Name = null!;
         Email = null!;
+        Projects = null!;
+        AssignedIssues = null!;
+        WatchedIssues = null!;
     }
 
     public User(string name, string email, DateTimeOffset registrationDate)
@@ -21,5 +25,9 @@ public class User : Entity
         Name = name;
         Email = email;
         RegistrationDate = registrationDate;
+
+        Projects = new List<ProjectMember>();
+        AssignedIssues = new List<Issue>();
+        WatchedIssues = new List<IssueWatcher>();
     }
 }

@@ -8,6 +8,7 @@ public class ProjectMember
     public User User { get; private set; }
     public DateTimeOffset MemberSince { get; private set; }
 
+    // For EF Core
     protected ProjectMember()
     {
         Project = null!;

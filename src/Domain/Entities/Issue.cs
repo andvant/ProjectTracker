@@ -20,16 +20,20 @@ public class Issue : AuditableEntity
     public Guid? ParentIssueId { get; private set; }
     public Issue? ParentIssue { get; private set; }
 
-    public ICollection<IssueWatcher> Watchers { get; private set; } = new List<IssueWatcher>();
-    public ICollection<Issue> ChildIssues { get; private set; } = new List<Issue>();
-    public ICollection<Attachment> Attachments { get; private set; } = new List<Attachment>();
+    public ICollection<IssueWatcher> Watchers { get; private set; }
+    public ICollection<Issue> ChildIssues { get; private set; }
+    public ICollection<Attachment> Attachments { get; private set; }
 
+    // For EF Core
     protected Issue()
     {
         Key = null!;
         Title = null!;
         Reporter = null!;
         Project = null!;
+        Watchers = null!;
+        ChildIssues = null!;
+        Attachments = null!;
     }
 
     internal Issue(
@@ -65,11 +69,14 @@ public class Issue : AuditableEntity
         EstimationMinutes = estimationMinutes;
         ParentIssue = parentIssue;
         ParentIssueId = parentIssue?.Id;
-        Watchers.Add(new IssueWatcher(this, reporter));
+
+        ChildIssues = new List<Issue>();
+        Attachments = new List<Attachment>();
+        Watchers = new List<IssueWatcher>() { new(this, reporter) };
 
         if (assignee is not null && reporter.Id != assignee.Id)
         {
-            Watchers.Add(new IssueWatcher(this, assignee));
+            Watchers.Add(new(this, assignee));
         }
     }
 
@@ -104,7 +111,7 @@ public class Issue : AuditableEntity
 
         if (!Watchers.Any(w => w.UserId == watcher.Id))
         {
-            Watchers.Add(new IssueWatcher(this, watcher));
+            Watchers.Add(new(this, watcher));
         }
     }
 

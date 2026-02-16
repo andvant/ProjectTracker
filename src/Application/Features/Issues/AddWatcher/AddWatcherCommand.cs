@@ -19,17 +19,21 @@ internal class AddWatcherCommandHandler : IRequestHandler<AddWatcherCommand>
 
     public async Task Handle(AddWatcherCommand command, CancellationToken ct)
     {
-        var project = _context.Projects.FirstOrDefault(p => p.Id == command.ProjectId);
+        var projectExists = await _context.Projects.AnyAsync(p => p.Id == command.ProjectId, ct);
 
-        if (project is null)
+        if (!projectExists)
         {
             throw new ProjectNotFoundException(command.ProjectId);
         }
 
-        var issue = project.Issues.FirstOrDefault(i => i.Id == command.IssueId)
+        var issue = await _context.Projects
+            .SelectMany(p => p.Issues)
+            .Include(i => i.Project).ThenInclude(p => p.Members)
+            .Include(i => i.Watchers)
+            .FirstOrDefaultAsync(i => i.Id == command.IssueId, ct)
             ?? throw new IssueNotFoundException(command.IssueId);
 
-        var watcher = _context.Users.FirstOrDefault(u => u.Id == command.WatcherId)
+        var watcher = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.WatcherId, ct)
             ?? throw new WatcherNotFoundException(command.WatcherId);
 
         issue.AddWatcher(watcher);

@@ -8,15 +8,19 @@ public class Project : AuditableEntity
     public Guid OwnerId { get; private set; }
     public User Owner { get; private set; }
 
-    public ICollection<ProjectMember> Members { get; private set; } = new List<ProjectMember>();
-    public ICollection<Issue> Issues { get; private set; } = new List<Issue>();
-    public ICollection<Attachment> Attachments { get; private set; } = new List<Attachment>();
+    public ICollection<ProjectMember> Members { get; private set; }
+    public ICollection<Issue> Issues { get; private set; }
+    public ICollection<Attachment> Attachments { get; private set; }
 
+    // For EF Core
     protected Project()
     {
         Key = null!;
         Name = null!;
         Owner = null!;
+        Members = null!;
+        Issues = null!;
+        Attachments = null!;
     }
 
     public Project(string key, string name, User owner, string? description, DateTimeOffset currentTime)
@@ -25,8 +29,11 @@ public class Project : AuditableEntity
         Name = name;
         Owner = owner;
         OwnerId = owner.Id;
-        Members.Add(new ProjectMember(this, owner, currentTime));
         Description = description;
+
+        Members = new List<ProjectMember> { new(this, owner, currentTime) };
+        Issues = new List<Issue>();
+        Attachments = new List<Attachment>();
     }
 
     public Issue CreateIssue(
@@ -76,7 +83,7 @@ public class Project : AuditableEntity
     {
         if (!Members.Any(m => m.UserId == member.Id))
         {
-            Members.Add(new ProjectMember(this, member, currentTime));
+            Members.Add(new(this, member, currentTime));
         }
     }
 
