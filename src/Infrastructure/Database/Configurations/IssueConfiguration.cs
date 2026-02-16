@@ -19,7 +19,7 @@ internal class IssueConfiguration : IEntityTypeConfiguration<Issue>
         builder.HasOne(i => i.Assignee).WithMany(i => i.AssignedIssues).HasForeignKey(i => i.AssigneeId);
         builder.HasOne(i => i.Reporter).WithMany().HasForeignKey(i => i.ReporterId);
         builder.HasOne(i => i.ParentIssue).WithMany(p => p.ChildIssues).HasForeignKey(i => i.ParentIssueId);
-        builder.HasMany(i => i.Watchers).WithMany(u => u.WatchedIssues);
+        builder.HasMany(i => i.Watchers).WithOne(w => w.Issue);
         builder.HasMany(i => i.Attachments).WithOne();
     }
 }

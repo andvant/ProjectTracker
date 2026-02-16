@@ -11,7 +11,7 @@ using ProjectTracker.Infrastructure.Database;
 namespace ProjectTracker.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260216054832_Initial")]
+    [Migration("20260216071300_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -19,25 +19,6 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
-
-            modelBuilder.Entity("IssueUser", b =>
-                {
-                    b.Property<Guid>("WatchedIssuesId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("watched_issues_id");
-
-                    b.Property<Guid>("WatchersId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("watchers_id");
-
-                    b.HasKey("WatchedIssuesId", "WatchersId")
-                        .HasName("pk_issue_user");
-
-                    b.HasIndex("WatchersId")
-                        .HasDatabaseName("ix_issue_user_watchers_id");
-
-                    b.ToTable("issue_user", (string)null);
-                });
 
             modelBuilder.Entity("ProjectTracker.Domain.Entities.Attachment", b =>
                 {
@@ -189,6 +170,25 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                     b.ToTable("issues", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectTracker.Domain.Entities.IssueWatcher", b =>
+                {
+                    b.Property<Guid>("IssueId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("issue_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("IssueId", "UserId")
+                        .HasName("pk_issue_watcher");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_issue_watcher_user_id");
+
+                    b.ToTable("issue_watcher", (string)null);
+                });
+
             modelBuilder.Entity("ProjectTracker.Domain.Entities.Project", b =>
                 {
                     b.Property<Guid>("Id")
@@ -242,6 +242,29 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                     b.ToTable("projects", (string)null);
                 });
 
+            modelBuilder.Entity("ProjectTracker.Domain.Entities.ProjectMember", b =>
+                {
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("project_id");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("user_id");
+
+                    b.Property<DateTimeOffset>("MemberSince")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("member_since");
+
+                    b.HasKey("ProjectId", "UserId")
+                        .HasName("pk_project_member");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_project_member_user_id");
+
+                    b.ToTable("project_member", (string)null);
+                });
+
             modelBuilder.Entity("ProjectTracker.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -266,42 +289,6 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                         .HasName("pk_users");
 
                     b.ToTable("users", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectUser", b =>
-                {
-                    b.Property<Guid>("MembersId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("members_id");
-
-                    b.Property<Guid>("ProjectsId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("projects_id");
-
-                    b.HasKey("MembersId", "ProjectsId")
-                        .HasName("pk_project_user");
-
-                    b.HasIndex("ProjectsId")
-                        .HasDatabaseName("ix_project_user_projects_id");
-
-                    b.ToTable("project_user", (string)null);
-                });
-
-            modelBuilder.Entity("IssueUser", b =>
-                {
-                    b.HasOne("ProjectTracker.Domain.Entities.Issue", null)
-                        .WithMany()
-                        .HasForeignKey("WatchedIssuesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_issue_user_issues_watched_issues_id");
-
-                    b.HasOne("ProjectTracker.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("WatchersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_issue_user_users_watchers_id");
                 });
 
             modelBuilder.Entity("ProjectTracker.Domain.Entities.Attachment", b =>
@@ -352,6 +339,27 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                     b.Navigation("Reporter");
                 });
 
+            modelBuilder.Entity("ProjectTracker.Domain.Entities.IssueWatcher", b =>
+                {
+                    b.HasOne("ProjectTracker.Domain.Entities.Issue", "Issue")
+                        .WithMany("Watchers")
+                        .HasForeignKey("IssueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_issue_watcher_issues_issue_id");
+
+                    b.HasOne("ProjectTracker.Domain.Entities.User", "User")
+                        .WithMany("WatchedIssues")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_issue_watcher_users_user_id");
+
+                    b.Navigation("Issue");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ProjectTracker.Domain.Entities.Project", b =>
                 {
                     b.HasOne("ProjectTracker.Domain.Entities.User", "Owner")
@@ -364,21 +372,25 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("ProjectUser", b =>
+            modelBuilder.Entity("ProjectTracker.Domain.Entities.ProjectMember", b =>
                 {
-                    b.HasOne("ProjectTracker.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("MembersId")
+                    b.HasOne("ProjectTracker.Domain.Entities.Project", "Project")
+                        .WithMany("Members")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_project_user_users_members_id");
+                        .HasConstraintName("fk_project_member_projects_project_id");
 
-                    b.HasOne("ProjectTracker.Domain.Entities.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
+                    b.HasOne("ProjectTracker.Domain.Entities.User", "User")
+                        .WithMany("Projects")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_project_user_projects_projects_id");
+                        .HasConstraintName("fk_project_member_users_user_id");
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProjectTracker.Domain.Entities.Issue", b =>
@@ -386,6 +398,8 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                     b.Navigation("Attachments");
 
                     b.Navigation("ChildIssues");
+
+                    b.Navigation("Watchers");
                 });
 
             modelBuilder.Entity("ProjectTracker.Domain.Entities.Project", b =>
@@ -393,11 +407,17 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                     b.Navigation("Attachments");
 
                     b.Navigation("Issues");
+
+                    b.Navigation("Members");
                 });
 
             modelBuilder.Entity("ProjectTracker.Domain.Entities.User", b =>
                 {
                     b.Navigation("AssignedIssues");
+
+                    b.Navigation("Projects");
+
+                    b.Navigation("WatchedIssues");
                 });
 #pragma warning restore 612, 618
         }

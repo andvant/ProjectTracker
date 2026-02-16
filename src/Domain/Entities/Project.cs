@@ -8,7 +8,7 @@ public class Project : AuditableEntity
     public Guid OwnerId { get; private set; }
     public User Owner { get; private set; }
 
-    public ICollection<User> Members { get; private set; } = new List<User>();
+    public ICollection<ProjectMember> Members { get; private set; } = new List<ProjectMember>();
     public ICollection<Issue> Issues { get; private set; } = new List<Issue>();
     public ICollection<Attachment> Attachments { get; private set; } = new List<Attachment>();
 
@@ -19,13 +19,13 @@ public class Project : AuditableEntity
         Owner = null!;
     }
 
-    public Project(string key, string name, User owner, string? description)
+    public Project(string key, string name, User owner, string? description, DateTimeOffset currentTime)
     {
         Key = key;
         Name = name;
         Owner = owner;
         OwnerId = owner.Id;
-        Members.Add(owner);
+        Members.Add(new ProjectMember(this, owner, currentTime));
         Description = description;
     }
 
@@ -72,19 +72,27 @@ public class Project : AuditableEntity
         Description = description;
     }
 
-    public void AddMember(User member)
+    public void AddMember(User member, DateTimeOffset currentTime)
     {
-        Members.AddIfNotPresent(member);
+        if (!Members.Any(m => m.UserId == member.Id))
+        {
+            Members.Add(new ProjectMember(this, member, currentTime));
+        }
     }
 
     public void RemoveMember(User member)
     {
-        Members.RemoveIfPresent(member);
+        var existing = Members.FirstOrDefault(m => m.UserId == member.Id);
+
+        if (existing is not null)
+        {
+            Members.Remove(existing);
+        }
     }
 
     public void TransferOwnership(User newOwner)
     {
-        if (!Members.Any(u => u.Id == newOwner.Id))
+        if (!IsMember(newOwner))
         {
             throw new NewOwnerNotMemberException(newOwner.Id);
         }
@@ -92,4 +100,7 @@ public class Project : AuditableEntity
         Owner = newOwner;
         OwnerId = newOwner.Id;
     }
+
+    public bool IsMember(User user) =>
+        Members.Any(u => u.UserId == user.Id);
 }

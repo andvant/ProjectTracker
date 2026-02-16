@@ -49,7 +49,7 @@ internal class GlobalExceptionHandler(
             Exception = exception,
             ProblemDetails = new ProblemDetails()
             {
-                Title = $"{exception.Message}; InnerException: {exception.InnerException?.Message}",
+                Title = exception.Message,
                 Detail = exception.ToString(), // TODO: remove in production env
                 Status = httpContext.Response.StatusCode,
             }

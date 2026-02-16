@@ -15,7 +15,7 @@ public class ProjectTests
     [AutoData]
     public void Create_issue_without_assignee(User owner)
     {
-        var project = new Project("TP", "Test Project", owner, "test desc");
+        var project = new Project("TP", "Test Project", owner, "test desc", _currentTime);
 
         var issue = project.CreateIssue(1, "test", "test desc", owner,
             null, null, null, null, null, _currentTime, null);
@@ -34,8 +34,8 @@ public class ProjectTests
     [AutoData]
     public void Create_issue_with_assignee(User owner, User memberAssignee)
     {
-        var project = new Project("TP", "Test Project", owner, "test desc");
-        project.Members.Add(memberAssignee);
+        var project = new Project("TP", "Test Project", owner, "test desc", _currentTime);
+        project.AddMember(memberAssignee, _currentTime);
 
         var issue = project.CreateIssue(1, "test", "test desc", owner, memberAssignee,
             null, null, null, null, _currentTime, null);
@@ -47,7 +47,7 @@ public class ProjectTests
     [AutoData]
     public void Throw_if_assignee_is_not_member(User owner, User nonMemberAssignee)
     {
-        var project = new Project("TP", "Test Project", owner, "test desc");
+        var project = new Project("TP", "Test Project", owner, "test desc", _currentTime);
 
         var exception = Should.Throw<AssigneeNotMemberException>(() =>
             project.CreateIssue(1, "test", "test desc", owner, nonMemberAssignee,

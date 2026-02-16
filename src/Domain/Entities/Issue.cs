@@ -20,7 +20,7 @@ public class Issue : AuditableEntity
     public Guid? ParentIssueId { get; private set; }
     public Issue? ParentIssue { get; private set; }
 
-    public ICollection<User> Watchers { get; private set; } = new List<User>();
+    public ICollection<IssueWatcher> Watchers { get; private set; } = new List<IssueWatcher>();
     public ICollection<Issue> ChildIssues { get; private set; } = new List<Issue>();
     public ICollection<Attachment> Attachments { get; private set; } = new List<Attachment>();
 
@@ -65,12 +65,11 @@ public class Issue : AuditableEntity
         EstimationMinutes = estimationMinutes;
         ParentIssue = parentIssue;
         ParentIssueId = parentIssue?.Id;
-        parentIssue?.ChildIssues.Add(this);
-        Watchers.Add(reporter);
+        Watchers.Add(new IssueWatcher(this, reporter));
 
-        if (reporter.Id != assignee?.Id)
+        if (assignee is not null && reporter.Id != assignee.Id)
         {
-            Watchers.AddIfNotNull(assignee);
+            Watchers.Add(new IssueWatcher(this, assignee));
         }
     }
 
@@ -98,17 +97,25 @@ public class Issue : AuditableEntity
 
     public void AddWatcher(User watcher)
     {
-        if (!Project.Members.Any(u => u.Id == watcher.Id))
+        if (!Project.IsMember(watcher))
         {
             throw new WatcherNotMemberException(watcher.Id);
         }
 
-        Watchers.AddIfNotPresent(watcher);
+        if (!Watchers.Any(w => w.UserId == watcher.Id))
+        {
+            Watchers.Add(new IssueWatcher(this, watcher));
+        }
     }
 
     public void RemoveWatcher(User watcher)
     {
-        Watchers.RemoveIfPresent(watcher);
+        var existing = Watchers.FirstOrDefault(w => w.UserId == watcher.Id);
+
+        if (existing is not null)
+        {
+            Watchers.Remove(existing);
+        }
     }
 
     private void ValidateDetails(
@@ -120,11 +127,11 @@ public class Issue : AuditableEntity
         int? estimationMinutes,
         Issue? parentIssue)
     {
-        if (assignee is not null && !project.Members.Any(u => u.Id == assignee.Id))
+        if (assignee is not null && !project.IsMember(assignee))
         {
             throw new AssigneeNotMemberException(assignee.Id);
         }
-        if (reporter is not null && !project.Members.Any(u => u.Id == reporter.Id))
+        if (reporter is not null && !project.IsMember(reporter))
         {
             throw new ReporterNotMemberException(reporter.Id);
         }
@@ -136,7 +143,7 @@ public class Issue : AuditableEntity
         {
             throw new NegativeEstimationException(estimationMinutes.Value);
         }
-        if (parentIssue != null)
+        if (parentIssue is not null)
         {
             ParentIssueWrongProjectException.ThrowIfMismatch(parentIssue.ProjectId, project.Id, parentIssue.Id);
             ParentIssueWrongTypeException.ThrowIfMismatch(parentIssue.Type, IssueType.Epic, parentIssue.Id);

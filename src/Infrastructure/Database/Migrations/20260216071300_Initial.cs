@@ -100,24 +100,25 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "project_user",
+                name: "project_member",
                 columns: table => new
                 {
-                    members_id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    projects_id = table.Column<Guid>(type: "TEXT", nullable: false)
+                    project_id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    user_id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    member_since = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_project_user", x => new { x.members_id, x.projects_id });
+                    table.PrimaryKey("pk_project_member", x => new { x.project_id, x.user_id });
                     table.ForeignKey(
-                        name: "fk_project_user_projects_projects_id",
-                        column: x => x.projects_id,
+                        name: "fk_project_member_projects_project_id",
+                        column: x => x.project_id,
                         principalTable: "projects",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_project_user_users_members_id",
-                        column: x => x.members_id,
+                        name: "fk_project_member_users_user_id",
+                        column: x => x.user_id,
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -153,24 +154,24 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "issue_user",
+                name: "issue_watcher",
                 columns: table => new
                 {
-                    watched_issues_id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    watchers_id = table.Column<Guid>(type: "TEXT", nullable: false)
+                    issue_id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    user_id = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_issue_user", x => new { x.watched_issues_id, x.watchers_id });
+                    table.PrimaryKey("pk_issue_watcher", x => new { x.issue_id, x.user_id });
                     table.ForeignKey(
-                        name: "fk_issue_user_issues_watched_issues_id",
-                        column: x => x.watched_issues_id,
+                        name: "fk_issue_watcher_issues_issue_id",
+                        column: x => x.issue_id,
                         principalTable: "issues",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_issue_user_users_watchers_id",
-                        column: x => x.watchers_id,
+                        name: "fk_issue_watcher_users_user_id",
+                        column: x => x.user_id,
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -187,9 +188,9 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                 column: "project_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_issue_user_watchers_id",
-                table: "issue_user",
-                column: "watchers_id");
+                name: "ix_issue_watcher_user_id",
+                table: "issue_watcher",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_issues_assignee_id",
@@ -218,9 +219,9 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                 column: "reporter_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_project_user_projects_id",
-                table: "project_user",
-                column: "projects_id");
+                name: "ix_project_member_user_id",
+                table: "project_member",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_projects_key",
@@ -241,10 +242,10 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
                 name: "attachments");
 
             migrationBuilder.DropTable(
-                name: "issue_user");
+                name: "issue_watcher");
 
             migrationBuilder.DropTable(
-                name: "project_user");
+                name: "project_member");
 
             migrationBuilder.DropTable(
                 name: "issues");

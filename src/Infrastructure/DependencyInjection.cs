@@ -33,8 +33,8 @@ public static class DependencyInjection
     {
         var projects = new List<Project>()
         {
-            new("P1", "Project One", user, "Description of Project One"),
-            new("P2", "Project Two", user, "Description of Project Two")
+            new("P1", "Project One", user, "Description of Project One", DateTimeOffset.UtcNow),
+            new("P2", "Project Two", user, "Description of Project Two", DateTimeOffset.UtcNow)
         };
 
         projects[0].CreateIssue(1, "Issue One", "Description of Issue One",

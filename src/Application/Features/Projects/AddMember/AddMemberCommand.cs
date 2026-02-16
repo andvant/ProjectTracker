@@ -7,13 +7,16 @@ public record AddMemberCommand(Guid ProjectId, Guid MemberId) : IRequest;
 internal class AddMemberCommandHandler : IRequestHandler<AddMemberCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly TimeProvider _timeProvider;
     private readonly ILogger<AddMemberCommandHandler> _logger;
 
     public AddMemberCommandHandler(
         IApplicationDbContext context,
+        TimeProvider timeProvider,
         ILogger<AddMemberCommandHandler> logger)
     {
         _context = context;
+        _timeProvider = timeProvider;
         _logger = logger;
     }
 
@@ -25,7 +28,7 @@ internal class AddMemberCommandHandler : IRequestHandler<AddMemberCommand>
         var member = _context.Users.FirstOrDefault(u => u.Id == command.MemberId)
             ?? throw new MemberNotFoundException(command.MemberId);
 
-        project.AddMember(member);
+        project.AddMember(member, _timeProvider.GetUtcNow());
 
         await _context.SaveChangesAsync(ct);
 

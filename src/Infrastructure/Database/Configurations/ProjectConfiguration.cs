@@ -18,7 +18,7 @@ internal class ProjectConfiguration : IEntityTypeConfiguration<Project>
 
         builder.HasOne(p => p.Owner).WithMany().HasForeignKey(p => p.OwnerId);
         builder.HasMany(p => p.Issues).WithOne(i => i.Project).HasForeignKey(i => i.ProjectId);
-        builder.HasMany(p => p.Members).WithMany(u => u.Projects);
+        builder.HasMany(p => p.Members).WithOne(m => m.Project).HasForeignKey(m => m.ProjectId);
         builder.HasMany(p => p.Attachments).WithOne();
     }
 }
