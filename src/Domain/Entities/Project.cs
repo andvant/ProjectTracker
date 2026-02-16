@@ -12,7 +12,7 @@ public class Project : AuditableEntity
     public ICollection<Issue> Issues { get; private set; }
     public ICollection<Attachment> Attachments { get; private set; }
 
-    // For EF Core
+    // for EF Core
     protected Project()
     {
         Key = null!;

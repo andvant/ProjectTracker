@@ -5,7 +5,7 @@ public class Attachment : AuditableEntity
     public string Name { get; private set; }
     public string StorageKey { get; private set; }
 
-    // For EF Core
+    // for EF Core
     protected Attachment()
     {
         Name = null!;

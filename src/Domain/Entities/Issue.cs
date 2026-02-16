@@ -24,7 +24,7 @@ public class Issue : AuditableEntity
     public IReadOnlyCollection<Issue> ChildIssues { get; private set; }
     public ICollection<Attachment> Attachments { get; private set; }
 
-    // For EF Core
+    // for EF Core
     protected Issue()
     {
         Key = null!;

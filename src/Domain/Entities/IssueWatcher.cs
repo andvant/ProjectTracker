@@ -7,7 +7,7 @@ public class IssueWatcher
     public Guid UserId { get; private set; }
     public User User { get; private set; }
 
-    // For EF Core
+    // for EF Core
     protected IssueWatcher()
     {
         Issue = null!;

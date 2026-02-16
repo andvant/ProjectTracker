@@ -10,7 +10,7 @@ public class User : Entity
     public IReadOnlyCollection<Issue> AssignedIssues { get; private set; }
     public IReadOnlyCollection<IssueWatcher> WatchedIssues { get; private set; }
 
-    // For EF Core
+    // for EF Core
     protected User()
     {
         Name = null!;

@@ -8,7 +8,7 @@ public class ProjectMember
     public User User { get; private set; }
     public DateTimeOffset MemberSince { get; private set; }
 
-    // For EF Core
+    // for EF Core
     protected ProjectMember()
     {
         Project = null!;
@@ -18,7 +18,9 @@ public class ProjectMember
     public ProjectMember(Project project, User member, DateTimeOffset memberSince)
     {
         Project = project;
+        ProjectId = project.Id;
         User = member;
+        UserId = member.Id;
         MemberSince = memberSince;
     }
 }
