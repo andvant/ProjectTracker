@@ -81,7 +81,7 @@ public class Project : AuditableEntity
 
     public void AddMember(User member, DateTimeOffset currentTime)
     {
-        if (!Members.Any(m => m.UserId == member.Id))
+        if (!IsMember(member))
         {
             Members.Add(new(this, member, currentTime));
         }

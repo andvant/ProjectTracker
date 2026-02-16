@@ -27,7 +27,9 @@ internal class RemoveWatcherCommandHandler : IRequestHandler<RemoveWatcherComman
         }
 
         var issue = await _context.Projects
+            .Where(p => p.Id == command.ProjectId)
             .SelectMany(p => p.Issues)
+            .Include(i => i.Watchers)
             .FirstOrDefaultAsync(i => i.Id == command.IssueId, ct)
             ?? throw new IssueNotFoundException(command.IssueId);
 

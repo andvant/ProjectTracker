@@ -19,12 +19,10 @@ internal class DeleteIssueCommandHandler : IRequestHandler<DeleteIssueCommand>
 
     public async Task Handle(DeleteIssueCommand command, CancellationToken ct)
     {
-        var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct);
-
-        if (project is null)
-        {
-            throw new ProjectNotFoundException(command.ProjectId);
-        }
+        var project = await _context.Projects
+            .Include(p => p.Issues)
+            .FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
+            ?? throw new ProjectNotFoundException(command.ProjectId);
 
         var issue = project.Issues.FirstOrDefault(i => i.Id == command.IssueId)
             ?? throw new IssueNotFoundException(command.IssueId);

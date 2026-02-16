@@ -39,12 +39,8 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
 
         var project = await _context.Projects
             .Include(p => p.Members)
-            .FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct);
-
-        if (project is null)
-        {
-            throw new ProjectNotFoundException(command.ProjectId);
-        }
+            .FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
+            ?? throw new ProjectNotFoundException(command.ProjectId);
 
         User? assignee = null;
         Issue? parentIssue = null;
@@ -57,7 +53,8 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
 
         if (command.ParentIssueId.HasValue)
         {
-            parentIssue = await _context.Projects.SelectMany(p => p.Issues)
+            parentIssue = await _context.Projects
+                .SelectMany(p => p.Issues)
                 .FirstOrDefaultAsync(i => i.Id == command.ParentIssueId.Value, ct)
                 ?? throw new ParentIssueNotFoundException(command.ParentIssueId.Value);
         }

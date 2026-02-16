@@ -21,6 +21,7 @@ internal class GetIssueQueryHandler : IRequestHandler<GetIssueQuery, IssueDto>
         }
 
         return await _context.Projects
+            .Where(p => p.Id == query.ProjectId)
             .SelectMany(p => p.Issues)
             .Where(i => i.Id == query.IssueId)
             .ProjectToDto()

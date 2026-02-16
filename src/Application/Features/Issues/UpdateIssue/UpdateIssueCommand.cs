@@ -31,14 +31,18 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
 
     public async Task Handle(UpdateIssueCommand command, CancellationToken ct)
     {
-        var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct);
+        var projectExists = await _context.Projects.AnyAsync(p => p.Id == command.ProjectId, ct);
 
-        if (project is null)
+        if (!projectExists)
         {
             throw new ProjectNotFoundException(command.ProjectId);
         }
 
-        var issue = project.Issues.FirstOrDefault(i => i.Id == command.IssueId)
+        var issue = await _context.Projects
+            .Where(p => p.Id == command.ProjectId)
+            .SelectMany(p => p.Issues)
+            .Include(i => i.Project).ThenInclude(p => p.Members)
+            .FirstOrDefaultAsync(i => i.Id == command.IssueId, ct)
             ?? throw new IssueNotFoundException(command.IssueId);
 
         User? assignee = null;
@@ -62,8 +66,8 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
         await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
-            "Updated project {Id} with key {Key}, name {Name}",
-            project.Id, project.Key, project.Name);
+            "Updated issue '{Id}' with key '{Key}', title '{Name}'",
+            issue.Id, issue.Key, issue.Title);
     }
 }
 
