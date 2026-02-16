@@ -19,7 +19,10 @@ internal class RemoveMemberCommandHandler : IRequestHandler<RemoveMemberCommand>
 
     public async Task Handle(RemoveMemberCommand command, CancellationToken ct)
     {
-        var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
+        var project = await _context.Projects
+            .Include(p => p.Members)
+            .Include(p => p.Issues).ThenInclude(i => i.Watchers)
+            .FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
             ?? throw new ProjectNotFoundException(command.ProjectId);
 
         var member = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.MemberId, ct)

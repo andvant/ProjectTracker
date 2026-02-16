@@ -125,6 +125,15 @@ public class Issue : AuditableEntity
         }
     }
 
+    internal void RemoveAssignee(User assignee)
+    {
+        if (AssigneeId == assignee.Id)
+        {
+            Assignee = null;
+            AssigneeId = null;
+        }
+    }
+
     private void ValidateDetails(
         Project project,
         User? reporter,

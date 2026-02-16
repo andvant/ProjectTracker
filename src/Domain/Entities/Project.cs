@@ -63,6 +63,7 @@ public class Project : AuditableEntity
             currentTime,
             estimationMinutes);
 
+        Issues ??= new List<Issue>();
         Issues.Add(issue);
 
         return issue;
@@ -89,10 +90,21 @@ public class Project : AuditableEntity
 
     public void RemoveMember(User member)
     {
+        if (OwnerId == member.Id)
+        {
+            throw new CantRemoveProjectOwnerException(member.Id);
+        }
+
         var existing = Members.FirstOrDefault(m => m.UserId == member.Id);
 
         if (existing is not null)
         {
+            foreach (var issue in Issues)
+            {
+                issue.RemoveAssignee(member);
+                issue.RemoveWatcher(member);
+            }
+
             Members.Remove(existing);
         }
     }
