@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture.Xunit3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="xunit.v3" />
   </ItemGroup>

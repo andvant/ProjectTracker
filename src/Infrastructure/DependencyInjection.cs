@@ -19,7 +19,7 @@ public static class DependencyInjection
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseSqlite(configuration.GetConnectionString("ProjectTrackerDb"));
+            options.UseNpgsql(configuration.GetConnectionString("ProjectTrackerDb"));
             options.EnableSensitiveDataLogging(isDevelopment);
             options.UseSnakeCaseNamingConvention();
 

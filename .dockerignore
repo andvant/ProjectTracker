@@ -6,4 +6,3 @@ txts/
 **/[Oo]bj/
 **/node_modules/
 **/Dockerfile
-**/testdatabase.db*
