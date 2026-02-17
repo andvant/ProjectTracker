@@ -104,5 +104,7 @@ public class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
         RuleFor(c => c.DueDate).GreaterThanOrEqualTo(timeProvider.GetUtcNow()).When(c => c.DueDate.HasValue)
             .WithMessage("Due date must be in the future.");
         RuleFor(c => c.EstimationMinutes).GreaterThanOrEqualTo(0).When(c => c.EstimationMinutes.HasValue);
+        RuleFor(c => c.ParentIssueId).Null().When(c => c.Type == IssueType.Epic)
+            .WithMessage($"Issue of type {IssueType.Epic} cannot have a parent issue.");
     }
 }

@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using ProjectTracker.Application.Common;
 
 namespace ProjectTracker.Api.Identity;

@@ -21,12 +21,11 @@ public class CreateIssueCommandTests
     //{
     //    var project = new Project("TP", "Test Project", user, "test desc");
 
-    //    project.Members.Add(user);
+    //    project.AddMember(user);
 
     //    List<Project> projects = [project];
     //    List<User> users = [user];
 
-    //    var mapper = new IssueDtoMapper();
     //    var logger = Substitute.For<ILogger<CreateIssueCommandHandler>>();
 
     //    var command = new CreateIssueCommand(project.Id, "test issue", "test desc", user, user.Id, null, null, null, null, null);

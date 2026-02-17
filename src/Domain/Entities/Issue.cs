@@ -50,7 +50,7 @@ public class Issue : AuditableEntity
         DateTimeOffset currentTime,
         int? estimationMinutes)
     {
-        ValidateDetails(project, reporter, assignee, dueDate, currentTime, estimationMinutes, parentIssue);
+        ValidateDetails(project, reporter, assignee, dueDate, currentTime, estimationMinutes, type, parentIssue);
 
         Key = new IssueKey(project.Key, number);
         Number = number;
@@ -90,7 +90,7 @@ public class Issue : AuditableEntity
         DateTimeOffset currentTime,
         int? estimationMinutes)
     {
-        ValidateDetails(Project, null, assignee, dueDate, currentTime, estimationMinutes, null);
+        ValidateDetails(Project, null, assignee, dueDate, currentTime, estimationMinutes, null, null);
 
         Title = title;
         Description = description;
@@ -141,6 +141,7 @@ public class Issue : AuditableEntity
         DateTimeOffset? dueDate,
         DateTimeOffset currentTime,
         int? estimationMinutes,
+        IssueType? type,
         Issue? parentIssue)
     {
         if (assignee is not null && !project.IsMember(assignee))
@@ -163,6 +164,11 @@ public class Issue : AuditableEntity
         {
             ParentIssueWrongProjectException.ThrowIfMismatch(parentIssue.ProjectId, project.Id, parentIssue.Id);
             ParentIssueWrongTypeException.ThrowIfMismatch(parentIssue.Type, IssueType.Epic, parentIssue.Id);
+
+            if (type.HasValue && type.Value == IssueType.Epic)
+            {
+                throw new ChildIssueWrongTypeException();
+            }
         }
     }
 }

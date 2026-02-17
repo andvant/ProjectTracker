@@ -15,7 +15,7 @@ internal class GlobalExceptionHandler(
     {
         switch (exception)
         {
-            case // resource from URL not found
+            case // problem with URL
                 ProjectNotFoundException or
                 IssueNotFoundException or
                 UserNotFoundException or
@@ -24,12 +24,15 @@ internal class GlobalExceptionHandler(
                 NewOwnerNotFoundException:
                 httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                 break;
-            case // resource from body not found
+            case // problem with body
                 AssigneeNotFoundException or
-                ParentIssueNotFoundException:
+                ParentIssueNotFoundException or
+                ParentIssueWrongProjectException or
+                ParentIssueWrongTypeException or
+                ChildIssueWrongTypeException:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 break;
-            case
+            case // violated constraints/invariants
                 ProjectKeyAlreadyExistsException or
                 AssigneeNotMemberException or
                 CantRemoveProjectOwnerException:
