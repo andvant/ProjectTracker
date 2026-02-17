@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Text.Json.Serialization;
+using ProjectTracker.Api.Identity;
 using ProjectTracker.Api.Middleware;
+using ProjectTracker.Application.Common;
 
 namespace ProjectTracker.Api;
 
@@ -24,6 +26,9 @@ public static class DependencyInjection
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
         services.AddOpenApiServices();
+
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUser, CurrentUser>();
 
         return services;
     }

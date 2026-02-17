@@ -8,13 +8,13 @@ public record CreateProjectCommand(string Key, string Name, string? Description)
 internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ProjectDto>
 {
     private readonly IApplicationDbContext _context;
-    private readonly User _currentUser;
+    private readonly ICurrentUser _currentUser;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<CreateProjectCommandHandler> _logger;
 
     public CreateProjectCommandHandler(
         IApplicationDbContext context,
-        User currentUser,
+        ICurrentUser currentUser,
         TimeProvider timeProvider,
         ILogger<CreateProjectCommandHandler> logger)
     {
@@ -28,7 +28,8 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
     {
         await ValidateUniqueProjectKey(command.Key, ct);
 
-        var owner = await GetCurrentUser(ct);
+        var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == _currentUser.UserId, ct)
+            ?? throw new Exception($"Current user with id '{_currentUser.UserId}' not found in the database");
 
         var project = new Project(command.Key, command.Name, owner, command.Description, _timeProvider.GetUtcNow());
 
@@ -49,19 +50,6 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
         {
             throw new ProjectKeyAlreadyExistsException(key);
         }
-    }
-
-    private async Task<User> GetCurrentUser(CancellationToken ct)
-    {
-        var currentUser = await _context.Users.FirstOrDefaultAsync(ct);
-
-        if (currentUser is null)
-        {
-            _context.Users.Add(_currentUser);
-            currentUser = _currentUser;
-        }
-
-        return currentUser;
     }
 }
 

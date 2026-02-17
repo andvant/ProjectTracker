@@ -17,13 +17,13 @@ public record CreateIssueCommand(
 internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, IssueDto>
 {
     private readonly IApplicationDbContext _context;
-    private readonly User _currentUser;
+    private readonly ICurrentUser _currentUser;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<CreateIssueCommandHandler> _logger;
 
     public CreateIssueCommandHandler(
         IApplicationDbContext context,
-        User currentUser,
+        ICurrentUser currentUser,
         TimeProvider timeProvider,
         ILogger<CreateIssueCommandHandler> logger)
     {
@@ -35,7 +35,8 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
 
     public async Task<IssueDto> Handle(CreateIssueCommand command, CancellationToken ct)
     {
-        var reporter = await GetCurrentUser(ct);
+        var reporter = await _context.Users.FirstOrDefaultAsync(u => u.Id == _currentUser.UserId, ct)
+            ?? throw new Exception($"Current user with id '{_currentUser.UserId}' not found in the database");
 
         var project = await _context.Projects
             .Include(p => p.Members)
@@ -81,19 +82,6 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
             issue.Id, issue.Key, issue.Title);
 
         return issue.ToDto();
-    }
-
-    private async Task<User> GetCurrentUser(CancellationToken ct)
-    {
-        var currentUser = await _context.Users.FirstOrDefaultAsync(ct);
-
-        if (currentUser is null)
-        {
-            _context.Users.Add(_currentUser);
-            currentUser = _currentUser;
-        }
-
-        return currentUser;
     }
 
     private async Task<int> GetNextIssueNumber(CancellationToken ct)

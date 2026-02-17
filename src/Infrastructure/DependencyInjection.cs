@@ -11,12 +11,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
-        var users = GetUsers();
+        //var users = GetUsers();
         //var projects = GetProjects(users[0]);
 
         //services.AddSingleton(users);
         //services.AddSingleton(projects);
-        services.AddSingleton(users[0]);
+        //services.AddSingleton(users[0]);
 
         services.AddSingleton(TimeProvider.System);
 
