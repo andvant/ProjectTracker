@@ -9,7 +9,7 @@ using ProjectTracker.Infrastructure.Database;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment.IsDevelopment());
 builder.Services.AddApiServices();
 
 var app = builder.Build();

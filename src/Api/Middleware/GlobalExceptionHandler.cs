@@ -8,6 +8,7 @@ namespace ProjectTracker.Api.Middleware;
 
 internal class GlobalExceptionHandler(
     IProblemDetailsService problemDetailsService,
+    IHostEnvironment environment,
     ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken ct)
@@ -51,7 +52,7 @@ internal class GlobalExceptionHandler(
             ProblemDetails = new ProblemDetails()
             {
                 Title = exception.Message,
-                Detail = exception.ToString(), // TODO: remove in production env
+                Detail = environment.IsDevelopment() ? exception.ToString() : null,
                 Status = httpContext.Response.StatusCode,
             }
         };

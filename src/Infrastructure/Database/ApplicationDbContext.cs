@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ProjectTracker.Application.Common;
 using ProjectTracker.Domain.Common;
 using ProjectTracker.Domain.Entities;
@@ -30,12 +31,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-        optionsBuilder.EnableSensitiveDataLogging(); // TODO: remove in production env
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken ct = default)

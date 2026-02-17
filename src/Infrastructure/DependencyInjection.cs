@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectTracker.Application.Common;
 using ProjectTracker.Domain.Entities;
@@ -9,19 +10,16 @@ namespace ProjectTracker.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureServices(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        bool isDevelopment)
     {
-        //var users = GetUsers();
-        //var projects = GetProjects(users[0]);
-
-        //services.AddSingleton(users);
-        //services.AddSingleton(projects);
-        //services.AddSingleton(users[0]);
-
         services.AddSingleton(TimeProvider.System);
 
         services.AddDbContext<ApplicationDbContext>(options => options
-            .UseSqlite("Data Source=testdatabase.db")
+            .UseSqlite(configuration.GetConnectionString("ProjectTrackerDb"))
+            .EnableSensitiveDataLogging(isDevelopment)
             .UseSnakeCaseNamingConvention());
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());

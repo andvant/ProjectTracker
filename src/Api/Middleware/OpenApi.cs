@@ -15,10 +15,13 @@ internal static class OpenApi
 
     public static IApplicationBuilder UseOpenApi(this WebApplication app)
     {
-        app.MapOpenApi();
-        app.MapScalarApiReference();
-        app.UseSwagger();
-        app.UseSwaggerUI();
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapOpenApi();
+            app.MapScalarApiReference();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
         return app;
     }
