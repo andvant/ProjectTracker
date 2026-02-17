@@ -4,7 +4,6 @@ using ProjectTracker.Api.Endpoints;
 using ProjectTracker.Api.Middleware;
 using ProjectTracker.Application;
 using ProjectTracker.Infrastructure;
-using ProjectTracker.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,15 +16,7 @@ var app = builder.Build();
 app.UseExceptionHandler();
 app.UseOpenApi();
 
-Guid defaultUserId;
-
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    //context.Database.EnsureDeleted();
-    context.Database.EnsureCreated();
-    defaultUserId = context.Users.OrderBy(u => u.Id).First().Id;
-}
+var defaultUserId = app.Services.ApplyMigrations();
 
 app.Use(async (context, next) =>
 {
