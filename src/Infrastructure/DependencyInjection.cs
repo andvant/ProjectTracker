@@ -17,10 +17,12 @@ public static class DependencyInjection
     {
         services.AddSingleton(TimeProvider.System);
 
-        services.AddDbContext<ApplicationDbContext>(options => options
-            .UseSqlite(configuration.GetConnectionString("ProjectTrackerDb"))
-            .EnableSensitiveDataLogging(isDevelopment)
-            .UseSnakeCaseNamingConvention());
+        services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseSqlite(configuration.GetConnectionString("ProjectTrackerDb"));
+            options.EnableSensitiveDataLogging(isDevelopment);
+            options.UseSnakeCaseNamingConvention();
+        });
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
