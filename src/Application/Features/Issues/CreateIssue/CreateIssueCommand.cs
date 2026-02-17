@@ -55,9 +55,10 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
         if (command.ParentIssueId.HasValue)
         {
             parentIssue = await _context.Projects
+                .Where(p => p.Id == command.ProjectId)
                 .SelectMany(p => p.Issues)
                 .FirstOrDefaultAsync(i => i.Id == command.ParentIssueId.Value, ct)
-                ?? throw new ParentIssueNotFoundException(command.ParentIssueId.Value);
+                ?? throw new ParentIssueNotFoundException(command.ProjectId, command.ParentIssueId.Value);
         }
 
         var nextIssueNumber = await GetNextIssueNumber(ct);
