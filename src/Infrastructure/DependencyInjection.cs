@@ -22,6 +22,19 @@ public static class DependencyInjection
             options.UseSqlite(configuration.GetConnectionString("ProjectTrackerDb"));
             options.EnableSensitiveDataLogging(isDevelopment);
             options.UseSnakeCaseNamingConvention();
+
+            options.UseSeeding((context, _) =>
+            {
+                var user = GetUsers()[0];
+
+                var existing = context.Set<User>().Find(user.Id);
+
+                if (existing == null)
+                {
+                    context.Set<User>().Add(user);
+                    context.SaveChanges();
+                }
+            });
         });
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());

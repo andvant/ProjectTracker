@@ -1,0 +1,9 @@
+.vs/
+txts/
+.git/
+.gitignore/
+**/[Bb]in/
+**/[Oo]bj/
+**/node_modules/
+**/Dockerfile
+**/testdatabase.db*
