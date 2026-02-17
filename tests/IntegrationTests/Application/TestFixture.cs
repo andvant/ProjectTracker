@@ -26,7 +26,7 @@ public class TestFixture : IAsyncDisposable
         services.AddApplicationServices();
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(_connection));
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
-        services.AddSingleton(TimeProvider.System);
+        services.AddSingleton<TimeProvider, FakeTimeProvider>();
         services.AddScoped<ICurrentUser, FakeCurrentUser>();
         services.AddScoped(typeof(ILogger<>), typeof(NullLogger<>));
 
@@ -42,6 +42,12 @@ public class TestFixture : IAsyncDisposable
         await _provider.DisposeAsync();
         await _connection.DisposeAsync();
     }
+}
+
+public class FakeTimeProvider : TimeProvider
+{
+    public override DateTimeOffset GetUtcNow() => FakeTime;
+    public DateTimeOffset FakeTime { get; set; }
 }
 
 public class FakeCurrentUser : ICurrentUser

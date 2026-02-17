@@ -6,6 +6,7 @@ using ProjectTracker.Application.Common;
 using ProjectTracker.Application.Exceptions;
 using ProjectTracker.Application.Features.Issues.CreateIssue;
 using ProjectTracker.Domain.Entities;
+using ProjectTracker.Domain.Enums;
 using ProjectTracker.Infrastructure.Database;
 using Shouldly;
 using Xunit;
@@ -30,11 +31,12 @@ public class CreateIssueCommandTests : IClassFixture<TestFixture>
 
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>() as FakeCurrentUser;
+        var timeProvider = scope.ServiceProvider.GetRequiredService<TimeProvider>() as FakeTimeProvider;
+        currentUser!.UserId = user.Id;
+        timeProvider!.FakeTime = DateTimeOffset.UtcNow;
 
         var project = new Project("TP1", "Test Project 1", user, "test desc", DateTimeOffset.UtcNow);
-
-        var currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>() as FakeCurrentUser;
-        currentUser!.UserId = user.Id;
 
         project.AddMember(user, DateTimeOffset.UtcNow);
 
@@ -50,13 +52,22 @@ public class CreateIssueCommandTests : IClassFixture<TestFixture>
 
         // Assert
         result.Title.ShouldBe("test issue");
+        result.Status.ShouldBe(IssueStatus.Open);
+        result.AssigneeId.ShouldBe(user.Id);
+        result.CreatedOn.ShouldBe(timeProvider.FakeTime);
+        result.UpdatedOn.ShouldBe(timeProvider.FakeTime);
+        result.CreatedBy.ShouldBe(user.Id);
+        result.UpdatedBy.ShouldBe(user.Id);
 
         var savedProject = await context.Projects
             .Include(p => p.Issues)
             .ThenInclude(i => i.Assignee)
             .SingleAsync(p => p.Id == project.Id, TestContext.Current.CancellationToken);
 
-        savedProject.Issues.Single().Assignee.ShouldBe(user);
+        var issue = savedProject.Issues.Single();
+        issue.AssigneeId.ShouldBe(user.Id);
+        issue.ReporterId.ShouldBe(user.Id);
+        issue.Key.ProjectKey.ShouldBe(savedProject.Key);
     }
 
     [Theory]
