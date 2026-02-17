@@ -24,7 +24,7 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     //context.Database.EnsureDeleted();
     context.Database.EnsureCreated();
-    defaultUserId = context.Users.First().Id;
+    defaultUserId = context.Users.OrderBy(u => u.Id).First().Id;
 }
 
 app.Use(async (context, next) =>

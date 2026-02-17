@@ -7,7 +7,7 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{json,xml,csproj,slnx,props}]
+[*.{json,xml,csproj,slnx,props,yaml,yml}]
 indent_size = 2
 
 [*.cs]

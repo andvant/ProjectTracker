@@ -25,12 +25,11 @@ public static class DependencyInjection
 
             options.UseSeeding((context, _) =>
             {
-                var user = GetUsers()[0];
-
-                var existing = context.Set<User>().Find(user.Id);
+                var existing = context.Set<User>().OrderBy(u => u.Id).FirstOrDefault();
 
                 if (existing == null)
                 {
+                    var user = GetUsers()[0];
                     context.Set<User>().Add(user);
                     context.SaveChanges();
                 }

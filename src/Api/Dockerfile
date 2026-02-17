@@ -13,8 +13,6 @@ COPY . .
 
 WORKDIR src/Api
 
-ENV ASPNETCORE_ENVIRONMENT=Development
-ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
 
 CMD ["dotnet", "watch", "run", "--no-launch-profile"]
