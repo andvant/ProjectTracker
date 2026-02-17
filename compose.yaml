@@ -8,3 +8,26 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
+      ConnectionStrings__ProjectTrackerDb: >
+        Host=postgres;
+        Port=5432;
+        Database=project_tracker_db;
+        Username=postgres;
+        Password=postgres;
+        Trust Server Certificate=true
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:18
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
