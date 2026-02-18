@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.StaticFiles;
 using ProjectTracker.Api.Identity;
 using ProjectTracker.Api.Middleware;
 using ProjectTracker.Application.Interfaces;
@@ -29,6 +30,8 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, CurrentUser>();
+
+        services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
 
         return services;
     }

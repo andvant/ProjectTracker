@@ -15,6 +15,7 @@ services:
         Username=postgres;
         Password=postgres;
         Trust Server Certificate=true
+      S3StorageOptions__Endpoint: http://rustfs:9000
     depends_on:
       - postgres
 

@@ -7,7 +7,7 @@ internal static class GetProjectEndpoint
     public static void MapGetProject(this IEndpointRouteBuilder app)
     {
         // GET /projects/{projectId}
-        app.MapGet("/{projectId}", async (
+        app.MapGet("/{projectId:guid}", async (
             Guid projectId,
             ISender sender,
             CancellationToken ct) =>

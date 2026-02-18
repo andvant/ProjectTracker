@@ -1,3 +1,4 @@
+using ProjectTracker.Application.Features.Common;
 using ProjectTracker.Application.Features.Users.GetUsers;
 
 namespace ProjectTracker.Application.Features.Issues.GetIssue;
@@ -20,5 +21,6 @@ public record IssueDto(
     DateTimeOffset CreatedOn,
     Guid UpdatedBy,
     DateTimeOffset UpdatedOn,
-    IReadOnlyCollection<UsersDto> Watchers
+    IReadOnlyCollection<UsersDto> Watchers,
+    IReadOnlyCollection<AttachmentDto> Attachments
 );

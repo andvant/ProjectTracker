@@ -1,3 +1,4 @@
+using ProjectTracker.Application.Features.Common;
 using ProjectTracker.Application.Features.Users.GetUsers;
 using Riok.Mapperly.Abstractions;
 
@@ -12,4 +13,7 @@ internal static partial class ProjectDtoMapper
 
     private static UsersDto MapMembers(ProjectMember member) =>
         new(member.User.Id, member.User.Name);
+
+    private static AttachmentDto MapAttachments(ProjectAttachment attachment) =>
+        new(attachment.Attachment.Id, attachment.Attachment.Name);
 }

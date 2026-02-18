@@ -27,7 +27,7 @@ internal class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectComman
         await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
-            "Updated project {Id} with key {Key}, name {Name}",
+            "Updated project '{Id}' with key {Key}, name {Name}",
             project.Id, project.Key, project.Name);
     }
 }

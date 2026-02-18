@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0
 WORKDIR /app
+EXPOSE 80
 
 COPY *.slnx .
 COPY Directory.*.props .
@@ -13,6 +14,4 @@ COPY . .
 
 WORKDIR src/Api
 
-EXPOSE 80
-
-CMD ["dotnet", "watch", "run", "--no-launch-profile"]
+CMD ["dotnet", "run", "--no-launch-profile"]

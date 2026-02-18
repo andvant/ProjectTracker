@@ -9,11 +9,10 @@ internal static class UpdateProjectEndpoint
     public static void MapUpdateProject(this IEndpointRouteBuilder app)
     {
         // PUT /projects/{projectId}
-        app.MapPut("/{projectId}", async (
+        app.MapPut("/{projectId:guid}", async (
             Guid projectId,
             UpdateProjectRequest request,
             ISender sender,
-            ILogger<Program> logger,
             CancellationToken ct) =>
         {
             var command = new UpdateProjectCommand(projectId, request.Name, request.Description);

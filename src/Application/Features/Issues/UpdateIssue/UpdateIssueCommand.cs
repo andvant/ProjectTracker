@@ -66,7 +66,7 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
         await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
-            "Updated issue '{Id}' with key '{Key}', title '{Name}'",
+            "Updated issue '{Id}' with key '{Key}', title '{Title}'",
             issue.Id, issue.Key, issue.Title);
     }
 }

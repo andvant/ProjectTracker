@@ -102,6 +102,14 @@ public class Issue : AuditableEntity
         EstimationMinutes = estimationMinutes;
     }
 
+    public void AddAttachment(string name, string storageKey, string mimeType)
+    {
+        var attachment = new Attachment(name, storageKey, mimeType);
+
+        Attachments ??= new List<IssueAttachment>();
+        Attachments.Add(new(this, attachment));
+    }
+
     public void AddWatcher(User watcher)
     {
         if (!Project.IsMember(watcher))
