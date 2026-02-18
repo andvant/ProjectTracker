@@ -1,4 +1,4 @@
-namespace ProjectTracker.Application.Common;
+namespace ProjectTracker.Application.Interfaces;
 
 public interface ICurrentUser
 {

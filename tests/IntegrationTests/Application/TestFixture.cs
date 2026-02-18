@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ProjectTracker.Application;
-using ProjectTracker.Application.Common;
+using ProjectTracker.Application.Interfaces;
 using ProjectTracker.Infrastructure.Database;
 
 namespace ProjectTracker.IntegrationTests.Application;

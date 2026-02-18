@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Text.Json.Serialization;
 using ProjectTracker.Api.Identity;
 using ProjectTracker.Api.Middleware;
-using ProjectTracker.Application.Common;
+using ProjectTracker.Application.Interfaces;
 
 namespace ProjectTracker.Api;
 

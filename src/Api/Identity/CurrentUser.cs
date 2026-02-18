@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using ProjectTracker.Application.Common;
+using ProjectTracker.Application.Interfaces;
 
 namespace ProjectTracker.Api.Identity;
 

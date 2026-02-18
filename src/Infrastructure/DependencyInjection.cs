@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ProjectTracker.Application.Common;
+using ProjectTracker.Application.Interfaces;
 using ProjectTracker.Domain.Entities;
 using ProjectTracker.Infrastructure.Database;
 using ProjectTracker.Infrastructure.ObjectStorage;
