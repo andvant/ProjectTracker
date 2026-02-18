@@ -40,11 +40,11 @@ internal class GlobalExceptionHandler(
                 break;
             case ApplicationException or DomainException:
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                logger.LogError(exception, "An unhandled Application or Domain exception occurred");
+                logger.LogError(exception, "An unhandled Application or Domain exception occurred.");
                 break;
             default:
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                logger.LogError(exception, "An unhandled exception occurred");
+                logger.LogError(exception, "An unhandled exception occurred.");
                 break;
         }
 
@@ -54,7 +54,7 @@ internal class GlobalExceptionHandler(
             Exception = exception,
             ProblemDetails = new ProblemDetails()
             {
-                Title = exception.Message,
+                Title = environment.IsDevelopment() ? exception.Message : "An unknown error occurred.",
                 Detail = environment.IsDevelopment() ? exception.ToString() : null,
                 Status = httpContext.Response.StatusCode,
             }
