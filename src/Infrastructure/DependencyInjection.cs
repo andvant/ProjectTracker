@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProjectTracker.Application.Common;
 using ProjectTracker.Domain.Entities;
 using ProjectTracker.Infrastructure.Database;
+using ProjectTracker.Infrastructure.ObjectStorage;
 
 namespace ProjectTracker.Infrastructure;
 
@@ -22,20 +23,13 @@ public static class DependencyInjection
             options.EnableSensitiveDataLogging(isDevelopment);
             options.UseSnakeCaseNamingConvention();
 
-            options.UseSeeding((context, _) =>
-            {
-                var existing = context.Set<User>().OrderBy(u => u.Id).FirstOrDefault();
-
-                if (existing is null)
-                {
-                    var user = new User("Default User 1", "test1@example.com", DateTimeOffset.UtcNow.AddDays(-3));
-                    context.Set<User>().Add(user);
-                    context.SaveChanges();
-                }
-            });
+            options.UseSeeding((context, _) => AddDefaultUser(context));
         });
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
+
+        services.Configure<S3StorageOptions>(configuration.GetSection(nameof(S3StorageOptions)));
+        services.AddSingleton<IObjectStorage, S3ObjectStorage>();
 
         return services;
     }
@@ -53,5 +47,14 @@ public static class DependencyInjection
         }
 
         return defaultUserId;
+    }
+
+    private static void AddDefaultUser(DbContext context)
+    {
+        if (context.Set<User>().Any()) return;
+
+        var user = new User("Default User 1", "test1@example.com", DateTimeOffset.UtcNow.AddDays(-3));
+        context.Set<User>().Add(user);
+        context.SaveChanges();
     }
 }

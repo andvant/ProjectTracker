@@ -29,5 +29,18 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql
 
+  rustfs:
+    image: rustfs/rustfs:1.0.0-alpha.83
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      RUSTFS_CONSOLE_ENABLE: true
+      RUSTFS_ACCESS_KEY: admin
+      RUSTFS_SECRET_KEY: secret
+    volumes:
+      - rustfs_data:/data
+
 volumes:
   postgres_data:
+  rustfs_data:
