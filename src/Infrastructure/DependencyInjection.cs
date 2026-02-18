@@ -41,7 +41,11 @@ public static class DependencyInjection
         using (var scope = serviceProvider.CreateScope())
         {
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            context.Database.Migrate();
+
+            if (context.Database.GetPendingMigrations().Any())
+            {
+                context.Database.Migrate();
+            }
 
             defaultUserId = context.Users.OrderBy(u => u.Id).First().Id;
         }

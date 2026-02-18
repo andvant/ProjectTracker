@@ -10,7 +10,7 @@ public class Project : AuditableEntity
 
     public ICollection<ProjectMember> Members { get; private set; }
     public ICollection<Issue> Issues { get; private set; }
-    public ICollection<Attachment> Attachments { get; private set; }
+    public ICollection<ProjectAttachment> Attachments { get; private set; }
 
     // for EF Core
     protected Project()
@@ -33,7 +33,7 @@ public class Project : AuditableEntity
 
         Members = new List<ProjectMember> { new(this, owner, currentTime) };
         Issues = new List<Issue>();
-        Attachments = new List<Attachment>();
+        Attachments = new List<ProjectAttachment>();
     }
 
     public Issue CreateIssue(
@@ -78,6 +78,14 @@ public class Project : AuditableEntity
     {
         Name = name;
         Description = description;
+    }
+
+    public void AddAttachment(string name, string storageKey, string mimeType)
+    {
+        var attachment = new Attachment(name, storageKey, mimeType);
+
+        Attachments ??= new List<ProjectAttachment>();
+        Attachments.Add(new(this, attachment));
     }
 
     public void AddMember(User member, DateTimeOffset currentTime)

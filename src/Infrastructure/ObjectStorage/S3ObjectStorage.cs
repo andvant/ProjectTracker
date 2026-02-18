@@ -33,7 +33,20 @@ public class S3ObjectStorage : IObjectStorage
         _bucket = options.Bucket;
     }
 
-    public async Task<string> UploadAsync(string storageKey, Stream stream, string mimeType, CancellationToken ct)
+    public async Task<Stream> GetAsync(string storageKey, CancellationToken ct)
+    {
+        var request = new GetObjectRequest()
+        {
+            BucketName = _bucket,
+            Key = storageKey
+        };
+
+        var response = await _s3Client.GetObjectAsync(request, ct);
+
+        return response.ResponseStream;
+    }
+
+    public async Task<bool> UploadAsync(string storageKey, Stream stream, string mimeType, CancellationToken ct)
     {
         await EnsureBucketCreated(ct);
 
@@ -45,22 +58,9 @@ public class S3ObjectStorage : IObjectStorage
             ContentType = mimeType ?? MediaTypeNames.Application.Octet
         };
 
-        await _s3Client.PutObjectAsync(request, ct);
+        var response = await _s3Client.PutObjectAsync(request, ct);
 
-        return $"{_serviceUrl}/{_bucket}/{storageKey}";
-    }
-
-    public async Task<Stream> GetStreamAsync(string storageKey, CancellationToken ct)
-    {
-        var request = new GetObjectRequest()
-        {
-            BucketName = _bucket,
-            Key = storageKey
-        };
-
-        var response = await _s3Client.GetObjectAsync(request, ct);
-
-        return response.ResponseStream;
+        return response.HttpStatusCode is HttpStatusCode.NoContent or HttpStatusCode.OK;
     }
 
     public async Task<bool> DeleteAsync(string storageKey, CancellationToken ct)

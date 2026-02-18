@@ -22,7 +22,7 @@ public class Issue : AuditableEntity
 
     public ICollection<IssueWatcher> Watchers { get; private set; }
     public IReadOnlyCollection<Issue> ChildIssues { get; private set; }
-    public ICollection<Attachment> Attachments { get; private set; }
+    public ICollection<IssueAttachment> Attachments { get; private set; }
 
     // for EF Core
     protected Issue()
@@ -71,7 +71,7 @@ public class Issue : AuditableEntity
         ParentIssueId = parentIssue?.Id;
 
         ChildIssues = new List<Issue>();
-        Attachments = new List<Attachment>();
+        Attachments = new List<IssueAttachment>();
         Watchers = new List<IssueWatcher>() { new(this, reporter) };
 
         if (assignee is not null && reporter.Id != assignee.Id)
