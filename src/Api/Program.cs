@@ -6,8 +6,11 @@ using ProjectTracker.Api.Endpoints;
 using ProjectTracker.Api.Middleware;
 using ProjectTracker.Application;
 using ProjectTracker.Infrastructure;
+using ProjectTracker.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment.IsDevelopment());
@@ -34,6 +37,8 @@ app.MapHealthChecks("/healthz", new HealthCheckOptions()
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
+
+app.MapDefaultEndpoints();
 
 app.MapAllEndpoints();
 
