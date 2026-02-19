@@ -38,8 +38,8 @@ services:
     restart: on-failure
     environment:
       RUSTFS_CONSOLE_ENABLE: true
-      RUSTFS_ACCESS_KEY: admin
-      RUSTFS_SECRET_KEY: secret
+      RUSTFS_ACCESS_KEY: rf_admin
+      RUSTFS_SECRET_KEY: rf_secret
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -56,8 +56,8 @@ services:
       KC_HEALTH_ENABLED: true
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
-      KC_DB_USERNAME: keycloak_user
-      KC_DB_PASSWORD: keycloak_password
+      KC_DB_USERNAME: kc_db_user
+      KC_DB_PASSWORD: kc_db_secret
     ports:
       - "8080:8080"
       - "8081:9000" # health check

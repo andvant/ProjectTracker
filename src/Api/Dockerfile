@@ -2,7 +2,6 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0
 WORKDIR /app
 EXPOSE 80
 
-COPY *.slnx .
 COPY Directory.*.props .
 COPY src/Domain/Domain.csproj src/Domain/
 COPY src/Application/Application.csproj src/Application/
