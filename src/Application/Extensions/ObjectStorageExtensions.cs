@@ -11,14 +11,9 @@ internal static class ObjectStorageExtensions
         string mimeType,
         CancellationToken ct)
     {
-        var storageKey = $"projects/{projectId}/issues/{issueId}/{Guid.NewGuid().ToString().Substring(0, 8)}-{name}";
+        var storageKey = $"projects/{projectId}/issues/{issueId}/{GetRandomPrefix()}-{name}";
 
-        var uploaded = await storage.UploadAsync(storageKey, stream, mimeType, ct);
-
-        if (!uploaded)
-        {
-            throw new FailedToUploadFileException(storageKey);
-        }
+        await UploadFile(storage, stream, mimeType, storageKey, ct);
 
         return storageKey;
     }
@@ -31,15 +26,23 @@ internal static class ObjectStorageExtensions
         string mimeType,
         CancellationToken ct)
     {
-        var storageKey = $"projects/{projectId}/{Guid.NewGuid().ToString().Substring(0, 8)}-{name}";
+        var storageKey = $"projects/{projectId}/{GetRandomPrefix()}-{name}";
 
+        await UploadFile(storage, stream, mimeType, storageKey, ct);
+
+        return storageKey;
+    }
+
+    private static async Task UploadFile(IObjectStorage storage,
+        Stream stream, string mimeType, string storageKey, CancellationToken ct)
+    {
         var uploaded = await storage.UploadAsync(storageKey, stream, mimeType, ct);
 
         if (!uploaded)
         {
             throw new FailedToUploadFileException(storageKey);
         }
-
-        return storageKey;
     }
+
+    private static string GetRandomPrefix() => Guid.NewGuid().ToString().Substring(0, 8);
 }
