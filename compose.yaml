@@ -18,6 +18,8 @@ services:
       - "5050:80"
     depends_on:
       - postgres
+      - rustfs
+      - keycloak
 
   postgres:
     image: postgres:18
@@ -29,6 +31,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
+      - ./postgres:/docker-entrypoint-initdb.d
 
   rustfs:
     image: rustfs/rustfs:1.0.0-alpha.83
@@ -42,6 +45,24 @@ services:
       - "9001:9001"
     volumes:
       - rustfs_data:/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.5.2
+    restart: on-failure
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: kc_admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: kc_secret
+      KC_HEALTH_ENABLED: true
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: keycloak_user
+      KC_DB_PASSWORD: keycloak_password
+    ports:
+      - "8080:8080"
+      - "8081:9000" # health check
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:
