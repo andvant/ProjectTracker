@@ -7,6 +7,7 @@ COPY Directory.*.props .
 COPY src/Domain/Domain.csproj src/Domain/
 COPY src/Application/Application.csproj src/Application/
 COPY src/Infrastructure/Infrastructure.csproj src/Infrastructure/
+COPY src/ServiceDefaults/ServiceDefaults.csproj src/ServiceDefaults/
 COPY src/Api/Api.csproj src/Api/
 RUN dotnet restore src/Api/Api.csproj
 
