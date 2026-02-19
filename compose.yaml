@@ -3,11 +3,10 @@ services:
     build:
       context: .
       dockerfile: src/Api/Dockerfile
-    ports:
-      - "5050:80"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
+      S3StorageOptions__Endpoint: http://rustfs:9000
       ConnectionStrings__ProjectTrackerDb: >
         Host=postgres;
         Port=5432;
@@ -15,13 +14,14 @@ services:
         Username=postgres;
         Password=postgres;
         Trust Server Certificate=true
-      S3StorageOptions__Endpoint: http://rustfs:9000
+    ports:
+      - "5050:80"
     depends_on:
       - postgres
 
   postgres:
     image: postgres:18
-    restart: always
+    restart: on-failure
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -32,13 +32,14 @@ services:
 
   rustfs:
     image: rustfs/rustfs:1.0.0-alpha.83
-    ports:
-      - "9000:9000"
-      - "9001:9001"
+    restart: on-failure
     environment:
       RUSTFS_CONSOLE_ENABLE: true
       RUSTFS_ACCESS_KEY: admin
       RUSTFS_SECRET_KEY: secret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - rustfs_data:/data
 
