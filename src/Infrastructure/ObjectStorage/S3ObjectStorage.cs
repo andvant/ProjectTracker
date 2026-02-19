@@ -11,12 +11,12 @@ namespace ProjectTracker.Infrastructure.ObjectStorage;
 public class S3ObjectStorage : IObjectStorage
 {
     private readonly IAmazonS3 _s3Client;
-    private readonly string _serviceUrl;
     private readonly string _bucket;
 
     public S3ObjectStorage(IOptions<S3StorageOptions> storageOptions)
     {
         var options = storageOptions.Value;
+        _bucket = options.Bucket;
 
         var config = new AmazonS3Config()
         {
@@ -28,9 +28,6 @@ public class S3ObjectStorage : IObjectStorage
         _s3Client = new AmazonS3Client(
             new BasicAWSCredentials(options.AccessKey, options.SecretKey),
             config);
-
-        _serviceUrl = options.Endpoint;
-        _bucket = options.Bucket;
     }
 
     public async Task<Stream> GetAsync(string storageKey, CancellationToken ct)
