@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using ProjectTracker.Api;
 using ProjectTracker.Api.Endpoints;
 using ProjectTracker.Api.Middleware;
@@ -9,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment.IsDevelopment());
-builder.Services.AddApiServices();
+builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -26,6 +28,11 @@ app.Use(async (context, next) =>
     context.User.AddIdentity(identity);
 
     await next();
+});
+
+app.MapHealthChecks("/healthz", new HealthCheckOptions()
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
 
 app.MapAllEndpoints();

@@ -10,7 +10,7 @@ namespace ProjectTracker.Api;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApiServices(this IServiceCollection services)
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.ConfigureHttpJsonOptions(opts =>
             opts.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -37,6 +37,9 @@ public static class DependencyInjection
         {
             options.MultipartBodyLengthLimit = 100 * 1024 * 1024; // 100 MB uploaded file size limit
         });
+
+        services.AddHealthChecks()
+            .AddNpgSql(configuration.GetConnectionString("ProjectTrackerDb")!);
 
         return services;
     }
