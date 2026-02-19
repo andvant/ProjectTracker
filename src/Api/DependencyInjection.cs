@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using ProjectTracker.Api.Identity;
 using ProjectTracker.Api.Middleware;
@@ -32,6 +33,10 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUser, CurrentUser>();
 
         services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
+        services.Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = 100 * 1024 * 1024; // 100 MB uploaded file size limit
+        });
 
         return services;
     }
