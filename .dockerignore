@@ -1,8 +1,16 @@
 .vs/
 txts/
 .git/
-.gitignore/
+.gitignore
+.dockerignore
+.github/
+.editorconfig/
+.aspire/
+tests/
 **/[Bb]in/
 **/[Oo]bj/
 **/node_modules/
+**/container-init/
+**/compose.yaml
 **/Dockerfile
+**/AppHost/
