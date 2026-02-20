@@ -31,7 +31,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
-      - ./postgres:/docker-entrypoint-initdb.d
+      - ./container-init/postgres:/docker-entrypoint-initdb.d
 
   rustfs:
     image: rustfs/rustfs:1.0.0-alpha.83
@@ -41,7 +41,6 @@ services:
       RUSTFS_ACCESS_KEY: rf_admin
       RUSTFS_SECRET_KEY: rf_secret
     ports:
-      - "9000:9000"
       - "9001:9001"
     volumes:
       - rustfs_data:/data
@@ -49,7 +48,9 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.5.2
     restart: on-failure
-    command: start-dev
+    command:
+      - start-dev
+      - --import-realm
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: kc_admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: kc_secret
@@ -60,7 +61,8 @@ services:
       KC_DB_PASSWORD: kc_db_secret
     ports:
       - "8080:8080"
-      - "8081:9000" # health check
+    volumes:
+      - ./container-init/keycloak:/opt/keycloak/data/import
     depends_on:
       - postgres
 
