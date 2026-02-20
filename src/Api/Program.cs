@@ -36,7 +36,7 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapHealthChecks("/healthz", new HealthCheckOptions()
+app.MapHealthChecks("/healthz", new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });

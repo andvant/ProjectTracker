@@ -18,7 +18,7 @@ public class S3ObjectStorage : IObjectStorage
         var options = storageOptions.Value;
         _bucket = options.Bucket;
 
-        var config = new AmazonS3Config()
+        var config = new AmazonS3Config
         {
             ServiceURL = options.Endpoint,
             ForcePathStyle = true,
@@ -32,7 +32,7 @@ public class S3ObjectStorage : IObjectStorage
 
     public async Task<Stream> GetAsync(string storageKey, CancellationToken ct)
     {
-        var request = new GetObjectRequest()
+        var request = new GetObjectRequest
         {
             BucketName = _bucket,
             Key = storageKey
@@ -47,7 +47,7 @@ public class S3ObjectStorage : IObjectStorage
     {
         await EnsureBucketCreated(ct);
 
-        var request = new PutObjectRequest()
+        var request = new PutObjectRequest
         {
             BucketName = _bucket,
             Key = storageKey,
@@ -62,7 +62,7 @@ public class S3ObjectStorage : IObjectStorage
 
     public async Task<bool> DeleteAsync(string storageKey, CancellationToken ct)
     {
-        var request = new DeleteObjectRequest()
+        var request = new DeleteObjectRequest
         {
             BucketName = _bucket,
             Key = storageKey
@@ -77,7 +77,7 @@ public class S3ObjectStorage : IObjectStorage
     {
         await EnsureBucketCreated(ct);
 
-        var request = new ListObjectsV2Request()
+        var request = new ListObjectsV2Request
         {
             BucketName = _bucket
         };
@@ -91,7 +91,7 @@ public class S3ObjectStorage : IObjectStorage
     {
         if (await BucketExistsAsync(ct)) return;
 
-        var request = new PutBucketRequest()
+        var request = new PutBucketRequest
         {
             BucketName = _bucket,
             UseClientRegion = false

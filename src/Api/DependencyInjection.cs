@@ -54,7 +54,7 @@ public static class DependencyInjection
                 options.Authority = keycloakConfig.Authority;
                 options.MetadataAddress = $"{keycloakConfig.Authority}/.well-known/openid-configuration";
 
-                options.TokenValidationParameters = new TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidIssuer = keycloakConfig.Authority
                 };

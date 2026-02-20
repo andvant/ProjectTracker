@@ -48,11 +48,11 @@ internal class GlobalExceptionHandler(
                 break;
         }
 
-        var context = new ProblemDetailsContext()
+        var context = new ProblemDetailsContext
         {
             HttpContext = httpContext,
             Exception = exception,
-            ProblemDetails = new ProblemDetails()
+            ProblemDetails = new ProblemDetails
             {
                 Title = environment.IsDevelopment() ? exception.Message : "An unknown error occurred.",
                 Detail = environment.IsDevelopment() ? exception.ToString() : null,

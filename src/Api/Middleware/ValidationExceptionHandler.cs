@@ -22,11 +22,11 @@ internal class ValidationExceptionHandler(IProblemDetailsService problemDetailsS
                 g => g.Select(e => e.ErrorMessage).ToArray()
             );
 
-        var context = new ProblemDetailsContext()
+        var context = new ProblemDetailsContext
         {
             HttpContext = httpContext,
             Exception = exception,
-            ProblemDetails = new ValidationProblemDetails()
+            ProblemDetails = new ValidationProblemDetails
             {
                 Title = "One or more validation errors occurred.",
                 Status = httpContext.Response.StatusCode,
