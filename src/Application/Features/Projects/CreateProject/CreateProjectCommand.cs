@@ -28,8 +28,10 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
     {
         await ValidateUniqueProjectKey(command.Key, ct);
 
-        var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == _currentUser.UserId, ct)
-            ?? throw new Exception($"Current user with id '{_currentUser.UserId}' not found in the database");
+        var userId = _currentUser.GetUserId();
+
+        var owner = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId, ct)
+            ?? throw new Exception($"Current user with id '{userId}' not found in the database");
 
         var project = new Project(command.Key, command.Name, owner, command.Description, _timeProvider.GetUtcNow());
 

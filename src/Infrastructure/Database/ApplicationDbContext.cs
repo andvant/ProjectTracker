@@ -50,14 +50,17 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         {
             var entity = (AuditableEntity)entry.Entity;
 
+            var currentUserId = _currentUser.GetUserId();
+            var currentTime = _timeProvider.GetUtcNow();
+
             if (entry.State == EntityState.Added)
             {
-                entity.CreatedBy = _currentUser.UserId;
-                entity.CreatedOn = _timeProvider.GetUtcNow();
+                entity.CreatedBy = currentUserId;
+                entity.CreatedOn = currentTime;
             }
 
-            entity.UpdatedBy = _currentUser.UserId;
-            entity.UpdatedOn = _timeProvider.GetUtcNow();
+            entity.UpdatedBy = currentUserId;
+            entity.UpdatedOn = currentTime;
         }
     }
 }

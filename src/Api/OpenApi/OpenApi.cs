@@ -1,7 +1,7 @@
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 
-namespace ProjectTracker.Api.Middleware;
+namespace ProjectTracker.Api.OpenApi;
 
 internal static class OpenApi
 {

@@ -1,11 +1,13 @@
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.IdentityModel.Tokens;
+using ProjectTracker.Api.ExceptionHandlers;
 using ProjectTracker.Api.Identity;
-using ProjectTracker.Api.Middleware;
+using ProjectTracker.Api.OpenApi;
 using ProjectTracker.Application.Interfaces;
 
 namespace ProjectTracker.Api;
@@ -29,6 +31,8 @@ public static class DependencyInjection
         services.AddExceptionHandler<ValidationExceptionHandler>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
+        services.AddScoped<UserProvisionMiddleware>();
+
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, CurrentUser>();
 
@@ -45,7 +49,13 @@ public static class DependencyInjection
 
         services.AddOpenApiServices(keycloakConfig.Authority);
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+        });
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -56,7 +66,8 @@ public static class DependencyInjection
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = keycloakConfig.Authority
+                    ValidIssuer = keycloakConfig.Authority,
+                    ClockSkew = TimeSpan.FromMinutes(1)
                 };
             });
 

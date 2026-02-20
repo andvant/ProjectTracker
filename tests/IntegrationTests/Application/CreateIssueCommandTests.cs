@@ -33,7 +33,7 @@ public class CreateIssueCommandTests : IClassFixture<TestFixture>
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>() as FakeCurrentUser;
         var timeProvider = scope.ServiceProvider.GetRequiredService<TimeProvider>() as FakeTimeProvider;
-        currentUser!.UserId = user.Id;
+        currentUser!.FakeUserId = user.Id;
         timeProvider!.FakeTime = DateTimeOffset.UtcNow;
 
         var project = new Project("TP1", "Test Project 1", user, "test desc", DateTimeOffset.UtcNow);
@@ -83,7 +83,7 @@ public class CreateIssueCommandTests : IClassFixture<TestFixture>
         var project = new Project("TP2", "Test Project 2", user, "test desc", DateTimeOffset.UtcNow);
 
         var currentUser = scope.ServiceProvider.GetRequiredService<ICurrentUser>() as FakeCurrentUser;
-        currentUser!.UserId = user.Id;
+        currentUser!.FakeUserId = user.Id;
 
         project.AddMember(user, DateTimeOffset.UtcNow);
 

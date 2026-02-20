@@ -12,6 +12,6 @@ internal class CurrentUser : ICurrentUser
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public Guid UserId => Guid.Parse(_httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
-        ?? throw new Exception("Failed to parse UserId from claims"));
+    public Guid GetUserId() => Guid.Parse(_httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+        ?? throw new Exception("Failed to parse UserId from claims."));
 }

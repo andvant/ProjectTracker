@@ -4,7 +4,7 @@ using ProjectTracker.Application.Exceptions;
 using ProjectTracker.Domain.Common;
 using ProjectTracker.Domain.Exceptions;
 
-namespace ProjectTracker.Api.Middleware;
+namespace ProjectTracker.Api.ExceptionHandlers;
 
 internal class GlobalExceptionHandler(
     IProblemDetailsService problemDetailsService,

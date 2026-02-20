@@ -1,9 +1,9 @@
-using System.Security.Claims;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using ProjectTracker.Api;
 using ProjectTracker.Api.Endpoints;
-using ProjectTracker.Api.Middleware;
+using ProjectTracker.Api.Identity;
+using ProjectTracker.Api.OpenApi;
 using ProjectTracker.Application;
 using ProjectTracker.Infrastructure;
 using ProjectTracker.ServiceDefaults;
@@ -18,23 +18,15 @@ builder.Services.AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 
+app.Services.ApplyMigrations();
+
 app.UseExceptionHandler();
 app.UseOpenApi();
 
-var defaultUserId = app.Services.ApplyMigrations();
-
-app.Use(async (context, next) =>
-{
-    Claim[] claims = [new Claim(ClaimTypes.NameIdentifier, defaultUserId.ToString())];
-
-    var identity = new ClaimsIdentity(claims, "Bearer");
-    context.User.AddIdentity(identity);
-
-    await next();
-});
-
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<UserProvisionMiddleware>();
 
 app.MapHealthChecks("/healthz", new HealthCheckOptions
 {

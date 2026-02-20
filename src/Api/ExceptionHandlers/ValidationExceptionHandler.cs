@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ProjectTracker.Api.Middleware;
+namespace ProjectTracker.Api.ExceptionHandlers;
 
 internal class ValidationExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
 {

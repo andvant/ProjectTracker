@@ -52,5 +52,6 @@ public class FakeTimeProvider : TimeProvider
 
 public class FakeCurrentUser : ICurrentUser
 {
-    public Guid UserId { get; set; }
+    public Guid GetUserId() => FakeUserId;
+    public Guid FakeUserId { get; set; }
 }

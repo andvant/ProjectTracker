@@ -20,8 +20,9 @@ public class User : Entity
         WatchedIssues = null!;
     }
 
-    public User(string name, string email, DateTimeOffset registrationDate)
+    public User(Guid id, string name, string email, DateTimeOffset registrationDate)
     {
+        Id = id;
         Name = name;
         Email = email;
         RegistrationDate = registrationDate;

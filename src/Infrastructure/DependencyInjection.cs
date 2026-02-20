@@ -57,7 +57,7 @@ public static class DependencyInjection
     {
         if (context.Set<User>().Any()) return;
 
-        var user = new User("Default User 1", "test1@example.com", DateTimeOffset.UtcNow.AddDays(-3));
+        var user = new User(Guid.CreateVersion7(), "Default User 1", "test1@example.com", DateTimeOffset.UtcNow.AddDays(-3));
         context.Set<User>().Add(user);
         context.SaveChanges();
     }
