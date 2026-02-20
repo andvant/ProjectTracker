@@ -6,7 +6,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
-      S3StorageOptions__Endpoint: http://rustfs:9000
+      S3Config__Endpoint: http://rustfs:9000
       ConnectionStrings__ProjectTrackerDb: >
         Host=postgres;
         Port=5432;

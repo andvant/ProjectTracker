@@ -28,7 +28,7 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
-        services.Configure<S3StorageOptions>(configuration.GetSection(nameof(S3StorageOptions)));
+        services.Configure<S3Config>(configuration.GetSection(nameof(S3Config)));
         services.AddSingleton<IObjectStorage, S3ObjectStorage>();
 
         return services;

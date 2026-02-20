@@ -13,9 +13,9 @@ public class S3ObjectStorage : IObjectStorage
     private readonly IAmazonS3 _s3Client;
     private readonly string _bucket;
 
-    public S3ObjectStorage(IOptions<S3StorageOptions> storageOptions)
+    public S3ObjectStorage(IOptions<S3Config> s3Config)
     {
-        var options = storageOptions.Value;
+        var options = s3Config.Value;
         _bucket = options.Bucket;
 
         var config = new AmazonS3Config

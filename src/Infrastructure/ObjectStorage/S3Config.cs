@@ -1,6 +1,6 @@
 namespace ProjectTracker.Infrastructure.ObjectStorage;
 
-public class S3StorageOptions
+public class S3Config
 {
     public required string Endpoint { get; set; }
     public required string AccessKey { get; set; }
