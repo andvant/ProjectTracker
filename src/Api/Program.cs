@@ -27,11 +27,14 @@ app.Use(async (context, next) =>
 {
     Claim[] claims = [new Claim(ClaimTypes.NameIdentifier, defaultUserId.ToString())];
 
-    var identity = new ClaimsIdentity(claims);
+    var identity = new ClaimsIdentity(claims, "Bearer");
     context.User.AddIdentity(identity);
 
     await next();
 });
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapHealthChecks("/healthz", new HealthCheckOptions()
 {

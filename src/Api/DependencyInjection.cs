@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.IdentityModel.Tokens;
 using ProjectTracker.Api.Identity;
 using ProjectTracker.Api.Middleware;
 using ProjectTracker.Application.Interfaces;
@@ -27,8 +29,6 @@ public static class DependencyInjection
         services.AddExceptionHandler<ValidationExceptionHandler>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
 
-        services.AddOpenApiServices();
-
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, CurrentUser>();
 
@@ -40,6 +40,25 @@ public static class DependencyInjection
 
         services.AddHealthChecks()
             .AddNpgSql(configuration.GetConnectionString("ProjectTrackerDb")!);
+
+        var keycloakConfig = configuration.GetSection(nameof(KeycloakConfig)).Get<KeycloakConfig>()!;
+
+        services.AddOpenApiServices(keycloakConfig.Authority);
+
+        services.AddAuthorization();
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = keycloakConfig.RequireHttps;
+                options.Audience = keycloakConfig.Audience;
+                options.Authority = keycloakConfig.Authority;
+                options.MetadataAddress = $"{keycloakConfig.Authority}/.well-known/openid-configuration";
+
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidIssuer = keycloakConfig.Authority
+                };
+            });
 
         return services;
     }
