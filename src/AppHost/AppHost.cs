@@ -11,7 +11,7 @@ var postgres = builder.AddPostgres("postgres", password: postgresPassword)
     .WithEnvironment("POSTGRES_USER", "postgres")
     .WithHostPort(5432)
     .WithVolume("projecttracker_postgres_data", "/var/lib/postgresql")
-    .WithInitFiles("../../postgres");
+    .WithInitFiles("../../container-init/postgres");
 
 var projectTrackerDb = postgres.AddDatabase("ProjectTrackerDb", "project_tracker_db");
 var keycloakDb = postgres.AddDatabase("KeycloakDb", "keycloak_db");
@@ -21,12 +21,13 @@ var rustfs = builder.AddContainer("rustfs", "rustfs/rustfs")
     .WithEnvironment("RUSTFS_CONSOLE_ENABLE", "true")
     .WithEnvironment("RUSTFS_ACCESS_KEY", "rf_admin")
     .WithEnvironment("RUSTFS_SECRET_KEY", "rf_secret")
-    .WithHttpEndpoint(port: 9000, targetPort: 9000, name: "s3")
-    .WithHttpEndpoint(port: 9001, targetPort: 9001, name: "console")
+    .WithHttpEndpoint(port: 9000, targetPort: 9000, name: "s3-api")
+    .WithHttpEndpoint(port: 9001, targetPort: 9001, name: "s3-console")
     .WithVolume("projecttracker_rustfs_data", "/data");
 
 var keycloak = builder.AddKeycloak("keycloak", 8080, keycloakUsername, keycloakPassword)
     .WithImageTag("26.5.2")
+    .WithRealmImport("../../container-init/keycloak")
     .WithEnvironment("KC_HEALTH_ENABLED", "true")
     .WithEnvironment("KC_DB", "postgres")
     .WithEnvironment("KC_DB_URL", $"jdbc:postgresql://{postgres.Resource.Name}:{postgres.Resource.Port}/{keycloakDb.Resource.DatabaseName}")

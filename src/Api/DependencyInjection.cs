@@ -62,7 +62,7 @@ public static class DependencyInjection
                 options.RequireHttpsMetadata = keycloakConfig.RequireHttps;
                 options.Audience = keycloakConfig.Audience;
                 options.Authority = keycloakConfig.Authority;
-                options.MetadataAddress = $"{keycloakConfig.Authority}/.well-known/openid-configuration";
+                options.MetadataAddress = keycloakConfig.MetadataAddress;
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {

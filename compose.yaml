@@ -7,6 +7,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
       S3Config__Endpoint: http://rustfs:9000
+      KeycloakConfig__MetadataAddress: http://keycloak:8080/realms/project-tracker/.well-known/openid-configuration
       ConnectionStrings__ProjectTrackerDb: >
         Host=postgres;
         Port=5432;
@@ -41,7 +42,8 @@ services:
       RUSTFS_ACCESS_KEY: rf_admin
       RUSTFS_SECRET_KEY: rf_secret
     ports:
-      - "9001:9001"
+      - "9000:9000" # api
+      - "9001:9001" # console
     volumes:
       - rustfs_data:/data
 
