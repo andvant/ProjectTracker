@@ -2,6 +2,7 @@ global using FluentValidation;
 global using MediatR;
 global using Microsoft.EntityFrameworkCore;
 global using ProjectTracker.Application.Exceptions;
+global using ProjectTracker.Application.Extensions;
 global using ProjectTracker.Application.Interfaces;
 global using ProjectTracker.Domain.Entities;
 global using ProjectTracker.Domain.Enums;

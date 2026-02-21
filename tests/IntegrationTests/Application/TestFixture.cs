@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ProjectTracker.Application;
+using ProjectTracker.Application.Common;
 using ProjectTracker.Application.Interfaces;
 using ProjectTracker.Infrastructure.Database;
 
@@ -53,5 +54,8 @@ public class FakeTimeProvider : TimeProvider
 public class FakeCurrentUser : ICurrentUser
 {
     public Guid GetUserId() => FakeUserId;
+    public IReadOnlyCollection<string> GetRoles() => [Roles.Admin];
+    public bool IsAdmin() => true;
+    public bool IsProjectManager() => true;
     public Guid FakeUserId { get; set; }
 }

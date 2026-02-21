@@ -38,6 +38,9 @@ internal class GlobalExceptionHandler(
                 CantRemoveProjectOwnerException:
                 httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
                 break;
+            case ActionForbiddenException:
+                httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                break;
             case ApplicationException or DomainException:
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 logger.LogError(exception, "An unhandled Application or Domain exception occurred.");

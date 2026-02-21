@@ -7,13 +7,16 @@ public record RemoveMemberCommand(Guid ProjectId, Guid MemberId) : IRequest;
 internal class RemoveMemberCommandHandler : IRequestHandler<RemoveMemberCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<RemoveMemberCommandHandler> _logger;
 
     public RemoveMemberCommandHandler(
         IApplicationDbContext context,
+        ICurrentUser currentUser,
         ILogger<RemoveMemberCommandHandler> logger)
     {
         _context = context;
+        _currentUser = currentUser;
         _logger = logger;
     }
 
@@ -24,6 +27,8 @@ internal class RemoveMemberCommandHandler : IRequestHandler<RemoveMemberCommand>
             .Include(p => p.Issues).ThenInclude(i => i.Watchers)
             .FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
             ?? throw new ProjectNotFoundException(command.ProjectId);
+
+        _currentUser.ValidateAllowed([project.OwnerId]);
 
         var member = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.MemberId, ct)
             ?? throw new MemberNotFoundException(command.MemberId);

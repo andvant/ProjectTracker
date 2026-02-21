@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using ProjectTracker.Application.Extensions;
 
 namespace ProjectTracker.Application.Features.Projects.UploadProjectAttachment;
 
@@ -9,15 +8,18 @@ internal class UploadProjectAttachmentCommandHandler : IRequestHandler<UploadPro
 {
     private readonly IApplicationDbContext _context;
     private readonly IObjectStorage _storage;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<UploadProjectAttachmentCommandHandler> _logger;
 
     public UploadProjectAttachmentCommandHandler(
         IApplicationDbContext context,
         IObjectStorage storage,
+        ICurrentUser currentUser,
         ILogger<UploadProjectAttachmentCommandHandler> logger)
     {
         _context = context;
         _storage = storage;
+        _currentUser = currentUser;
         _logger = logger;
     }
 
@@ -25,6 +27,8 @@ internal class UploadProjectAttachmentCommandHandler : IRequestHandler<UploadPro
     {
         var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
             ?? throw new ProjectNotFoundException(command.ProjectId);
+
+        _currentUser.ValidateAllowed([project.OwnerId]);
 
         var storageKey = await _storage.UploadProjectAttachment(command.ProjectId,
             command.Name, command.Stream, command.MimeType, ct);

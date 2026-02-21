@@ -7,13 +7,16 @@ public record DeleteIssueCommand(Guid ProjectId, Guid IssueId) : IRequest;
 internal class DeleteIssueCommandHandler : IRequestHandler<DeleteIssueCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<DeleteIssueCommandHandler> _logger;
 
     public DeleteIssueCommandHandler(
         IApplicationDbContext context,
+        ICurrentUser currentUser,
         ILogger<DeleteIssueCommandHandler> logger)
     {
         _context = context;
+        _currentUser = currentUser;
         _logger = logger;
     }
 
@@ -26,6 +29,8 @@ internal class DeleteIssueCommandHandler : IRequestHandler<DeleteIssueCommand>
 
         var issue = project.Issues.FirstOrDefault(i => i.Id == command.IssueId)
             ?? throw new IssueNotFoundException(command.IssueId);
+
+        _currentUser.ValidateAllowed([issue.ReporterId, project.OwnerId]);
 
         project.RemoveIssue(issue);
 

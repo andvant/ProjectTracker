@@ -7,13 +7,16 @@ public record AddWatcherCommand(Guid ProjectId, Guid IssueId, Guid WatcherId) : 
 internal class AddWatcherCommandHandler : IRequestHandler<AddWatcherCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<AddWatcherCommandHandler> _logger;
 
     public AddWatcherCommandHandler(
         IApplicationDbContext context,
+        ICurrentUser currentUser,
         ILogger<AddWatcherCommandHandler> logger)
     {
         _context = context;
+        _currentUser = currentUser;
         _logger = logger;
     }
 
@@ -35,6 +38,8 @@ internal class AddWatcherCommandHandler : IRequestHandler<AddWatcherCommand>
 
         var watcher = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.WatcherId, ct)
             ?? throw new WatcherNotFoundException(command.WatcherId);
+
+        _currentUser.ValidateAllowed([watcher.Id, issue.Project.OwnerId]);
 
         issue.AddWatcher(watcher);
 

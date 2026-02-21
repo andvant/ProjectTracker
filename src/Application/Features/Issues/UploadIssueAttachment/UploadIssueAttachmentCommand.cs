@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using ProjectTracker.Application.Extensions;
 
 namespace ProjectTracker.Application.Features.Issues.UploadIssueAttachment;
 
@@ -14,15 +13,18 @@ internal class UploadIssueAttachmentCommandHandler : IRequestHandler<UploadIssue
 {
     private readonly IApplicationDbContext _context;
     private readonly IObjectStorage _storage;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<UploadIssueAttachmentCommandHandler> _logger;
 
     public UploadIssueAttachmentCommandHandler(
         IApplicationDbContext context,
         IObjectStorage storage,
+        ICurrentUser currentUser,
         ILogger<UploadIssueAttachmentCommandHandler> logger)
     {
         _context = context;
         _storage = storage;
+        _currentUser = currentUser;
         _logger = logger;
     }
 
@@ -40,6 +42,8 @@ internal class UploadIssueAttachmentCommandHandler : IRequestHandler<UploadIssue
             .SelectMany(p => p.Issues)
             .FirstOrDefaultAsync(i => i.Id == command.IssueId, ct)
             ?? throw new IssueNotFoundException(command.IssueId);
+
+        _currentUser.ValidateAllowed([issue.ReporterId, issue.Project.OwnerId]);
 
         var storageKey = await _storage.UploadIssueAttachment(command.ProjectId, issue.Id,
             command.Name, command.Stream, command.MimeType, ct);

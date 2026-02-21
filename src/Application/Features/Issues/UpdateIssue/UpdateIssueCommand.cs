@@ -16,15 +16,18 @@ public record UpdateIssueCommand(
 internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUser _currentUser;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<UpdateIssueCommandHandler> _logger;
 
     public UpdateIssueCommandHandler(
         IApplicationDbContext context,
+        ICurrentUser currentUser,
         TimeProvider timeProvider,
         ILogger<UpdateIssueCommandHandler> logger)
     {
         _context = context;
+        _currentUser = currentUser;
         _timeProvider = timeProvider;
         _logger = logger;
     }
@@ -44,6 +47,8 @@ internal class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand>
             .Include(i => i.Project).ThenInclude(p => p.Members)
             .FirstOrDefaultAsync(i => i.Id == command.IssueId, ct)
             ?? throw new IssueNotFoundException(command.IssueId);
+
+        _currentUser.ValidateAllowed([issue.ReporterId, issue.Project.OwnerId]);
 
         User? assignee = null;
 

@@ -7,13 +7,16 @@ public record UpdateProjectCommand(Guid Id, string Name, string? Description) : 
 internal class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<UpdateProjectCommandHandler> _logger;
 
     public UpdateProjectCommandHandler(
         IApplicationDbContext context,
+        ICurrentUser currentUser,
         ILogger<UpdateProjectCommandHandler> logger)
     {
         _context = context;
+        _currentUser = currentUser;
         _logger = logger;
     }
 
@@ -21,6 +24,8 @@ internal class UpdateProjectCommandHandler : IRequestHandler<UpdateProjectComman
     {
         var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == command.Id, ct)
             ?? throw new ProjectNotFoundException(command.Id);
+
+        _currentUser.ValidateAllowed([project.OwnerId]);
 
         project.UpdateDetails(command.Name, command.Description);
 

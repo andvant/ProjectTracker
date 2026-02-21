@@ -1,3 +1,4 @@
+using ProjectTracker.Application.Common;
 using ProjectTracker.Application.Features.Projects.CreateProject;
 using ProjectTracker.Application.Features.Projects.GetProject;
 
@@ -24,6 +25,7 @@ internal static class CreateProjectEndpoint
                 EndpointNames.GetProject,
                 new { projectId = project.Id });
         })
+        .RequireAuthorization(p => p.RequireRole(Roles.ProjectManager))
         .Produces<ProjectDto>(StatusCodes.Status201Created)
         .ProducesValidationProblem();
     }

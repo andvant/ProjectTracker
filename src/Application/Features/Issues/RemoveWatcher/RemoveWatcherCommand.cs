@@ -7,13 +7,16 @@ public record RemoveWatcherCommand(Guid ProjectId, Guid IssueId, Guid WatcherId)
 internal class RemoveWatcherCommandHandler : IRequestHandler<RemoveWatcherCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<RemoveWatcherCommandHandler> _logger;
 
     public RemoveWatcherCommandHandler(
         IApplicationDbContext context,
+        ICurrentUser currentUser,
         ILogger<RemoveWatcherCommandHandler> logger)
     {
         _context = context;
+        _currentUser = currentUser;
         _logger = logger;
     }
 
@@ -35,6 +38,8 @@ internal class RemoveWatcherCommandHandler : IRequestHandler<RemoveWatcherComman
 
         var watcher = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.WatcherId, ct)
             ?? throw new WatcherNotFoundException(command.WatcherId);
+
+        _currentUser.ValidateAllowed([watcher.Id, issue.Project.OwnerId]);
 
         issue.RemoveWatcher(watcher);
 

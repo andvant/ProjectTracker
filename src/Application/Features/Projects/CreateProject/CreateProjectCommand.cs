@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using ProjectTracker.Application.Common;
 using ProjectTracker.Application.Features.Projects.GetProject;
 
 namespace ProjectTracker.Application.Features.Projects.CreateProject;
@@ -26,6 +27,8 @@ internal class CreateProjectCommandHandler : IRequestHandler<CreateProjectComman
 
     public async Task<ProjectDto> Handle(CreateProjectCommand command, CancellationToken ct)
     {
+        _currentUser.ValidateAllowed(allowedRoles: [Roles.ProjectManager]);
+
         await ValidateUniqueProjectKey(command.Key, ct);
 
         var userId = _currentUser.GetUserId();

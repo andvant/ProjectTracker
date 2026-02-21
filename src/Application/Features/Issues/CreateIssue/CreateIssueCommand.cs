@@ -45,6 +45,8 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
             .FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
             ?? throw new ProjectNotFoundException(command.ProjectId);
 
+        _currentUser.ValidateAllowed([..project.Members.Select(m => m.UserId)]);
+
         User? assignee = null;
         Issue? parentIssue = null;
 

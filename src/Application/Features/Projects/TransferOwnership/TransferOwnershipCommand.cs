@@ -7,13 +7,16 @@ public record TransferOwnershipCommand(Guid ProjectId, Guid NewOwnerId) : IReque
 internal class TransferOwnershipCommandHandler : IRequestHandler<TransferOwnershipCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICurrentUser _currentUser;
     private readonly ILogger<TransferOwnershipCommandHandler> _logger;
 
     public TransferOwnershipCommandHandler(
         IApplicationDbContext context,
+        ICurrentUser currentUser,
         ILogger<TransferOwnershipCommandHandler> logger)
     {
         _context = context;
+        _currentUser = currentUser;
         _logger = logger;
     }
 
@@ -23,6 +26,8 @@ internal class TransferOwnershipCommandHandler : IRequestHandler<TransferOwnersh
             .Include(p => p.Members)
             .FirstOrDefaultAsync(p => p.Id == command.ProjectId, ct)
             ?? throw new ProjectNotFoundException(command.ProjectId);
+
+        _currentUser.ValidateAllowed([project.OwnerId]);
 
         var newOwner = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.NewOwnerId, ct)
             ?? throw new NewOwnerNotFoundException(command.NewOwnerId);
