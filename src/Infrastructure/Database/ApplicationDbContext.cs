@@ -63,4 +63,12 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             entity.UpdatedOn = currentTime;
         }
     }
+
+    public async Task<IReadOnlyCollection<Guid>> GetProjectMemberIds(Guid projectId, CancellationToken ct)
+    {
+        return await Projects
+            .Where(p => p.Id == projectId)
+            .SelectMany(p => p.Members)
+            .Select(m => m.UserId).ToListAsync(ct);
+    }
 }

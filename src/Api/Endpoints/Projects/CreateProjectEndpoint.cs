@@ -25,7 +25,7 @@ internal static class CreateProjectEndpoint
                 EndpointNames.GetProject,
                 new { projectId = project.Id });
         })
-        .RequireAuthorization(p => p.RequireRole(Roles.ProjectManager))
+        .RequireAuthorization(p => p.RequireRole(Roles.ProjectManager, Roles.Admin))
         .Produces<ProjectDto>(StatusCodes.Status201Created)
         .ProducesValidationProblem();
     }

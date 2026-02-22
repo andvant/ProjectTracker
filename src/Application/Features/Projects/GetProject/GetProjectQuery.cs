@@ -17,10 +17,7 @@ internal class GetProjectQueryHandler : IRequestHandler<GetProjectQuery, Project
 
     public async Task<ProjectDto> Handle(GetProjectQuery query, CancellationToken ct)
     {
-        var memberIds = await _context.Projects
-            .Where(p => p.Id == query.Id)
-            .SelectMany(p => p.Members)
-            .Select(m => m.UserId).ToListAsync(ct);
+        var memberIds = await _context.GetProjectMemberIds(query.Id, ct);
 
         _currentUser.ValidateAllowed(memberIds, [Roles.ProjectManager]);
 

@@ -24,10 +24,7 @@ internal class GetIssuesQueryHandler : IRequestHandler<GetIssuesQuery, List<Issu
             throw new ProjectNotFoundException(query.ProjectId);
         }
 
-        var memberIds = await _context.Projects
-            .Where(p => p.Id == query.ProjectId)
-            .SelectMany(p => p.Members)
-            .Select(m => m.UserId).ToListAsync(ct);
+        var memberIds = await _context.GetProjectMemberIds(query.ProjectId, ct);
 
         _currentUser.ValidateAllowed(memberIds, [Roles.ProjectManager]);
 
