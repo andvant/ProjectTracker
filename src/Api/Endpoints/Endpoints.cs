@@ -57,5 +57,7 @@ internal static class Endpoints
 
         group.MapGetUser();
         group.MapGetUsers();
+        group.MapGetUserGroups();
+        group.MapUpdateUserGroups();
     }
 }

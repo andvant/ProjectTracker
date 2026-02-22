@@ -6,5 +6,4 @@ public class KeycloakConfig
     public required string Audience { get; set; }
     public required string Authority { get; set; }
     public required string MetadataAddress { get; set; }
-    public required string ClientId { get; set; }
 }

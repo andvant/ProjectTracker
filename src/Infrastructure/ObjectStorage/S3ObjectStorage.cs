@@ -8,7 +8,7 @@ using ProjectTracker.Application.Interfaces;
 
 namespace ProjectTracker.Infrastructure.ObjectStorage;
 
-public class S3ObjectStorage : IObjectStorage
+internal class S3ObjectStorage : IObjectStorage
 {
     private readonly IAmazonS3 _s3Client;
     private readonly string _bucket;

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProjectTracker.Application.Interfaces;
 using ProjectTracker.Domain.Entities;
 using ProjectTracker.Infrastructure.Database;
+using ProjectTracker.Infrastructure.Identity;
 using ProjectTracker.Infrastructure.ObjectStorage;
 
 namespace ProjectTracker.Infrastructure;
@@ -30,6 +31,8 @@ public static class DependencyInjection
 
         services.Configure<S3Config>(configuration.GetSection(nameof(S3Config)));
         services.AddSingleton<IObjectStorage, S3ObjectStorage>();
+
+        services.Configure<KeycloakAdminConfig>(configuration.GetSection(nameof(KeycloakAdminConfig)));
 
         return services;
     }

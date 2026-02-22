@@ -7,7 +7,7 @@ internal static class GetUserEndpoint
     public static void MapGetUser(this IEndpointRouteBuilder app)
     {
         // GET /users/{userId}
-        app.MapGet("/{userId}", async (
+        app.MapGet("/{userId:guid}", async (
             Guid userId,
             ISender sender,
             CancellationToken ct) =>

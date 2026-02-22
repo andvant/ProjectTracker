@@ -9,6 +9,7 @@ using ProjectTracker.Api.ExceptionHandlers;
 using ProjectTracker.Api.Identity;
 using ProjectTracker.Api.OpenApi;
 using ProjectTracker.Application.Interfaces;
+using ProjectTracker.Infrastructure.Identity;
 
 namespace ProjectTracker.Api;
 
@@ -70,6 +71,11 @@ public static class DependencyInjection
                     ClockSkew = TimeSpan.FromMinutes(1)
                 };
             });
+
+        services.AddHttpClient<IIdentityService, KeycloakService>(c =>
+        {
+            c.BaseAddress = new Uri("http://localhost:8080/");
+        });
 
         return services;
     }
