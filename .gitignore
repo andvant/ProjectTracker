@@ -3,4 +3,5 @@ txts/
 [Bb]in/
 [Oo]bj/
 [Pp]ublish/
+dist/
 node_modules/
