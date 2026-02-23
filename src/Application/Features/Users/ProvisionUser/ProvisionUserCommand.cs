@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ProjectTracker.Application.Features.Users.ProvisionUser;
 
-public record ProvisionUserCommand(Guid ExternalId, string Username, string Email) : IRequest;
+public record ProvisionUserCommand(Guid Id, string Username, string Email) : IRequest;
 
 internal class ProvisionUserCommandHandler : IRequestHandler<ProvisionUserCommand>
 {
@@ -22,14 +22,14 @@ internal class ProvisionUserCommandHandler : IRequestHandler<ProvisionUserComman
 
     public async Task Handle(ProvisionUserCommand command, CancellationToken ct)
     {
-        var userExists = await _context.Users.AnyAsync(u => u.Id == command.ExternalId);
+        var userExists = await _context.Users.AnyAsync(u => u.Id == command.Id);
 
         if (userExists)
         {
             return;
         }
 
-        var user = new User(command.ExternalId, command.Username, command.Email, _timeProvider.GetUtcNow());
+        var user = new User(command.Id, command.Username, command.Email, _timeProvider.GetUtcNow());
 
         _context.Users.Add(user);
 

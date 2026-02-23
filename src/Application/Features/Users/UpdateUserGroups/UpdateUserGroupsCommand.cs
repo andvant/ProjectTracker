@@ -34,15 +34,14 @@ internal class UpdateUserGroupsCommandHandler : IRequestHandler<UpdateUserGroups
             throw new UserNotFoundException(command.UserId);
         }
 
-
         var userGroups = await _identityService.GetUserGroups(command.UserId, ct);
 
-        var groupsToBeDeleted = userGroups.Where(ug => !command.GroupIds.Contains(ug.Id)).Select(g => g.Id).ToList();
+        var groupsToBeRemoved = userGroups.Where(ug => !command.GroupIds.Contains(ug.Id)).Select(g => g.Id).ToList();
         var groupsToBeAdded = command.GroupIds.Where(g => !userGroups.Select(ug => ug.Id).Contains(g)).ToList();
 
-        foreach (var groupId in groupsToBeDeleted)
+        foreach (var groupId in groupsToBeRemoved)
         {
-            await _identityService.DeleteUserFromGroup(command.UserId, groupId, ct);
+            await _identityService.RemoveUserFromGroup(command.UserId, groupId, ct);
         }
 
         foreach (var groupId in groupsToBeAdded)

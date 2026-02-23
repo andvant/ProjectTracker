@@ -15,6 +15,6 @@ internal static class GetUsersEndpoint
 
             return TypedResults.Ok(users);
         })
-        .Produces<List<UsersDto>>(StatusCodes.Status200OK);
+        .Produces<IReadOnlyCollection<UsersDto>>(StatusCodes.Status200OK);
     }
 }

@@ -22,11 +22,11 @@ public class UserProvisionMiddleware : IMiddleware
             return;
         }
 
-        var externalId = user.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var id = user.FindFirstValue(ClaimTypes.NameIdentifier)!;
         var username = user.FindFirstValue("preferred_username")!;
         var email = user.FindFirstValue(ClaimTypes.Email)!;
 
-        var command = new ProvisionUserCommand(Guid.Parse(externalId), username, email);
+        var command = new ProvisionUserCommand(Guid.Parse(id), username, email);
 
         await _sender.Send(command);
 

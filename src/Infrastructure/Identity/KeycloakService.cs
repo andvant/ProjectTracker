@@ -43,7 +43,7 @@ public class KeycloakService : IIdentityService
         return (await response.Content.ReadFromJsonAsync<IReadOnlyCollection<GroupDto>>(ct))!;
     }
 
-    public async Task DeleteUserFromGroup(Guid userId, Guid groupId, CancellationToken ct)
+    public async Task RemoveUserFromGroup(Guid userId, Guid groupId, CancellationToken ct)
     {
         await SetAccessToken(ct);
 

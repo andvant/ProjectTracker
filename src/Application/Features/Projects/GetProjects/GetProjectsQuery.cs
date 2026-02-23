@@ -1,8 +1,8 @@
 namespace ProjectTracker.Application.Features.Projects.GetProjects;
 
-public record GetProjectsQuery : IRequest<List<ProjectsDto>>;
+public record GetProjectsQuery : IRequest<IReadOnlyCollection<ProjectsDto>>;
 
-internal class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, List<ProjectsDto>>
+internal class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IReadOnlyCollection<ProjectsDto>>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUser _currentUser;
@@ -13,7 +13,7 @@ internal class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, List<
         _currentUser = currentUser;
     }
 
-    public async Task<List<ProjectsDto>> Handle(GetProjectsQuery query, CancellationToken ct)
+    public async Task<IReadOnlyCollection<ProjectsDto>> Handle(GetProjectsQuery query, CancellationToken ct)
     {
         if (_currentUser.IsAdmin() || _currentUser.IsProjectManager())
         {

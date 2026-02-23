@@ -74,7 +74,7 @@ public static class DependencyInjection
 
         services.AddHttpClient<IIdentityService, KeycloakService>(c =>
         {
-            c.BaseAddress = new Uri("http://localhost:8080/");
+            c.BaseAddress = new Uri(configuration["KeycloakAdminConfig:BaseUrl"]!);
         });
 
         return services;

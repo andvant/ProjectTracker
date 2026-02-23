@@ -15,6 +15,6 @@ internal static class GetIssuesEndpoint
 
             return TypedResults.Ok(issues);
         })
-        .Produces<List<IssuesDto>>(StatusCodes.Status200OK);
+        .Produces<IReadOnlyCollection<IssuesDto>>(StatusCodes.Status200OK);
     }
 }

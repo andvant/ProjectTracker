@@ -8,6 +8,7 @@ services:
       ASPNETCORE_URLS: http://+:80
       S3Config__Endpoint: http://rustfs:9000
       KeycloakConfig__MetadataAddress: http://keycloak:8080/realms/project-tracker/.well-known/openid-configuration
+      KeycloakAdminConfig__BaseUrl: http://keycloak:8080
       ConnectionStrings__ProjectTrackerDb: >
         Host=postgres;
         Port=5432;

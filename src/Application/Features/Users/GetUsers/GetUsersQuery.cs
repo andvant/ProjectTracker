@@ -1,8 +1,8 @@
 namespace ProjectTracker.Application.Features.Users.GetUsers;
 
-public record GetUsersQuery : IRequest<List<UsersDto>>;
+public record GetUsersQuery : IRequest<IReadOnlyCollection<UsersDto>>;
 
-internal class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<UsersDto>>
+internal class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, IReadOnlyCollection<UsersDto>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -11,6 +11,6 @@ internal class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<UsersD
         _context = context;
     }
 
-    public Task<List<UsersDto>> Handle(GetUsersQuery query, CancellationToken ct) =>
-        _context.Users.AsNoTracking().ProjectToDto().ToListAsync(ct);
+    public async Task<IReadOnlyCollection<UsersDto>> Handle(GetUsersQuery query, CancellationToken ct) =>
+        await _context.Users.AsNoTracking().ProjectToDto().ToListAsync(ct);
 }

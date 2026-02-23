@@ -2,9 +2,9 @@ using ProjectTracker.Application.Common;
 
 namespace ProjectTracker.Application.Features.Issues.GetIssues;
 
-public record GetIssuesQuery(Guid ProjectId) : IRequest<List<IssuesDto>>;
+public record GetIssuesQuery(Guid ProjectId) : IRequest<IReadOnlyCollection<IssuesDto>>;
 
-internal class GetIssuesQueryHandler : IRequestHandler<GetIssuesQuery, List<IssuesDto>>
+internal class GetIssuesQueryHandler : IRequestHandler<GetIssuesQuery, IReadOnlyCollection<IssuesDto>>
 {
     private readonly IApplicationDbContext _context;
     private readonly ICurrentUser _currentUser;
@@ -15,7 +15,7 @@ internal class GetIssuesQueryHandler : IRequestHandler<GetIssuesQuery, List<Issu
         _currentUser = currentUser;
     }
 
-    public async Task<List<IssuesDto>> Handle(GetIssuesQuery query, CancellationToken ct)
+    public async Task<IReadOnlyCollection<IssuesDto>> Handle(GetIssuesQuery query, CancellationToken ct)
     {
         var projectExists = await _context.Projects.AnyAsync(p => p.Id == query.ProjectId, ct);
 
