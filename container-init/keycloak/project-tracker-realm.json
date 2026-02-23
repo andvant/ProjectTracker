@@ -3,7 +3,7 @@
   "realm" : "project-tracker",
   "displayName" : "",
   "displayNameHtml" : "",
-  "notBefore" : 0,
+  "notBefore" : 1771804128,
   "defaultSignatureAlgorithm" : "RS256",
   "revokeRefreshToken" : false,
   "refreshTokenMaxReuse" : 0,
@@ -49,6 +49,22 @@
   "failureFactor" : 30,
   "roles" : {
     "realm" : [ {
+      "id" : "e6751223-3f4c-4ebd-a591-ae72aeb2a451",
+      "name" : "ProjectManager",
+      "description" : "Project Manager (can create and see all projects)",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "203150f5-701c-40dd-bdcb-287282fb8e65",
+      "attributes" : { }
+    }, {
+      "id" : "883b527a-b0a3-4496-8124-0db19e5c011a",
+      "name" : "Admin",
+      "description" : "Admin (can do anything)",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "203150f5-701c-40dd-bdcb-287282fb8e65",
+      "attributes" : { }
+    }, {
       "id" : "4169705c-168e-49b2-bbe6-259eab96b407",
       "name" : "uma_authorization",
       "description" : "${role_uma_authorization}",
@@ -80,6 +96,7 @@
       "attributes" : { }
     } ],
     "client" : {
+      "admin-client" : [ ],
       "realm-management" : [ {
         "id" : "69d169fc-3448-4512-92a8-c435ab30af6d",
         "name" : "create-client",
@@ -338,7 +355,25 @@
       } ]
     }
   },
-  "groups" : [ ],
+  "groups" : [ {
+    "id" : "dad0fa7e-c5bc-408d-ad35-4580992b45dc",
+    "name" : "Admins",
+    "description" : "Admins (can do anything)",
+    "path" : "/Admins",
+    "subGroups" : [ ],
+    "attributes" : { },
+    "realmRoles" : [ "Admin" ],
+    "clientRoles" : { }
+  }, {
+    "id" : "a54a9dd6-230c-4f56-b678-b270b743a2f5",
+    "name" : "ProjectManagers",
+    "description" : "Project Managers (can create and see all projects)",
+    "path" : "/ProjectManagers",
+    "subGroups" : [ ],
+    "attributes" : { },
+    "realmRoles" : [ "ProjectManager" ],
+    "clientRoles" : { }
+  } ],
   "defaultRole" : {
     "id" : "2c7e770f-59e7-4468-bcfc-3bef4138f29e",
     "name" : "default-roles-project-tracker",
@@ -400,8 +435,43 @@
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-project-tracker" ],
+    "notBefore" : 1771686763,
+    "groups" : [ "/Admins" ]
+  }, {
+    "id" : "a84e00ba-6e8a-4a5c-9e4f-bfd46d0410e0",
+    "username" : "service-account-admin-client",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1771723057829,
+    "totp" : false,
+    "serviceAccountClientId" : "admin-client",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-project-tracker" ],
+    "clientRoles" : {
+      "realm-management" : [ "manage-events", "query-users", "manage-users", "view-users", "manage-authorization", "view-authorization", "query-realms", "create-client", "view-clients", "view-realm", "view-identity-providers", "impersonation", "view-events", "manage-realm", "query-groups", "manage-identity-providers", "realm-admin", "query-clients", "manage-clients" ],
+      "broker" : [ "read-token" ],
+      "account" : [ "view-consent", "manage-consent", "manage-account", "delete-account", "view-profile", "view-groups", "manage-account-links", "view-applications" ]
+    },
     "notBefore" : 0,
     "groups" : [ ]
+  }, {
+    "id" : "177afd42-4715-4631-946f-f532734c6389",
+    "username" : "user",
+    "firstName" : "James",
+    "lastName" : "Smith",
+    "email" : "user@mail.com",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1771809381370,
+    "totp" : false,
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-project-tracker" ],
+    "notBefore" : 0,
+    "groups" : [ "/ProjectManagers" ]
   } ],
   "scopeMappings" : [ {
     "clientScope" : "offline_access",
@@ -513,6 +583,47 @@
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : 0,
     "defaultClientScopes" : [ "web-origins", "acr", "profile", "roles", "basic", "email" ],
+    "optionalClientScopes" : [ "address", "phone", "offline_access", "organization", "microprofile-jwt" ]
+  }, {
+    "id" : "f1520780-1e06-42c1-aca0-e5dabd10fb69",
+    "clientId" : "admin-client",
+    "name" : "Confidential admin client for Project Tracker",
+    "description" : "",
+    "rootUrl" : "",
+    "adminUrl" : "",
+    "baseUrl" : "",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "alwaysDisplayInConsole" : false,
+    "clientAuthenticatorType" : "client-secret",
+    "secret" : "eqUfIFaZ4mHm9PW0JC6p0ciab13LFanj",
+    "redirectUris" : [ "/*" ],
+    "webOrigins" : [ "/*" ],
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "consentRequired" : false,
+    "standardFlowEnabled" : true,
+    "implicitFlowEnabled" : false,
+    "directAccessGrantsEnabled" : false,
+    "serviceAccountsEnabled" : true,
+    "publicClient" : false,
+    "frontchannelLogout" : true,
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "realm_client" : "false",
+      "oidc.ciba.grant.enabled" : "false",
+      "client.secret.creation.time" : "1771723057",
+      "backchannel.logout.session.required" : "true",
+      "standard.token.exchange.enabled" : "false",
+      "oauth2.device.authorization.grant.enabled" : "false",
+      "pkce.code.challenge.method" : "S256",
+      "backchannel.logout.revoke.offline.tokens" : "false",
+      "dpop.bound.access.tokens" : "false"
+    },
+    "authenticationFlowBindingOverrides" : { },
+    "fullScopeAllowed" : true,
+    "nodeReRegistrationTimeout" : -1,
+    "defaultClientScopes" : [ "web-origins", "service_account", "acr", "profile", "roles", "basic", "email" ],
     "optionalClientScopes" : [ "address", "phone", "offline_access", "organization", "microprofile-jwt" ]
   }, {
     "id" : "a99ec687-8353-4488-9f4e-ae3a0bd67252",
@@ -995,12 +1106,15 @@
       "protocolMapper" : "oidc-usermodel-realm-role-mapper",
       "consentRequired" : false,
       "config" : {
-        "user.attribute" : "foo",
         "introspection.token.claim" : "true",
+        "multivalued" : "true",
+        "userinfo.token.claim" : "false",
+        "user.attribute" : "foo",
+        "id.token.claim" : "false",
+        "lightweight.claim" : "false",
         "access.token.claim" : "true",
-        "claim.name" : "realm_access.roles",
-        "jsonType.label" : "String",
-        "multivalued" : "true"
+        "claim.name" : "roles",
+        "jsonType.label" : "String"
       }
     } ]
   }, {
@@ -1317,7 +1431,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-full-name-mapper", "saml-user-attribute-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "oidc-address-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-full-name-mapper", "oidc-usermodel-attribute-mapper", "oidc-address-mapper", "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-property-mapper", "saml-role-list-mapper" ]
       }
     }, {
       "id" : "dd0ea7d3-e0db-411d-843f-2ef4e59809fc",
@@ -1333,7 +1447,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "oidc-address-mapper", "saml-user-property-mapper", "oidc-usermodel-property-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-full-name-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "saml-user-property-mapper", "oidc-full-name-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper" ]
       }
     }, {
       "id" : "6e96c32c-4851-4252-8ffb-4d26b0c042d3",
