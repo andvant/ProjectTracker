@@ -43,4 +43,9 @@ var api = builder.AddProject<Projects.Api>("api")
     .WaitFor(rustfs)
     .WaitFor(keycloak);
 
+var frontend = builder.AddDockerfile("frontend", "../../frontend")
+    .WithHttpEndpoint(port: 5150, targetPort: 80)
+    .WithReference(api)
+    .WaitFor(api);
+
 builder.Build().Run();
