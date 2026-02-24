@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AppLayout from '@/layouts/AppLayout.vue'
+import MainLayout from '@/layouts/MainLayout.vue'
 import ProjectView from '@/views/ProjectView.vue'
 import UsersView from '@/views/UsersView.vue'
 
 const routes = [
   {
     path: '/',
-    component: AppLayout,
+    component: MainLayout,
     children: [
       {
         path: 'projects/:projectKey?',

@@ -28,7 +28,7 @@ const onClickUsers = () => {
 </script>
 <template>
   <aside class="sidebar">
-    <div class="projects">
+    <div>
       <ul>
         <li
           v-for="project in projects"
@@ -42,13 +42,7 @@ const onClickUsers = () => {
       </ul>
     </div>
     <div class="users">
-      <p
-        @click="onClickUsers"
-        class="users button sidebar-item"
-        :class="{ selected: usersSelected }"
-      >
-        Users
-      </p>
+      <p @click="onClickUsers" class="users button" :class="{ selected: usersSelected }">Users</p>
     </div>
   </aside>
 </template>

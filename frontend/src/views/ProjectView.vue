@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import ProjectDetails from '@/components/ProjectDetails.vue'
-import IssuesList from '@/components/IssuesList.vue'
+import Project from '@/components/Project.vue'
+import Issues from '@/components/Issues.vue'
 
 defineProps<{ projectId?: string }>()
 </script>
 <template>
   <div>
-    <ProjectDetails :projectId="projectId" />
-    <IssuesList :projectId="projectId" />
+    <Project :projectId="projectId" />
+    <Issues :projectId="projectId" />
   </div>
 </template>
