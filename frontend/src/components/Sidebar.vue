@@ -19,11 +19,11 @@ const usersSelected = computed(() => {
 })
 
 const onSelectProject = (projectKey: string) => {
-  router.push(`/projects/${projectKey}`)
+  router.push({ name: 'Project', params: { projectKey } })
 }
 
 const onClickUsers = () => {
-  router.push('/users')
+  router.push({ name: 'Users' })
 }
 </script>
 <template>
