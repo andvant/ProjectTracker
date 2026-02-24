@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { getProject } from '@/api'
-import type { ProjectDto } from '@/api'
+import type { ProjectDto } from '@/types'
 
 const project = ref<ProjectDto>()
 

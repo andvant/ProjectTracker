@@ -2,7 +2,7 @@
 import { ref, onMounted, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProjects } from '@/api'
-import type { ProjectsDto } from '@/api'
+import type { ProjectsDto } from '@/types'
 import Sidebar from '@/components/Sidebar.vue'
 import MainPanel from '@/components/MainPanel.vue'
 

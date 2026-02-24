@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { getUsers } from '@/api'
-import type { UsersDto } from '@/api'
+import type { UsersDto } from '@/types'
 
 const users = ref<UsersDto[]>([])
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import type { ProjectsDto } from '@/api'
+import type { ProjectsDto } from '@/types'
 
 const router = useRouter()
 const route = useRoute()

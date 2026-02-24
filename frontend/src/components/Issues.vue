@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { getIssues } from '@/api'
-import type { IssuesDto } from '@/api'
+import type { IssuesDto } from '@/types'
 
 const issues = ref<IssuesDto[]>([])
 
