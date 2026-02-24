@@ -5,7 +5,7 @@ import App from '@/App.vue'
 const routes = [
   {
     path: '/projects/:projectKey?',
-    name: 'Dashboard',
+    name: 'App',
     component: App,
     props: (route: RouteLocationNormalized) => ({
       projectKey: (route.params.projectKey as string) || null,

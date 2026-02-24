@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-
-interface Issue {
-  id: string
-  title: string
-}
+import { fetchIssues } from '@/api'
+import type { Issue } from '@/api'
 
 const issues = ref<Issue[]>([])
 
@@ -12,26 +9,10 @@ const props = defineProps<{
   projectId: string | null
 }>()
 
-const fetchIssues = async (projectId: string) => {
-  try {
-    const res = await fetch(`http://localhost:5050/projects/${projectId}/issues`)
-
-    if (!res.ok) throw new Error('Failed to fetch issues')
-
-    issues.value = await res.json()
-  } catch (err) {
-    console.error(err)
-  }
-}
-
 watch(
   () => props.projectId,
-  (projectId) => {
-    if (projectId) {
-      fetchIssues(projectId)
-    } else {
-      issues.value = []
-    }
+  async (projectId) => {
+    issues.value = projectId ? await fetchIssues(projectId) : []
   },
 )
 </script>

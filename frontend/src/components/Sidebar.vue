@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-
-interface Project {
-  id: string
-  key: string
-  name: string
-}
+import { fetchProjects } from '@/api'
+import type { Project } from '@/api'
 
 const router = useRouter()
 
@@ -18,18 +14,6 @@ const emit = defineEmits<{
 
 const selectedProjectKey = ref<string | null>()
 
-const fetchProjects = async () => {
-  try {
-    const res = await fetch('http://localhost:5050/projects')
-
-    if (!res.ok) throw new Error('Failed to fetch projects')
-
-    projects.value = await res.json()
-  } catch (err) {
-    console.error(err)
-  }
-}
-
 const selectProject = (id: string, key: string) => {
   emit('select-project', id)
   selectedProjectKey.value = key
@@ -37,7 +21,7 @@ const selectProject = (id: string, key: string) => {
 }
 
 onMounted(async () => {
-  await fetchProjects()
+  projects.value = await fetchProjects()
 
   const selectedProjectKey = router.currentRoute.value.params.projectKey as string
 
