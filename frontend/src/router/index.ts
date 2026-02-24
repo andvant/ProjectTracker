@@ -1,15 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteLocationNormalized } from 'vue-router'
-import App from '@/App.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
+import ProjectView from '@/views/ProjectView.vue'
+import UsersView from '@/views/UsersView.vue'
 
 const routes = [
   {
-    path: '/projects/:projectKey?',
-    name: 'App',
-    component: App,
-    props: (route: RouteLocationNormalized) => ({
-      projectKey: (route.params.projectKey as string) || null,
-    }),
+    path: '/',
+    component: AppLayout,
+    children: [
+      {
+        path: 'projects/:projectKey?',
+        name: 'Project',
+        component: ProjectView,
+      },
+      {
+        path: 'users',
+        name: 'Users',
+        component: UsersView,
+      },
+    ],
   },
 ]
 

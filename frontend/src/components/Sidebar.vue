@@ -1,49 +1,55 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { fetchProjects } from '@/api'
-import type { Project } from '@/api'
+import { computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import type { ProjectsDto } from '@/api'
 
 const router = useRouter()
+const route = useRoute()
 
-const projects = ref<Project[]>([])
-
-const emit = defineEmits<{
-  (e: 'select-project', projectId: string): void
+defineProps<{
+  projects: ProjectsDto[]
 }>()
 
-const selectedProjectKey = ref<string | null>()
+const selectedProjectKey = computed(() => {
+  return route.name === 'Project' ? route.params.projectKey : null
+})
 
-const selectProject = (id: string, key: string) => {
-  emit('select-project', id)
-  selectedProjectKey.value = key
-  router.push(`/projects/${key}`)
+const usersSelected = computed(() => {
+  return route.name === 'Users'
+})
+
+const onSelectProject = (projectKey: string) => {
+  router.push(`/projects/${projectKey}`)
 }
 
-onMounted(async () => {
-  projects.value = await fetchProjects()
-
-  const selectedProjectKey = router.currentRoute.value.params.projectKey as string
-
-  if (selectedProjectKey) {
-    const selectedProjectId = projects.value.filter((p) => p.key === selectedProjectKey)[0]!.id
-    selectProject(selectedProjectId, selectedProjectKey)
-  }
-})
+const onClickUsers = () => {
+  router.push('/users')
+}
 </script>
 <template>
   <aside class="sidebar">
-    <ul>
-      <li
-        v-for="project in projects"
-        :key="project.id"
-        @click="selectProject(project.id, project.key)"
-        class="projects-btn"
-        :class="{ selected: project.key === selectedProjectKey }"
+    <div class="projects">
+      <ul>
+        <li
+          v-for="project in projects"
+          :key="project.id"
+          @click="onSelectProject(project.key)"
+          class="button"
+          :class="{ selected: project.key === selectedProjectKey }"
+        >
+          {{ project.name }}
+        </li>
+      </ul>
+    </div>
+    <div class="users">
+      <p
+        @click="onClickUsers"
+        class="users button sidebar-item"
+        :class="{ selected: usersSelected }"
       >
-        {{ project.name }}
-      </li>
-    </ul>
+        Users
+      </p>
+    </div>
   </aside>
 </template>
 <style scoped>
@@ -55,27 +61,29 @@ onMounted(async () => {
   flex-direction: column;
 }
 
-.projects-btn {
+.button {
   color: white;
   background: transparent;
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
+  margin: 0;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+
+  &.selected {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: bold;
+  }
+}
+
+.users {
+  margin-top: auto;
 }
 
 .sidebar ul {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.sidebar li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
-}
-
-.sidebar li.selected {
-  background-color: rgba(255, 255, 255, 0.2);
-  font-weight: bold;
 }
 </style>
