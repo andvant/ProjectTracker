@@ -5,7 +5,7 @@ interface RequestOptions<TBody = unknown> {
   body?: TBody
 }
 
-const BASE_URL = import.meta.env.VITE_BASE_API_URL
+const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export const request = async <TResponse, TBody = unknown>(
   url: string,

@@ -23,6 +23,13 @@ services:
       - rustfs
       - keycloak
 
+  frontend:
+    build: frontend
+    ports:
+      - "5150:80"
+    depends_on:
+      - api
+
   postgres:
     image: postgres:18
     restart: on-failure
