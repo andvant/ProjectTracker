@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watchEffect } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProjects, getIssues } from '@/api'
 import type { ProjectsDto, IssuesDto } from '@/types'
@@ -14,25 +14,40 @@ const selectedIssueId = ref<string | null>()
 const projects = ref<ProjectsDto[]>([])
 const issues = ref<IssuesDto[]>([])
 
+const updateSelectedProject = async (projectKey?: string) => {
+  if (!projectKey || !projects.value.length) return
+
+  selectedProjectId.value = projects.value.find((p) => p.key === projectKey)!.id
+
+  issues.value = await getIssues(selectedProjectId.value)
+}
+
+const updateSelectedIssue = (issueKey?: string) => {
+  if (!issueKey || !issues.value.length) return
+
+  selectedIssueId.value = issues.value.find((i) => i.key === issueKey)!.id
+}
+
 onMounted(async () => {
   projects.value = await getProjects()
+
+  await updateSelectedProject(route.params.projectKey as string)
+  updateSelectedIssue(route.params.issueKey as string)
 })
 
-watchEffect(async () => {
-  const projectKey = route.params.projectKey as string
+watch(
+  () => route.params.projectKey,
+  async (projectKey) => {
+    await updateSelectedProject(projectKey as string)
+  },
+)
 
-  if (projectKey && projects.value.length) {
-    selectedProjectId.value = projects.value.filter((p) => p.key === projectKey)[0]!.id
-
-    issues.value = await getIssues(selectedProjectId.value)
-  }
-
-  const issueKey = route.params.issueKey as string
-
-  if (issueKey) {
-    selectedIssueId.value = issues.value.filter((i) => i.key === issueKey)[0]?.id
-  }
-})
+watch(
+  () => route.params.issueKey,
+  (issueKey) => {
+    updateSelectedIssue(issueKey as string)
+  },
+)
 </script>
 <template>
   <div class="app">
