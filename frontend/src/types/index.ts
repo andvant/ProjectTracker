@@ -18,7 +18,11 @@ export interface ProjectDto {
 
 export interface IssuesDto {
   id: string
+  key: string
   title: string
+  status: IssueStatus
+  type: IssueType
+  priority: IssuePriority
 }
 
 export interface IssueDto {

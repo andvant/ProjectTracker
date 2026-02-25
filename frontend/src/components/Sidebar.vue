@@ -1,22 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import type { ProjectsDto } from '@/types'
 
-const router = useRouter()
 const route = useRoute()
+const router = useRouter()
 
 defineProps<{
   projects: ProjectsDto[]
 }>()
 
-const selectedProjectKey = computed(() => {
-  return route.name === 'Project' ? route.params.projectKey : null
-})
+const selectedProjectKey = computed(() => route.params.projectKey)
 
-const usersSelected = computed(() => {
-  return route.name === 'Users'
-})
+const usersSelected = computed(() => route.name === 'Users')
 
 const onSelectProject = (projectKey: string) => {
   router.push({ name: 'Project', params: { projectKey } })

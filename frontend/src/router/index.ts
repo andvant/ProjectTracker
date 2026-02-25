@@ -1,9 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import MainLayout from '@/layouts/MainLayout.vue'
 import ProjectView from '@/views/ProjectView.vue'
 import UsersView from '@/views/UsersView.vue'
+import Issue from '@/components/Issue.vue'
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: MainLayout,
@@ -12,6 +13,13 @@ const routes = [
         path: 'projects/:projectKey?',
         name: 'Project',
         component: ProjectView,
+        children: [
+          {
+            path: 'issues/:issueKey?',
+            name: 'Issue',
+            component: Issue,
+          },
+        ],
       },
       {
         path: 'users',

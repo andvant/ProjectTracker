@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import { getIssues } from '@/api'
+import { useRouter } from 'vue-router'
 import type { IssuesDto } from '@/types'
 
-const issues = ref<IssuesDto[]>([])
+const router = useRouter()
 
-const props = defineProps<{ projectId?: string }>()
+defineProps<{ projectId?: string; issues?: IssuesDto[] }>()
 
-watchEffect(async () => {
-  if (!props.projectId) return
-
-  issues.value = await getIssues(props.projectId)
-})
+const onSelectIssue = (issueKey: string) => {
+  router.push({ name: 'Issue', params: { issueKey } })
+}
 </script>
 <template>
   <div class="issues">
     <ul>
-      <li v-for="issue in issues" :key="issue.id">{{ issue.title }}</li>
+      <li v-for="issue in issues" :key="issue.id" @click="onSelectIssue(issue.key)">
+        {{ issue.title }}
+      </li>
     </ul>
   </div>
 </template>
