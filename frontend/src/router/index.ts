@@ -16,7 +16,7 @@ const routes: RouteRecordRaw[] = [
         component: ProjectView,
         children: [
           {
-            path: 'issues/:issueKey?',
+            path: 'issues/:issueKey',
             name: 'Issue',
             component: Issue,
           },
@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
         component: UsersView,
         children: [
           {
-            path: ':userId?',
+            path: ':userId',
             name: 'User',
             component: User,
           },
