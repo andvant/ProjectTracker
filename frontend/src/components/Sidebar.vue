@@ -12,7 +12,7 @@ defineProps<{
 
 const selectedProjectKey = computed(() => route.params.projectKey)
 
-const usersSelected = computed(() => route.name === 'Users')
+const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
 
 const onSelectProject = (projectKey: string) => {
   router.push({ name: 'Project', params: { projectKey } })

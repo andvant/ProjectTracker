@@ -17,7 +17,7 @@ watchEffect(async () => {
 })
 </script>
 <template>
-  <div class="issue" v-if="issue">
+  <div v-if="issue" class="issue">
     <h2>{{ issue.title }}</h2>
     <p>{{ issue.description }}</p>
     <p>{{ issue.reporterId }}</p>

@@ -1,19 +1,34 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { getUsers } from '@/api'
 import type { UsersDto } from '@/types'
+import User from '@/components/User.vue'
+
+const router = useRouter()
 
 const users = ref<UsersDto[]>([])
+
+const route = useRoute()
+
+const userId = computed(() => route.params.userId as string)
+
+const onSelectUser = (userId: string) => {
+  router.push({ name: 'User', params: { userId } })
+}
 
 onMounted(async () => {
   users.value = await getUsers()
 })
 </script>
 <template>
-  <div class="users">
+  <div v-if="!userId" class="users">
     <ul>
-      <li v-for="user in users" :key="user.id">{{ user.name }}</li>
+      <li v-for="user in users" :key="user.id" @click="onSelectUser(user.id)">{{ user.name }}</li>
     </ul>
+  </div>
+  <div v-if="userId">
+    <User :userId="userId" />
   </div>
 </template>
 <style scoped>

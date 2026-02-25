@@ -3,6 +3,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import ProjectView from '@/views/ProjectView.vue'
 import UsersView from '@/views/UsersView.vue'
 import Issue from '@/components/Issue.vue'
+import User from '@/components/User.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -25,6 +26,13 @@ const routes: RouteRecordRaw[] = [
         path: 'users',
         name: 'Users',
         component: UsersView,
+        children: [
+          {
+            path: ':userId?',
+            name: 'User',
+            component: User,
+          },
+        ],
       },
     ],
   },

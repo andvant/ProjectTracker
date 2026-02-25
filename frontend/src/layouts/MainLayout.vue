@@ -21,7 +21,7 @@ onMounted(async () => {
 watchEffect(async () => {
   const projectKey = route.params.projectKey as string
 
-  if (projectKey) {
+  if (projectKey && projects.value.length) {
     selectedProjectId.value = projects.value.filter((p) => p.key === projectKey)[0]!.id
 
     issues.value = await getIssues(selectedProjectId.value)
