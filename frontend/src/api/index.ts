@@ -1,25 +1,24 @@
-import { request } from '@/api/base'
+import client from '@/api/client'
 import type { ProjectsDto, ProjectDto, IssuesDto, IssueDto, UsersDto, UserDto } from '@/types'
 
 const api = {
-  getProjects: () => request<ProjectsDto[]>('projects'),
+  getProjects: () => client.get<ProjectsDto[]>('projects'),
 
-  getProject: (projectId: string) => request<ProjectDto>(`projects/${projectId}`),
+  getProject: (projectId: string) => client.get<ProjectDto>(`projects/${projectId}`),
 
-  deleteProject: (projectId: string) =>
-    request<ProjectDto>(`projects/${projectId}`, { method: 'DELETE' }),
+  deleteProject: (projectId: string) => client.delete<ProjectDto>(`projects/${projectId}`),
 
-  getIssues: (projectId: string) => request<IssuesDto[]>(`projects/${projectId}/issues`),
+  getIssues: (projectId: string) => client.get<IssuesDto[]>(`projects/${projectId}/issues`),
 
   getIssue: (projectId: string, issueId: string) =>
-    request<IssueDto>(`projects/${projectId}/issues/${issueId}`),
+    client.get<IssueDto>(`projects/${projectId}/issues/${issueId}`),
 
   deleteIssue: (projectId: string, issueId: string) =>
-    request<IssueDto>(`projects/${projectId}/issues/${issueId}`, { method: 'DELETE' }),
+    client.delete<IssueDto>(`projects/${projectId}/issues/${issueId}`),
 
-  getUsers: () => request<UsersDto[]>('users'),
+  getUsers: () => client.get<UsersDto[]>('users'),
 
-  getUser: (userId: string) => request<UserDto>(`users/${userId}`),
+  getUser: (userId: string) => client.get<UserDto>(`users/${userId}`),
 }
 
 export default api
