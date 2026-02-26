@@ -16,9 +16,14 @@ export const useProjectsStore = defineStore('projects', () => {
     await api.deleteProject(projectId)
   }
 
+  const getProjectIdByKey = (projectKey: string) => {
+    return projects.value.find((p) => p.key === projectKey)?.id
+  }
+
   return {
     projects,
     fetchProjects,
     deleteProject,
+    getProjectIdByKey,
   }
 })

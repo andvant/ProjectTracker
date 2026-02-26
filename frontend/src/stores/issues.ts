@@ -16,9 +16,14 @@ export const useIssuesStore = defineStore('issues', () => {
     await api.deleteIssue(projectId, issueId)
   }
 
+  const getIssueIdByKey = (issueKey: string) => {
+    return issues.value.find((i) => i.key === issueKey)?.id
+  }
+
   return {
     issues,
     fetchIssues,
     deleteIssue,
+    getIssueIdByKey,
   }
 })

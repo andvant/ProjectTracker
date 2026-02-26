@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useIssuesStore } from '@/stores/issues'
@@ -11,28 +11,18 @@ const route = useRoute()
 const projectsStore = useProjectsStore()
 const issuesStore = useIssuesStore()
 
-const selectedProjectId = ref<string | null>()
-const selectedIssueId = ref<string | null>()
-
 const updateSelectedProject = async (projectKey?: string) => {
   if (!projectKey || !projectsStore.projects.length) return
 
-  selectedProjectId.value = projectsStore.projects.find((p) => p.key === projectKey)!.id
+  const projectId = projectsStore.getProjectIdByKey(projectKey)!
 
-  await issuesStore.fetchIssues(selectedProjectId.value)
-}
-
-const updateSelectedIssue = (issueKey?: string) => {
-  if (!issueKey || !issuesStore.issues.length) return
-
-  selectedIssueId.value = issuesStore.issues.find((i) => i.key === issueKey)!.id
+  await issuesStore.fetchIssues(projectId)
 }
 
 onMounted(async () => {
   await projectsStore.fetchProjects()
 
   await updateSelectedProject(route.params.projectKey as string)
-  updateSelectedIssue(route.params.issueKey as string)
 })
 
 watch(
@@ -41,19 +31,12 @@ watch(
     await updateSelectedProject(projectKey as string)
   },
 )
-
-watch(
-  () => route.params.issueKey,
-  (issueKey) => {
-    updateSelectedIssue(issueKey as string)
-  },
-)
 </script>
 <template>
   <div class="app">
     <Sidebar />
     <MainPanel>
-      <router-view :projectId="selectedProjectId" :issueId="selectedIssueId" />
+      <router-view />
     </MainPanel>
   </div>
 </template>

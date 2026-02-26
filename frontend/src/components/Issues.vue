@@ -6,8 +6,6 @@ const router = useRouter()
 
 const issuesStore = useIssuesStore()
 
-defineProps<{ projectId?: string }>()
-
 const onSelectIssue = (issueKey: string) => {
   router.push({ name: 'Issue', params: { issueKey } })
 }

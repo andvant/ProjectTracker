@@ -1,33 +1,38 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/api'
 import { useIssuesStore } from '@/stores/issues'
 import type { IssueDto } from '@/types'
-
-const props = defineProps<{
-  projectId?: string
-  issueId?: string
-}>()
+import { useProjectsStore } from '@/stores/projects'
 
 const route = useRoute()
 const router = useRouter()
 
 const issue = ref<IssueDto>()
 
+const projectsStore = useProjectsStore()
 const issuesStore = useIssuesStore()
 
-const onDeleteIssue = async (issueId: string) => {
+const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
+
+const issueId = computed(() => issuesStore.getIssueIdByKey(route.params.issueKey as string))
+
+const onDeleteIssue = async () => {
   router.push({ name: 'Project', params: { projectKey: route.params.projectKey } })
 
-  await issuesStore.deleteIssue(props.projectId!, issueId)
+  await issuesStore.deleteIssue(projectId.value!, issueId.value!)
 }
 
-watchEffect(async () => {
-  if (!props.projectId || !props.issueId) return
+watch(
+  issueId,
+  async (issueId) => {
+    if (!issueId) return
 
-  issue.value = await api.getIssue(props.projectId, props.issueId)
-})
+    issue.value = await api.getIssue(projectId.value!, issueId)
+  },
+  { immediate: true },
+)
 </script>
 <template>
   <div v-if="issue" class="issue">
@@ -36,7 +41,7 @@ watchEffect(async () => {
     <p>{{ issue.reporterId }}</p>
     <p>{{ issue.assigneeId }}</p>
     <p>{{ issue.createdOn }}</p>
-    <button @click="onDeleteIssue(issue.id)">Delete</button>
+    <button @click="onDeleteIssue">Delete</button>
   </div>
 </template>
 <style scoped>

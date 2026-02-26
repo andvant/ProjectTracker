@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
     component: MainLayout,
     children: [
       {
-        path: 'projects/:projectKey?',
+        path: 'projects/:projectKey',
         name: 'Project',
         component: ProjectView,
         children: [

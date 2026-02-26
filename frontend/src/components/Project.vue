@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import api from '@/api'
 import { useProjectsStore } from '@/stores/projects'
 import type { ProjectDto } from '@/types'
 
+const route = useRoute()
 const router = useRouter()
-
-const props = defineProps<{ projectId?: string }>()
 
 const projectsStore = useProjectsStore()
 
 const project = ref<ProjectDto>()
+
+const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
 
 const onDeleteProject = async (projectId: string) => {
   router.push({ name: 'Home' })
@@ -19,15 +20,20 @@ const onDeleteProject = async (projectId: string) => {
   await projectsStore.deleteProject(projectId)
 }
 
-watchEffect(async () => {
-  if (!props.projectId) return
+watch(
+  projectId,
+  async (projectId) => {
+    if (!projectId) return
 
-  project.value = await api.getProject(props.projectId)
-})
+    project.value = await api.getProject(projectId)
+  },
+  { immediate: true },
+)
 </script>
 <template>
   <div v-if="project" class="project">
     <h2>{{ project.name }}</h2>
+    <p>{{ project.id }}</p>
     <p>{{ project.description }}</p>
     <p>{{ project.ownerId }}</p>
     <p>{{ project.createdOn }}</p>
