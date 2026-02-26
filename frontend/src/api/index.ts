@@ -3,6 +3,7 @@ import type {
   ProjectsDto,
   ProjectDto,
   CreateProjectRequest,
+  UpdateProjectRequest,
   IssuesDto,
   IssueDto,
   UsersDto,
@@ -13,6 +14,12 @@ const api = {
   getProjects: () => client.get<ProjectsDto[]>('projects'),
 
   getProject: (projectId: string) => client.get<ProjectDto>(`projects/${projectId}`),
+
+  createProject: (request: CreateProjectRequest) =>
+    client.post<ProjectDto, CreateProjectRequest>('projects', request),
+
+  updateProject: (projectId: string, request: UpdateProjectRequest) =>
+    client.put<ProjectDto, UpdateProjectRequest>(`projects/${projectId}`, request),
 
   deleteProject: (projectId: string) => client.delete(`projects/${projectId}`),
 
@@ -27,9 +34,6 @@ const api = {
   getUsers: () => client.get<UsersDto[]>('users'),
 
   getUser: (userId: string) => client.get<UserDto>(`users/${userId}`),
-
-  createProject: (request: CreateProjectRequest) =>
-    client.post<ProjectDto, CreateProjectRequest>('projects', request),
 }
 
 export default api

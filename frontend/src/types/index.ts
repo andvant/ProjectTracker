@@ -8,7 +8,7 @@ export interface ProjectDto {
   id: string
   key: string
   name: string
-  description: string
+  description?: string
   ownerId: string
   createdBy: string
   createdOn: Date
@@ -19,7 +19,12 @@ export interface ProjectDto {
 export interface CreateProjectRequest {
   key: string
   name: string
-  description: string
+  description?: string
+}
+
+export interface UpdateProjectRequest {
+  name: string
+  description?: string
 }
 
 export interface IssuesDto {

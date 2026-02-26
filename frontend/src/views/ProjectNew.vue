@@ -100,9 +100,7 @@ const onSubmit = async () => {
       {{ errors.general }}
     </div>
 
-    <button @click="onSubmit" :disabled="isSubmitting">
-      {{ isSubmitting ? 'Creating...' : 'Create' }}
-    </button>
+    <button @click="onSubmit" :disabled="isSubmitting">Create</button>
   </div>
 </template>
 <style scoped>
