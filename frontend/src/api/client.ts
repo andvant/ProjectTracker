@@ -11,9 +11,9 @@ const request = async <TResponse, TBody = unknown>(
   url: string,
   options: RequestOptions<TBody> = {},
 ): Promise<TResponse> => {
-  const { method, body } = options
+  const { method = 'GET', body } = options
 
-  const res = await fetch(`${BASE_URL}/${url}`, {
+  const res = await fetch(new URL(url, BASE_URL), {
     method,
     headers: body
       ? {
@@ -29,7 +29,7 @@ const request = async <TResponse, TBody = unknown>(
   }
 
   if (res.status === 204 || res.status === 304) {
-    return null as TResponse
+    return undefined as TResponse
   }
 
   return res.json() as Promise<TResponse>
@@ -44,7 +44,7 @@ const client = {
   put: <TResponse, TBody>(url: string, body: TBody): Promise<TResponse> =>
     request<TResponse, TBody>(url, { method: 'PUT', body }),
 
-  delete: <TResponse>(url: string): Promise<TResponse> =>
+  delete: <TResponse = void>(url: string): Promise<TResponse> =>
     request<TResponse>(url, { method: 'DELETE' }),
 }
 

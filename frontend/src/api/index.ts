@@ -6,7 +6,7 @@ const api = {
 
   getProject: (projectId: string) => client.get<ProjectDto>(`projects/${projectId}`),
 
-  deleteProject: (projectId: string) => client.delete<ProjectDto>(`projects/${projectId}`),
+  deleteProject: (projectId: string) => client.delete(`projects/${projectId}`),
 
   getIssues: (projectId: string) => client.get<IssuesDto[]>(`projects/${projectId}/issues`),
 
@@ -14,7 +14,7 @@ const api = {
     client.get<IssueDto>(`projects/${projectId}/issues/${issueId}`),
 
   deleteIssue: (projectId: string, issueId: string) =>
-    client.delete<IssueDto>(`projects/${projectId}/issues/${issueId}`),
+    client.delete(`projects/${projectId}/issues/${issueId}`),
 
   getUsers: () => client.get<UsersDto[]>('users'),
 
