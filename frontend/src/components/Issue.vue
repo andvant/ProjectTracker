@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { getIssue } from '@/api'
+import api from '@/api'
 import type { IssueDto } from '@/types'
 
 const issue = ref<IssueDto>()
@@ -13,7 +13,7 @@ const props = defineProps<{
 watchEffect(async () => {
   if (!props.projectId || !props.issueId) return
 
-  issue.value = await getIssue(props.projectId, props.issueId)
+  issue.value = await api.getIssue(props.projectId, props.issueId)
 })
 </script>
 <template>

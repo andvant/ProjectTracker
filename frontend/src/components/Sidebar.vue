@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { ProjectsDto } from '@/types'
+import { useProjectsStore } from '@/stores/projects'
 
 const route = useRoute()
 const router = useRouter()
 
-defineProps<{
-  projects: ProjectsDto[]
-}>()
+const projectsStore = useProjectsStore()
 
 const selectedProjectKey = computed(() => route.params.projectKey)
 
@@ -27,7 +25,7 @@ const onClickUsers = () => {
     <div>
       <ul>
         <li
-          v-for="project in projects"
+          v-for="project in projectsStore.projects"
           :key="project.id"
           @click="onSelectProject(project.key)"
           class="button"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { getUser } from '@/api'
+import api from '@/api'
 import type { UserDto } from '@/types'
 
 const props = defineProps<{
@@ -12,7 +12,7 @@ const user = ref<UserDto>()
 watchEffect(async () => {
   if (!props.userId) return
 
-  user.value = await getUser(props.userId)
+  user.value = await api.getUser(props.userId)
 })
 </script>
 <template>

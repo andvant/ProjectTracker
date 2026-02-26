@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getUsers } from '@/api'
+import api from '@/api'
 import type { UsersDto } from '@/types'
 import User from '@/components/User.vue'
 
@@ -18,7 +18,7 @@ const onSelectUser = (userId: string) => {
 }
 
 onMounted(async () => {
-  users.value = await getUsers()
+  users.value = await api.getUsers()
 })
 </script>
 <template>

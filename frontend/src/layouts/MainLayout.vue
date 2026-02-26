@@ -1,25 +1,27 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { getProjects, getIssues } from '@/api'
-import type { ProjectsDto, IssuesDto } from '@/types'
+import api from '@/api'
+import type { IssuesDto } from '@/types'
+import { useProjectsStore } from '@/stores/projects'
 import Sidebar from '@/components/Sidebar.vue'
 import MainPanel from '@/components/MainPanel.vue'
 
 const route = useRoute()
 
+const projectsStore = useProjectsStore()
+
 const selectedProjectId = ref<string | null>()
 const selectedIssueId = ref<string | null>()
 
-const projects = ref<ProjectsDto[]>([])
 const issues = ref<IssuesDto[]>([])
 
 const updateSelectedProject = async (projectKey?: string) => {
-  if (!projectKey || !projects.value.length) return
+  if (!projectKey || !projectsStore.projects.length) return
 
-  selectedProjectId.value = projects.value.find((p) => p.key === projectKey)!.id
+  selectedProjectId.value = projectsStore.projects.find((p) => p.key === projectKey)!.id
 
-  issues.value = await getIssues(selectedProjectId.value)
+  issues.value = await api.getIssues(selectedProjectId.value)
 }
 
 const updateSelectedIssue = (issueKey?: string) => {
@@ -29,7 +31,7 @@ const updateSelectedIssue = (issueKey?: string) => {
 }
 
 onMounted(async () => {
-  projects.value = await getProjects()
+  await projectsStore.fetchProjects()
 
   await updateSelectedProject(route.params.projectKey as string)
   updateSelectedIssue(route.params.issueKey as string)
@@ -51,7 +53,7 @@ watch(
 </script>
 <template>
   <div class="app">
-    <Sidebar :projects="projects" />
+    <Sidebar />
     <MainPanel>
       <router-view :projectId="selectedProjectId" :issues="issues" :issueId="selectedIssueId" />
     </MainPanel>

@@ -8,6 +8,7 @@ import User from '@/components/User.vue'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    name: 'Home',
     component: MainLayout,
     children: [
       {
