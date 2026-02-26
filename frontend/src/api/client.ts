@@ -7,7 +7,7 @@ interface RequestOptions<TBody = unknown> {
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-const request = async <TResponse, TBody = unknown>(
+const sendRequest = async <TResponse, TBody = unknown>(
   url: string,
   options: RequestOptions<TBody> = {},
 ): Promise<TResponse> => {
@@ -36,16 +36,17 @@ const request = async <TResponse, TBody = unknown>(
 }
 
 const client = {
-  get: <TResponse>(url: string): Promise<TResponse> => request<TResponse>(url, { method: 'GET' }),
+  get: <TResponse>(url: string): Promise<TResponse> =>
+    sendRequest<TResponse>(url, { method: 'GET' }),
 
   post: <TResponse, TBody>(url: string, body: TBody): Promise<TResponse> =>
-    request<TResponse, TBody>(url, { method: 'POST', body }),
+    sendRequest<TResponse, TBody>(url, { method: 'POST', body }),
 
   put: <TResponse, TBody>(url: string, body: TBody): Promise<TResponse> =>
-    request<TResponse, TBody>(url, { method: 'PUT', body }),
+    sendRequest<TResponse, TBody>(url, { method: 'PUT', body }),
 
   delete: <TResponse = void>(url: string): Promise<TResponse> =>
-    request<TResponse>(url, { method: 'DELETE' }),
+    sendRequest<TResponse>(url, { method: 'DELETE' }),
 }
 
 export default client
