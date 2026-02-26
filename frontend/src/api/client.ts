@@ -1,3 +1,5 @@
+import { ApiError, type ProblemDetails } from '@/types/api'
+
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
 interface RequestOptions<TBody = unknown> {
@@ -23,16 +25,25 @@ const sendRequest = async <TResponse, TBody = unknown>(
     body: body ? JSON.stringify(body) : undefined,
   })
 
-  if (!res.ok) {
-    const message = await res.text().catch(() => res.statusText)
-    throw new Error(`API Error ${res.status}: ${message}`)
-  }
-
   if (res.status === 204 || res.status === 304) {
     return undefined as TResponse
   }
 
-  return res.json() as Promise<TResponse>
+  const contentType = res.headers.get('content-type')
+
+  const data = contentType?.includes('json')
+    ? await res.json().catch(() => res.statusText)
+    : await res.text().catch(() => res.statusText)
+
+  if (!res.ok) {
+    if (data && typeof data === 'object' && 'title' in data) {
+      throw new ApiError(res.status, data as ProblemDetails)
+    }
+
+    throw new ApiError(res.status, undefined, data)
+  }
+
+  return data as TResponse
 }
 
 const client = {
