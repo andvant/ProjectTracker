@@ -23,6 +23,8 @@ app.Services.ApplyMigrations();
 app.UseExceptionHandler();
 app.UseOpenApi();
 
+app.UseCors("frontend");
+
 app.UseAuthentication();
 app.UseAuthorization();
 

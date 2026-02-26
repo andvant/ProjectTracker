@@ -77,6 +77,15 @@ public static class DependencyInjection
             c.BaseAddress = new Uri(configuration["KeycloakAdminConfig:BaseUrl"]!);
         });
 
+        services.AddCors(options =>
+            options.AddPolicy("frontend", policy =>
+            {
+                policy.WithOrigins(configuration["CorsConfig:Origins"]!)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            })
+        );
+
         return services;
     }
 }
