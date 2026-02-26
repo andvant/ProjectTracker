@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import type { IssuesDto } from '@/types'
+import { useIssuesStore } from '@/stores/issues'
 
 const router = useRouter()
 
-defineProps<{ projectId?: string; issues?: IssuesDto[] }>()
+const issuesStore = useIssuesStore()
+
+defineProps<{ projectId?: string }>()
 
 const onSelectIssue = (issueKey: string) => {
   router.push({ name: 'Issue', params: { issueKey } })
@@ -13,7 +15,7 @@ const onSelectIssue = (issueKey: string) => {
 <template>
   <div class="issues">
     <ul>
-      <li v-for="issue in issues" :key="issue.id" @click="onSelectIssue(issue.key)">
+      <li v-for="issue in issuesStore.issues" :key="issue.id" @click="onSelectIssue(issue.key)">
         {{ issue.title }}
       </li>
     </ul>
