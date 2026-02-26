@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import MainLayout from '@/layouts/MainLayout.vue'
 import ProjectView from '@/views/ProjectView.vue'
 import UsersView from '@/views/UsersView.vue'
+import ProjectNew from '@/views/ProjectNew.vue'
 import Issue from '@/components/Issue.vue'
 import User from '@/components/User.vue'
 
@@ -11,6 +12,10 @@ const routes: RouteRecordRaw[] = [
     name: 'Home',
     component: MainLayout,
     children: [
+      {
+        path: 'projects',
+        redirect: '/',
+      },
       {
         path: 'projects/:projectKey',
         name: 'Project',
@@ -22,6 +27,11 @@ const routes: RouteRecordRaw[] = [
             component: Issue,
           },
         ],
+      },
+      {
+        path: 'projects/new',
+        name: 'ProjectNew',
+        component: ProjectNew,
       },
       {
         path: 'users',

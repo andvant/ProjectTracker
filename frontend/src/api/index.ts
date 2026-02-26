@@ -1,5 +1,13 @@
 import client from '@/api/client'
-import type { ProjectsDto, ProjectDto, IssuesDto, IssueDto, UsersDto, UserDto } from '@/types'
+import type {
+  ProjectsDto,
+  ProjectDto,
+  CreateProjectRequest,
+  IssuesDto,
+  IssueDto,
+  UsersDto,
+  UserDto,
+} from '@/types'
 
 const api = {
   getProjects: () => client.get<ProjectsDto[]>('projects'),
@@ -19,6 +27,9 @@ const api = {
   getUsers: () => client.get<UsersDto[]>('users'),
 
   getUser: (userId: string) => client.get<UserDto>(`users/${userId}`),
+
+  createProject: (request: CreateProjectRequest) =>
+    client.post<ProjectDto, CreateProjectRequest>('projects', request),
 }
 
 export default api

@@ -12,6 +12,12 @@ const selectedProjectKey = computed(() => route.params.projectKey)
 
 const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
 
+const newProjectSelected = computed(() => route.name === 'ProjectNew')
+
+const onNewProject = () => {
+  router.push({ name: 'ProjectNew' })
+}
+
 const onSelectProject = (projectKey: string) => {
   router.push({ name: 'Project', params: { projectKey } })
 }
@@ -22,6 +28,11 @@ const onClickUsers = () => {
 </script>
 <template>
   <aside class="sidebar">
+    <div>
+      <p @click="onNewProject" class="button" :class="{ selected: newProjectSelected }">
+        + New project
+      </p>
+    </div>
     <div>
       <ul>
         <li

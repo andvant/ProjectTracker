@@ -16,6 +16,12 @@ export interface ProjectDto {
   updatedOn: Date
 }
 
+export interface CreateProjectRequest {
+  key: string
+  name: string
+  description: string
+}
+
 export interface IssuesDto {
   id: string
   key: string

@@ -10,6 +10,10 @@ export const useIssuesStore = defineStore('issues', () => {
     issues.value = await api.getIssues(projectId)
   }
 
+  const clearIssues = () => {
+    issues.value = []
+  }
+
   const deleteIssue = async (projectId: string, issueId: string) => {
     issues.value = issues.value.filter((p) => p.id !== issueId)
 
@@ -23,6 +27,7 @@ export const useIssuesStore = defineStore('issues', () => {
   return {
     issues,
     fetchIssues,
+    clearIssues,
     deleteIssue,
     getIssueIdByKey,
   }
