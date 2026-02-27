@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '@/api'
+import projectsApi from '@/api/projectsApi'
 import { useUsersStore } from '@/stores/users'
 import type { CreateProjectRequest, ProjectDto, ProjectsDto, UpdateProjectRequest } from '@/types'
 
@@ -8,13 +8,13 @@ export const useProjectsStore = defineStore('projects', () => {
   const projects = ref<ProjectsDto[]>([])
 
   const fetchProjects = async () => {
-    projects.value = await api.getProjects()
+    projects.value = await projectsApi.getProjects()
   }
 
   const deleteProject = async (projectId: string) => {
     projects.value = projects.value.filter((p) => p.id !== projectId)
 
-    await api.deleteProject(projectId)
+    await projectsApi.deleteProject(projectId)
   }
 
   const getProjectIdByKey = (projectKey: string) => {
@@ -22,7 +22,7 @@ export const useProjectsStore = defineStore('projects', () => {
   }
 
   const createProject = async (request: CreateProjectRequest): Promise<ProjectDto> => {
-    const project = await api.createProject({
+    const project = await projectsApi.createProject({
       key: request.key,
       name: request.name,
       description: request.description,
@@ -37,7 +37,7 @@ export const useProjectsStore = defineStore('projects', () => {
     projectId: string,
     request: UpdateProjectRequest,
   ): Promise<ProjectDto> => {
-    await api.updateProject(projectId, {
+    await projectsApi.updateProject(projectId, {
       name: request.name,
       description: request.description,
     })
@@ -46,7 +46,7 @@ export const useProjectsStore = defineStore('projects', () => {
   }
 
   const getProject = async (projectId: string) => {
-    const project = await api.getProject(projectId)
+    const project = await projectsApi.getProject(projectId)
 
     const existing = projects.value.find((u) => u.id === project.id)
 
@@ -62,7 +62,7 @@ export const useProjectsStore = defineStore('projects', () => {
   const addMember = async (project: ProjectDto, memberId: string) => {
     const usersStore = useUsersStore()
 
-    await api.addMember(project.id, memberId)
+    await projectsApi.addMember(project.id, memberId)
 
     if (!usersStore.users.length) {
       await usersStore.fetchUsers()
@@ -73,7 +73,7 @@ export const useProjectsStore = defineStore('projects', () => {
   }
 
   const removeMember = async (project: ProjectDto, memberId: string) => {
-    await api.removeMember(project.id, memberId)
+    await projectsApi.removeMember(project.id, memberId)
 
     project.members = project.members.filter((m) => m.id !== memberId)
   }

@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '@/api'
+import usersApi from '@/api/usersApi'
 import type { UsersDto } from '@/types'
 
 export const useUsersStore = defineStore('users', () => {
   const users = ref<UsersDto[]>([])
 
   const fetchUsers = async () => {
-    users.value = await api.getUsers()
+    users.value = await usersApi.getUsers()
   }
 
   const getUser = async (userId: string) => {
-    const user = await api.getUser(userId)
+    const user = await usersApi.getUser(userId)
 
     const existing = users.value.find((u) => u.id === user.id)
 

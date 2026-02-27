@@ -46,7 +46,7 @@ const sendRequest = async <TResponse, TBody = unknown>(
   return data as TResponse
 }
 
-const client = {
+const apiClient = {
   get: <TResponse>(url: string): Promise<TResponse> =>
     sendRequest<TResponse>(url, { method: 'GET' }),
 
@@ -59,4 +59,4 @@ const client = {
   delete: (url: string): Promise<void> => sendRequest(url, { method: 'DELETE' }),
 }
 
-export default client
+export default apiClient

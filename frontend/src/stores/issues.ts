@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import api from '@/api'
+import issuesApi from '@/api/issuesApi'
 import type { IssuesDto } from '@/types'
 
 export const useIssuesStore = defineStore('issues', () => {
   const issues = ref<IssuesDto[]>([])
 
   const fetchIssues = async (projectId: string) => {
-    issues.value = await api.getIssues(projectId)
+    issues.value = await issuesApi.getIssues(projectId)
   }
 
   const clearIssues = () => {
@@ -17,7 +17,7 @@ export const useIssuesStore = defineStore('issues', () => {
   const deleteIssue = async (projectId: string, issueId: string) => {
     issues.value = issues.value.filter((p) => p.id !== issueId)
 
-    await api.deleteIssue(projectId, issueId)
+    await issuesApi.deleteIssue(projectId, issueId)
   }
 
   const getIssueIdByKey = (issueKey: string) => {
@@ -25,7 +25,7 @@ export const useIssuesStore = defineStore('issues', () => {
   }
 
   const getIssue = async (projectId: string, issueId: string) => {
-    const issue = await api.getIssue(projectId, issueId)
+    const issue = await issuesApi.getIssue(projectId, issueId)
 
     const existing = issues.value.find((i) => i.id === issue.id)
 
