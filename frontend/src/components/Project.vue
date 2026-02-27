@@ -62,6 +62,8 @@ const onUpdateProject = async (projectId: string) => {
       name: name.value,
       description: description.value,
     })
+
+    isEditing.value = false
   } catch (e) {
     if (e instanceof ApiError && e.problem) {
       applyErrorsFromApi(errors.value, e.problem)
@@ -70,11 +72,11 @@ const onUpdateProject = async (projectId: string) => {
     }
   } finally {
     isSubmitting.value = false
-    isEditing.value = false
   }
 }
 
 const onEditing = () => {
+  errors.value = createDefaultErrors()
   name.value = project.value!.name
   description.value = project.value!.description || ''
 
@@ -125,11 +127,17 @@ watch(
 <template>
   <div v-if="project" class="project">
     <h2 v-if="!isEditing">{{ project.name }}</h2>
-    <input v-else v-model="name" />
+    <div v-else class="form-group">
+      <input v-model="name" />
+      <span v-if="errors.name" class="error">{{ errors.name }}</span>
+    </div>
     <p>Id: {{ project.id }}</p>
     <label>Description: </label>
     <p v-if="!isEditing">{{ project.description }}</p>
-    <input v-else v-model="description" />
+    <div v-else class="form-group">
+      <input v-model="description" />
+      <span v-if="errors.description" class="error">{{ errors.description }}</span>
+    </div>
     <p>Owner: {{ project.ownerId }}</p>
     <p>Created on: {{ project.createdOn }}</p>
     <label>Members:</label>
@@ -168,5 +176,16 @@ watch(
 <style scoped>
 .project {
   padding: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
 }
 </style>
