@@ -53,11 +53,10 @@ const client = {
   post: <TResponse, TBody>(url: string, body: TBody): Promise<TResponse> =>
     sendRequest<TResponse, TBody>(url, { method: 'POST', body }),
 
-  put: <TResponse, TBody>(url: string, body: TBody): Promise<TResponse> =>
-    sendRequest<TResponse, TBody>(url, { method: 'PUT', body }),
+  put: <TBody>(url: string, body: TBody): Promise<void> =>
+    sendRequest<void, TBody>(url, { method: 'PUT', body }),
 
-  delete: <TResponse = void>(url: string): Promise<TResponse> =>
-    sendRequest<TResponse>(url, { method: 'DELETE' }),
+  delete: (url: string): Promise<void> => sendRequest(url, { method: 'DELETE' }),
 }
 
 export default client

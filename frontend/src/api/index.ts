@@ -19,9 +19,15 @@ const api = {
     client.post<ProjectDto, CreateProjectRequest>('projects', request),
 
   updateProject: (projectId: string, request: UpdateProjectRequest) =>
-    client.put<ProjectDto, UpdateProjectRequest>(`projects/${projectId}`, request),
+    client.put(`projects/${projectId}`, request),
 
   deleteProject: (projectId: string) => client.delete(`projects/${projectId}`),
+
+  removeMember: (projectId: string, memberId: string) =>
+    client.delete(`projects/${projectId}/members/${memberId}`),
+
+  addMember: (projectId: string, memberId: string) =>
+    client.put(`projects/${projectId}/members/${memberId}`, null),
 
   getIssues: (projectId: string) => client.get<IssuesDto[]>(`projects/${projectId}/issues`),
 

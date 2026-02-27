@@ -37,10 +37,10 @@ watch(
 <template>
   <div v-if="issue" class="issue">
     <h2>{{ issue.title }}</h2>
-    <p>{{ issue.description }}</p>
-    <p>{{ issue.reporterId }}</p>
-    <p>{{ issue.assigneeId }}</p>
-    <p>{{ issue.createdOn }}</p>
+    <p>Description: {{ issue.description }}</p>
+    <p>Reporter: {{ issue.reporterId }}</p>
+    <p>Assignee: {{ issue.assigneeId ?? 'Unassigned' }}</p>
+    <p>Created on: {{ issue.createdOn }}</p>
     <button @click="onDeleteIssue">Delete</button>
   </div>
 </template>

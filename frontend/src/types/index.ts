@@ -14,6 +14,7 @@ export interface ProjectDto {
   createdOn: Date
   updatedBy: string
   updatedOn: Date
+  members: UsersDto[]
 }
 
 export interface CreateProjectRequest {

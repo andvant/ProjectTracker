@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/api'
-import type { UsersDto } from '@/types'
+import { useUsersStore } from '@/stores/users'
 import User from '@/components/User.vue'
 
 const router = useRouter()
 
-const users = ref<UsersDto[]>([])
+const usersStore = useUsersStore()
 
 const route = useRoute()
 
@@ -18,13 +17,15 @@ const onSelectUser = (userId: string) => {
 }
 
 onMounted(async () => {
-  users.value = await api.getUsers()
+  await usersStore.fetchUsers()
 })
 </script>
 <template>
   <div v-if="!userId" class="users">
     <ul>
-      <li v-for="user in users" :key="user.id" @click="onSelectUser(user.id)">{{ user.name }}</li>
+      <li v-for="user in usersStore.users" :key="user.id" @click="onSelectUser(user.id)">
+        {{ user.name }}
+      </li>
     </ul>
   </div>
   <div v-if="userId">
