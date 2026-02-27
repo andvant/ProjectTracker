@@ -142,6 +142,10 @@ watch(
   async (projectId) => {
     if (!projectId) return
 
+    isAddingMember.value = false
+    isEditing.value = false
+    isTransferringOwnership.value = false
+
     project.value = await projectsStore.getProject(projectId)
   },
   { immediate: true },

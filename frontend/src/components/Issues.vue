@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import type { CreateIssueRequest, IssueTypeEnum, IssuePriorityEnum } from '@/types'
@@ -110,6 +110,11 @@ const onCreating = () => {
   estimationMinutes.value = undefined
   isCreating.value = true
 }
+
+watch(projectId, () => {
+    isCreating.value = false
+  }
+)
 </script>
 <template>
   <div>
