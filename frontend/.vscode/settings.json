@@ -4,5 +4,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
-  "eslint.validate": ["typescript", "vue", "json"]
+  "eslint.validate": ["typescript", "vue", "json"],
+  "files.exclude": {
+    "**/dist": true
+  }
 }

@@ -189,7 +189,7 @@ watch(
         <label @click="router.push({ name: 'User', params: { userId: member.id } })">
           {{ member.name }}
         </label>
-        <button @click="onRemoveMember(member.id)">X</button>
+        <button v-if="member.id !== project.owner.id" @click="onRemoveMember(member.id)">X</button>
       </li>
     </ul>
 

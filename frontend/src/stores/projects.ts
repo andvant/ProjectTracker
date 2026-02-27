@@ -6,6 +6,7 @@ import type { CreateProjectRequest, ProjectDto, ProjectsDto, UpdateProjectReques
 
 export const useProjectsStore = defineStore('projects', () => {
   const projects = ref<ProjectsDto[]>([])
+  const cachedProject = ref<ProjectDto>()
 
   const fetchProjects = async () => {
     projects.value = await projectsApi.getProjects()
@@ -22,11 +23,7 @@ export const useProjectsStore = defineStore('projects', () => {
   }
 
   const createProject = async (request: CreateProjectRequest): Promise<ProjectDto> => {
-    const project = await projectsApi.createProject({
-      key: request.key,
-      name: request.name,
-      description: request.description,
-    })
+    const project = await projectsApi.createProject(request)
 
     await fetchProjects()
 
@@ -48,6 +45,8 @@ export const useProjectsStore = defineStore('projects', () => {
   const getProject = async (projectId: string) => {
     const project = await projectsApi.getProject(projectId)
 
+    cachedProject.value = project
+
     const existing = projects.value.find((u) => u.id === project.id)
 
     if (existing) {
@@ -58,6 +57,8 @@ export const useProjectsStore = defineStore('projects', () => {
 
     return project
   }
+
+  const getCachedProject = () => cachedProject.value
 
   const addMember = async (project: ProjectDto, memberId: string) => {
     const usersStore = useUsersStore()
@@ -99,6 +100,7 @@ export const useProjectsStore = defineStore('projects', () => {
     createProject,
     updateProject,
     getProject,
+    getCachedProject,
     addMember,
     removeMember,
     transferOwnership,

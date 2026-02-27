@@ -1,5 +1,18 @@
 import type { ProblemDetails } from '@/types/api'
 
+interface ValueLabel {
+  value: string
+  label: string
+}
+
+type Enum = Record<string, ValueLabel>
+
+export const getEnumOptions = <T extends Enum>(enumObject: T) => Object.values(enumObject)
+
+export const getEnumLabel = <T extends Enum>(enumObject: T, enumValue: string) => {
+  return getEnumOptions(enumObject).find((e) => e.value === enumValue)!.label
+}
+
 const toCamelCase = (value: string) => value.charAt(0).toLowerCase() + value.slice(1)
 
 export const applyErrorsFromApi = (errors: Record<string, string>, problem: ProblemDetails) => {

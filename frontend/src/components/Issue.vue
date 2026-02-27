@@ -3,7 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
-import type { IssueDto } from '@/types'
+import { IssuePriority, IssueStatus, IssueType, type IssueDto } from '@/types'
+import { getEnumLabel } from '@/utils'
 
 const route = useRoute()
 const router = useRouter()
@@ -40,6 +41,9 @@ watch(
     <p>Description: {{ issue.description }}</p>
     <p>Reporter: {{ issue.reporter.name }}</p>
     <p>Assignee: {{ issue.assignee?.name ?? 'Unassigned' }}</p>
+    <p>Type: {{ getEnumLabel(IssueType, issue.type) }}</p>
+    <p>Status: {{ getEnumLabel(IssueStatus, issue.status) }}</p>
+    <p>Priority: {{ getEnumLabel(IssuePriority, issue.priority) }}</p>
     <p>Created on: {{ issue.createdOn }}</p>
     <button @click="onDeleteIssue">Delete</button>
   </div>
