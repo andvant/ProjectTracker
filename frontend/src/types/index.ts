@@ -17,14 +17,14 @@ export interface ProjectDto {
   members: UsersDto[]
 }
 
-export interface CreateProjectRequest {
-  key: string
-  name: string
+export class CreateProjectRequest {
+  key: string = ''
+  name: string = ''
   description?: string
 }
 
-export interface UpdateProjectRequest {
-  name: string
+export class UpdateProjectRequest {
+  name: string = ''
   description?: string
 }
 
@@ -57,8 +57,8 @@ export interface IssueDto {
   updatedOn: Date
 }
 
-export interface CreateIssueRequest {
-  title: string
+export class CreateIssueRequest {
+  title: string = ''
   description?: string
   assigneeId?: string
   type?: IssueTypeEnum

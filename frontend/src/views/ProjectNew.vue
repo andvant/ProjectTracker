@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useIssuesStore } from '@/stores/issues'
-import type { CreateProjectRequest } from '@/types'
+import { CreateProjectRequest } from '@/types'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi } from '@/utils'
 
@@ -12,9 +12,7 @@ const router = useRouter()
 const projectsStore = useProjectsStore()
 const issuesStore = useIssuesStore()
 
-const key = ref('')
-const name = ref('')
-const description = ref('')
+const req = new CreateProjectRequest()
 const isSubmitting = ref(false)
 
 type Errors = ValidationErrors<CreateProjectRequest>
@@ -33,12 +31,12 @@ const validate = () => {
 
   let isValid = true
 
-  if (!key.value.trim()) {
+  if (!req.key.trim()) {
     errors.value.key = 'Project key is required'
     isValid = false
   }
 
-  if (!name.value.trim()) {
+  if (!req.name.trim()) {
     errors.value.name = 'Project name is required'
     isValid = false
   }
@@ -52,11 +50,7 @@ const onSubmit = async () => {
   try {
     isSubmitting.value = true
 
-    const project = await projectsStore.createProject({
-      key: key.value,
-      name: name.value,
-      description: description.value,
-    })
+    const project = await projectsStore.createProject(req)
 
     await issuesStore.clearIssues()
 
@@ -78,19 +72,19 @@ const onSubmit = async () => {
 
     <div class="form-group">
       <label>Project Key</label>
-      <input v-model="key" />
+      <input v-model="req.key" />
       <span v-if="errors.key" class="error">{{ errors.key }}</span>
     </div>
 
     <div class="form-group">
       <label>Project Name</label>
-      <input v-model="name" />
+      <input v-model="req.name" />
       <span v-if="errors.name" class="error">{{ errors.name }}</span>
     </div>
 
     <div class="form-group">
       <label>Description</label>
-      <textarea v-model="description"></textarea>
+      <textarea v-model="req.description"></textarea>
       <span v-if="errors.description" class="error">{{ errors.description }}</span>
     </div>
 

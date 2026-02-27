@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
-import type { CreateIssueRequest, IssueTypeEnum, IssuePriorityEnum } from '@/types'
+import { CreateIssueRequest } from '@/types'
 import { IssuePriority, IssueType } from '@/types'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { useProjectsStore } from '@/stores/projects'
@@ -24,15 +24,7 @@ const onSelectIssue = (issueKey: string) => {
   router.push({ name: 'Issue', params: { issueKey } })
 }
 
-const title = ref('')
-const description = ref<string | undefined>()
-const assigneeId = ref<string | undefined>()
-const type = ref<IssueTypeEnum | undefined>()
-const priority = ref<IssuePriorityEnum | undefined>()
-const parentIssueId = ref<string | undefined>()
-const dueDate = ref<Date | undefined>()
-const estimationMinutes = ref<number | undefined>()
-
+const req = new CreateIssueRequest()
 const isCreating = ref(false)
 const isSubmitting = ref(false)
 
@@ -57,12 +49,12 @@ const validate = () => {
 
   let isValid = true
 
-  if (!title.value.trim()) {
+  if (!req.title.trim()) {
     errors.value.title = 'Title is required'
     isValid = false
   }
 
-  if (estimationMinutes.value && estimationMinutes.value < 0) {
+  if (req.estimationMinutes && req.estimationMinutes < 0) {
     errors.value.estimationMinutes = 'Estimation minutes cannot be negative'
     isValid = false
   }
@@ -76,16 +68,7 @@ const onSubmit = async () => {
   try {
     isSubmitting.value = true
 
-    await issuesStore.createIssue(projectId.value!, {
-      title: title.value,
-      description: description.value,
-      assigneeId: assigneeId.value,
-      type: type.value,
-      priority: priority.value,
-      parentIssueId: parentIssueId.value,
-      dueDate: dueDate.value,
-      estimationMinutes: estimationMinutes.value,
-    })
+    await issuesStore.createIssue(projectId.value!, req)
 
     isCreating.value = false
   } catch (e) {
@@ -100,14 +83,8 @@ const onSubmit = async () => {
 }
 
 const onCreating = () => {
-  title.value = ''
-  description.value = undefined
-  assigneeId.value = undefined
-  type.value = undefined
-  priority.value = undefined
-  parentIssueId.value = undefined
-  dueDate.value = undefined
-  estimationMinutes.value = undefined
+  errors.value = createDefaultErrors()
+  Object.assign(req, new CreateIssueRequest())
   isCreating.value = true
 }
 
@@ -122,19 +99,19 @@ watch(projectId, () => {
     <div v-else>
       <div class="form-group">
         <label>Title</label>
-        <input v-model="title" />
+        <input v-model="req.title" />
         <span v-if="errors.title" class="error">{{ errors.title }}</span>
       </div>
 
       <div class="form-group">
         <label>Description</label>
-        <textarea v-model="description"></textarea>
+        <textarea v-model="req.description"></textarea>
         <span v-if="errors.description" class="error">{{ errors.description }}</span>
       </div>
 
       <div class="form-group">
         <label>Type</label>
-        <select v-model="type">
+        <select v-model="req.type">
           <option :value="undefined">{{ "<Not selected>" }}</option>
           <option
             v-for="option in getEnumOptions(IssueType)"
@@ -149,7 +126,7 @@ watch(projectId, () => {
 
       <div class="form-group">
         <label>Priority</label>
-        <select v-model="priority">
+        <select v-model="req.priority">
           <option :value="undefined">{{ "<Not selected>" }}</option>
           <option
             v-for="option in getEnumOptions(IssuePriority)"
@@ -164,7 +141,7 @@ watch(projectId, () => {
 
       <div class="form-group">
         <label>Assignee</label>
-        <select v-model="assigneeId">
+        <select v-model="req.assigneeId">
           <option :value="undefined">{{ "<Not selected>" }}</option>
           <option v-for="user in memberUsers" :key="user.id" :value="user.id">
             {{ user.name }}
@@ -175,7 +152,7 @@ watch(projectId, () => {
 
       <div class="form-group">
         <label>Parent issue</label>
-        <select v-model="parentIssueId">
+        <select v-model="req.parentIssueId">
           <option :value="undefined">{{ "<Not selected>" }}</option>
           <option v-for="issue in epicIssues" :key="issue.id" :value="issue.id">
             {{ issue.title }}
@@ -186,13 +163,13 @@ watch(projectId, () => {
 
       <div class="form-group">
         <label>Estimation minutes</label>
-        <input v-model="estimationMinutes" type="number" />
+        <input v-model="req.estimationMinutes" type="number" />
         <span v-if="errors.estimationMinutes" class="error">{{ errors.estimationMinutes }}</span>
       </div>
 
       <div class="form-group">
         <label>Due date</label>
-        <input v-model="dueDate" type="date" />
+        <input v-model="req.dueDate" type="date" />
         <span v-if="errors.dueDate" class="error">{{ errors.dueDate }}</span>
       </div>
 

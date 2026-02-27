@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useUsersStore } from '@/stores/users'
-import type { ProjectDto, UpdateProjectRequest } from '@/types'
+import { UpdateProjectRequest, type ProjectDto } from '@/types'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi } from '@/utils'
 
@@ -17,8 +17,7 @@ const project = ref<ProjectDto>()
 
 const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
 
-const description = ref('')
-const name = ref('')
+const req = new UpdateProjectRequest()
 const isEditing = ref(false)
 const isTransferringOwnership = ref(false)
 const isAddingMember = ref(false)
@@ -46,7 +45,7 @@ const validate = () => {
 
   let isValid = true
 
-  if (!name.value.trim()) {
+  if (!req.name.trim()) {
     errors.value.name = 'Project name is required'
     isValid = false
   }
@@ -60,10 +59,7 @@ const onUpdateProject = async (projectId: string) => {
   try {
     isSubmitting.value = true
 
-    project.value = await projectsStore.updateProject(projectId, {
-      name: name.value,
-      description: description.value,
-    })
+    project.value = await projectsStore.updateProject(projectId, req)
 
     isEditing.value = false
   } catch (e) {
@@ -79,8 +75,8 @@ const onUpdateProject = async (projectId: string) => {
 
 const onEditing = () => {
   errors.value = createDefaultErrors()
-  name.value = project.value!.name
-  description.value = project.value!.description || ''
+  req.name = project.value!.name
+  req.description = project.value!.description
 
   isEditing.value = true
 }
@@ -149,14 +145,14 @@ watch(
   <div v-if="project" class="project">
     <h2 v-if="!isEditing">{{ project.name }}</h2>
     <div v-else class="form-group">
-      <input v-model="name" />
+      <input v-model="req.name" />
       <span v-if="errors.name" class="error">{{ errors.name }}</span>
     </div>
     <p>Id: {{ project.id }}</p>
     <label>Description: </label>
     <p v-if="!isEditing">{{ project.description }}</p>
     <div v-else class="form-group">
-      <input v-model="description" />
+      <input v-model="req.description" />
       <span v-if="errors.description" class="error">{{ errors.description }}</span>
     </div>
 
