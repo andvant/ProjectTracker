@@ -18,10 +18,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.ConfigureHttpJsonOptions(opts =>
-        {
-            opts.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            opts.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        });
+            opts.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         services.AddProblemDetails(opts =>
         {

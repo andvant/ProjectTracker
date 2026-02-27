@@ -25,17 +25,7 @@ export const useIssuesStore = defineStore('issues', () => {
   }
 
   const getIssue = async (projectId: string, issueId: string) => {
-    const issue = await issuesApi.getIssue(projectId, issueId)
-
-    const existing = issues.value.find((i) => i.id === issue.id)
-
-    if (existing) {
-      Object.assign(existing, issue)
-    } else {
-      issues.value.push(issue)
-    }
-
-    return issue
+    return await issuesApi.getIssue(projectId, issueId)
   }
 
   const createIssue = async (projectId: string, request: CreateIssueRequest): Promise<IssueDto> => {

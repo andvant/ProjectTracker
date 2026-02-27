@@ -34,10 +34,7 @@ export const useProjectsStore = defineStore('projects', () => {
     projectId: string,
     request: UpdateProjectRequest,
   ): Promise<ProjectDto> => {
-    await projectsApi.updateProject(projectId, {
-      name: request.name,
-      description: request.description,
-    })
+    await projectsApi.updateProject(projectId, request)
 
     return await getProject(projectId)
   }
@@ -47,13 +44,8 @@ export const useProjectsStore = defineStore('projects', () => {
 
     cachedProject.value = project
 
-    const existing = projects.value.find((u) => u.id === project.id)
-
-    if (existing) {
-      Object.assign(existing, project)
-    } else {
-      projects.value.push(project)
-    }
+    const existing = projects.value.find((u) => u.id === project.id)!
+    existing.name = project.name
 
     return project
   }

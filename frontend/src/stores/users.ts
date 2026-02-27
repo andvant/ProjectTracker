@@ -11,17 +11,7 @@ export const useUsersStore = defineStore('users', () => {
   }
 
   const getUser = async (userId: string) => {
-    const user = await usersApi.getUser(userId)
-
-    const existing = users.value.find((u) => u.id === user.id)
-
-    if (existing) {
-      Object.assign(existing, user)
-    } else {
-      users.value.push(user)
-    }
-
-    return user
+    return await usersApi.getUser(userId)
   }
 
   return {

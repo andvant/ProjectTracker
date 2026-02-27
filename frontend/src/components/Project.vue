@@ -31,10 +31,6 @@ const nonMemberUsers = computed(() =>
   usersStore.users.filter((u) => !project.value?.members.find((m) => m.id === u.id)),
 )
 
-const memberUsers = computed(() =>
-  usersStore.users.filter((u) => project.value?.members.find((m) => m.id === u.id)),
-)
-
 type Errors = UpdateProjectRequest & GeneralError
 
 const createDefaultErrors = () => ({
@@ -109,8 +105,6 @@ const onAddingMember = async () => {
 }
 
 const onTransferringOwnership = async () => {
-  await usersStore.fetchUsers()
-
   selectedOwnerId.value = project.value!.owner.id
   isTransferringOwnership.value = true
 }
@@ -173,7 +167,7 @@ watch(
     </button>
     <div v-else>
       <select v-model="selectedOwnerId">
-        <option v-for="user in memberUsers" :key="user.id" :value="user.id">
+        <option v-for="user in project.members" :key="user.id" :value="user.id">
           {{ user.name }}
         </option>
       </select>
