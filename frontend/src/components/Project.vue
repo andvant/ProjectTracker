@@ -26,7 +26,7 @@ const isSubmitting = ref(false)
 
 const selectedMemberId = ref<string | null>(null)
 
-const availableUsers = computed(() =>
+const nonMemberUsers = computed(() =>
   usersStore.users.filter((u) => !project.value?.members.find((m) => m.id === u.id)),
 )
 
@@ -164,7 +164,7 @@ watch(
       <div v-else>
         <select v-model="selectedMemberId">
           <option disabled :value="null">Select a user</option>
-          <option v-for="user in availableUsers" :key="user.id" :value="user.id">
+          <option v-for="user in nonMemberUsers" :key="user.id" :value="user.id">
             {{ user.name }}
           </option>
         </select>

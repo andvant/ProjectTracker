@@ -18,8 +18,9 @@ watchEffect(async () => {
 <template>
   <div v-if="user" class="user">
     <h2>{{ user.name }}</h2>
-    <p>{{ user.email }}</p>
-    <p>{{ user.registrationDate }}</p>
+    <p>Id: {{ user.id }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Registration date: {{ user.registrationDate }}</p>
   </div>
 </template>
 <style scoped>
