@@ -41,16 +41,16 @@ export interface IssueDto {
   id: string
   key: string
   title: string
-  description: string
-  reporterId: string
+  description?: string
+  reporter: UsersDto
   projectId: string
-  assigneeId: string
+  assignee?: UsersDto
   status: IssueStatus
   type: IssueType
   priority: IssuePriority
-  dueDate: Date
-  estimationMinutes: number
-  parentIssueId: string
+  dueDate?: Date
+  estimationMinutes?: number
+  parentIssueId?: string
   createdBy: string
   createdOn: Date
   updatedBy: string

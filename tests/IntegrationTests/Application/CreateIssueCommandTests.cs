@@ -53,7 +53,7 @@ public class CreateIssueCommandTests : IClassFixture<TestFixture>
         // Assert
         result.Title.ShouldBe("test issue");
         result.Status.ShouldBe(IssueStatus.Open);
-        result.AssigneeId.ShouldBe(user.Id);
+        result.Assignee!.Id.ShouldBe(user.Id);
         result.CreatedOn.ShouldBe(timeProvider.FakeTime);
         result.UpdatedOn.ShouldBe(timeProvider.FakeTime);
         result.CreatedBy.ShouldBe(user.Id);

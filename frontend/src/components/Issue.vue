@@ -38,8 +38,8 @@ watch(
     <h2>{{ issue.title }}</h2>
     <p>Id: {{ issue.id }}</p>
     <p>Description: {{ issue.description }}</p>
-    <p>Reporter: {{ issue.reporterId }}</p>
-    <p>Assignee: {{ issue.assigneeId ?? 'Unassigned' }}</p>
+    <p>Reporter: {{ issue.reporter.name }}</p>
+    <p>Assignee: {{ issue.assignee?.name ?? 'Unassigned' }}</p>
     <p>Created on: {{ issue.createdOn }}</p>
     <button @click="onDeleteIssue">Delete</button>
   </div>
