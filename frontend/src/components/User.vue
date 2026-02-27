@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import api from '@/api'
+import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useUsersStore } from '@/stores/users'
 import type { UserDto } from '@/types'
 
-const props = defineProps<{
-  userId?: string
-}>()
+const route = useRoute()
+
+const userId = computed(() => route.params.userId as string)
+
+const usersStore = useUsersStore()
 
 const user = ref<UserDto>()
 
-watchEffect(async () => {
-  if (!props.userId) return
+watch(
+  userId,
+  async (userId) => {
+    if (!userId) return
 
-  user.value = await api.getUser(props.userId)
-})
+    user.value = await usersStore.getUser(userId)
+  },
+  { immediate: true },
+)
 </script>
 <template>
   <div v-if="user" class="user">

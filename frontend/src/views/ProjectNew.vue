@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '@/api'
 import { useProjectsStore } from '@/stores/projects'
 import { useIssuesStore } from '@/stores/issues'
 import type { CreateProjectRequest } from '@/types'
@@ -53,13 +52,12 @@ const onSubmit = async () => {
   try {
     isSubmitting.value = true
 
-    const project = await api.createProject({
+    const project = await projectsStore.createProject({
       key: key.value,
       name: name.value,
       description: description.value,
     })
 
-    await projectsStore.fetchProjects()
     await issuesStore.clearIssues()
 
     router.push({ name: 'Project', params: { projectKey: project.key } })

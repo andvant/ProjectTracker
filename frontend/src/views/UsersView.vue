@@ -29,7 +29,7 @@ onMounted(async () => {
     </ul>
   </div>
   <div v-if="userId">
-    <User :userId="userId" />
+    <User />
   </div>
 </template>
 <style scoped>

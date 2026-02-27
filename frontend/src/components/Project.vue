@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/api'
 import { useProjectsStore } from '@/stores/projects'
 import { useUsersStore } from '@/stores/users'
 import type { ProjectDto, UpdateProjectRequest } from '@/types'
@@ -59,13 +58,10 @@ const onUpdateProject = async (projectId: string) => {
   try {
     isSubmitting.value = true
 
-    await api.updateProject(projectId, {
+    project.value = await projectsStore.updateProject(projectId, {
       name: name.value,
       description: description.value,
     })
-
-    project.value = await api.getProject(projectId)
-    await projectsStore.fetchProjects()
   } catch (e) {
     if (e instanceof ApiError && e.problem) {
       applyErrorsFromApi(errors.value, e.problem)
@@ -94,9 +90,7 @@ const onDeleteProject = async (projectId: string) => {
 const onRemoveMember = async (memberId: string) => {
   if (!project.value) return
 
-  await api.removeMember(project.value.id, memberId)
-
-  project.value.members = project.value.members.filter((m) => m.id !== memberId)
+  await projectsStore.removeMember(project.value, memberId)
 }
 
 const onAddingMember = async () => {
@@ -111,10 +105,7 @@ const onAddMember = async () => {
 
   isSubmitting.value = true
   try {
-    await api.addMember(project.value!.id, selectedMemberId.value)
-
-    const user = usersStore.users.find((u) => u.id === selectedMemberId.value)
-    project.value!.members.push(user!)
+    await projectsStore.addMember(project.value!, selectedMemberId.value)
   } finally {
     isAddingMember.value = false
     isSubmitting.value = false
@@ -126,7 +117,7 @@ watch(
   async (projectId) => {
     if (!projectId) return
 
-    project.value = await api.getProject(projectId)
+    project.value = await projectsStore.getProject(projectId)
   },
   { immediate: true },
 )

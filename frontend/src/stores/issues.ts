@@ -24,11 +24,26 @@ export const useIssuesStore = defineStore('issues', () => {
     return issues.value.find((i) => i.key === issueKey)?.id
   }
 
+  const getIssue = async (projectId: string, issueId: string) => {
+    const issue = await api.getIssue(projectId, issueId)
+
+    const existing = issues.value.find((i) => i.id === issue.id)
+
+    if (existing) {
+      Object.assign(existing, issue)
+    } else {
+      issues.value.push(issue)
+    }
+
+    return issue
+  }
+
   return {
     issues,
     fetchIssues,
     clearIssues,
     deleteIssue,
     getIssueIdByKey,
+    getIssue,
   }
 })

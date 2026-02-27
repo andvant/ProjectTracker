@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/api'
 import { useIssuesStore } from '@/stores/issues'
-import type { IssueDto } from '@/types'
 import { useProjectsStore } from '@/stores/projects'
+import type { IssueDto } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
@@ -29,7 +28,7 @@ watch(
   async (issueId) => {
     if (!issueId) return
 
-    issue.value = await api.getIssue(projectId.value!, issueId)
+    issue.value = await issuesStore.getIssue(projectId.value!, issueId)
   },
   { immediate: true },
 )
@@ -37,6 +36,7 @@ watch(
 <template>
   <div v-if="issue" class="issue">
     <h2>{{ issue.title }}</h2>
+    <p>Id: {{ issue.id }}</p>
     <p>Description: {{ issue.description }}</p>
     <p>Reporter: {{ issue.reporterId }}</p>
     <p>Assignee: {{ issue.assigneeId ?? 'Unassigned' }}</p>
