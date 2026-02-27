@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useIssuesStore } from '@/stores/issues'
 import type { CreateProjectRequest } from '@/types'
-import { ApiError, type GeneralError } from '@/types/api'
+import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi } from '@/utils'
 
 const router = useRouter()
@@ -17,7 +17,7 @@ const name = ref('')
 const description = ref('')
 const isSubmitting = ref(false)
 
-type Errors = CreateProjectRequest & GeneralError
+type Errors = ValidationErrors<CreateProjectRequest>
 
 const createDefaultErrors = () => ({
   key: '',

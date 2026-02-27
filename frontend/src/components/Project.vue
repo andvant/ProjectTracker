@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useUsersStore } from '@/stores/users'
 import type { ProjectDto, UpdateProjectRequest } from '@/types'
-import { ApiError, type GeneralError } from '@/types/api'
+import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi } from '@/utils'
 
 const route = useRoute()
@@ -31,7 +31,7 @@ const nonMemberUsers = computed(() =>
   usersStore.users.filter((u) => !project.value?.members.find((m) => m.id === u.id)),
 )
 
-type Errors = UpdateProjectRequest & GeneralError
+type Errors = ValidationErrors<UpdateProjectRequest>
 
 const createDefaultErrors = () => ({
   name: '',

@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import type { CreateIssueRequest, IssueTypeEnum, IssuePriorityEnum } from '@/types'
 import { IssuePriority, IssueType } from '@/types'
-import { ApiError, type GeneralError } from '@/types/api'
+import { ApiError, type ValidationErrors } from '@/types/api'
 import { useProjectsStore } from '@/stores/projects'
 import { applyErrorsFromApi, getEnumOptions } from '@/utils'
 
@@ -36,7 +36,7 @@ const estimationMinutes = ref<number | undefined>()
 const isCreating = ref(false)
 const isSubmitting = ref(false)
 
-type Errors = Record<keyof (CreateIssueRequest & GeneralError), string>
+type Errors = ValidationErrors<CreateIssueRequest>
 
 const createDefaultErrors = () => ({
   title: '',

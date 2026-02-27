@@ -7,8 +7,8 @@ export interface ProblemDetails {
   errors?: Record<string, string[]>
 }
 
-export type GeneralError = {
-  general?: string
+export type ValidationErrors<T> = Record<keyof T, string> & {
+  general: string
 }
 
 export class ApiError extends Error {
