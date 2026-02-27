@@ -9,7 +9,7 @@ public record ProjectDto(
     string Key,
     string Name,
     string? Description,
-    Guid OwnerId,
+    UsersDto Owner,
     Guid CreatedBy,
     DateTimeOffset CreatedOn,
     Guid UpdatedBy,

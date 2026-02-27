@@ -19,6 +19,9 @@ const projectsApi = {
 
   addMember: (projectId: string, memberId: string) =>
     apiClient.put(`projects/${projectId}/members/${memberId}`, null),
+
+  transferOwnership: (projectId: string, newOwnerId: string) =>
+    apiClient.put(`projects/${projectId}/new-owner/${newOwnerId}`, null),
 }
 
 export default projectsApi

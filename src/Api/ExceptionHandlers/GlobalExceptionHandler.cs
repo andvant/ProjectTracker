@@ -35,6 +35,7 @@ internal class GlobalExceptionHandler(
             case // violated constraints/invariants
                 ProjectKeyAlreadyExistsException or
                 AssigneeNotMemberException or
+                NewOwnerNotMemberException or
                 CantRemoveProjectOwnerException:
                 httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
                 break;

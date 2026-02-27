@@ -78,6 +78,19 @@ export const useProjectsStore = defineStore('projects', () => {
     project.members = project.members.filter((m) => m.id !== memberId)
   }
 
+  const transferOwnership = async (project: ProjectDto, newOwnerId: string) => {
+    const usersStore = useUsersStore()
+
+    await projectsApi.transferOwnership(project.id, newOwnerId)
+
+    if (!usersStore.users.length) {
+      await usersStore.fetchUsers()
+    }
+
+    const user = usersStore.users.find((u) => u.id === newOwnerId)
+    project.owner = user!
+  }
+
   return {
     projects,
     fetchProjects,
@@ -88,5 +101,6 @@ export const useProjectsStore = defineStore('projects', () => {
     getProject,
     addMember,
     removeMember,
+    transferOwnership,
   }
 })

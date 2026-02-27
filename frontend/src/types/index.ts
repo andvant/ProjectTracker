@@ -9,7 +9,7 @@ export interface ProjectDto {
   key: string
   name: string
   description?: string
-  ownerId: string
+  owner: UsersDto
   createdBy: string
   createdOn: Date
   updatedBy: string

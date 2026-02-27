@@ -20,13 +20,19 @@ const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.pr
 const description = ref('')
 const name = ref('')
 const isEditing = ref(false)
+const isTransferringOwnership = ref(false)
 const isAddingMember = ref(false)
 const isSubmitting = ref(false)
 
 const selectedMemberId = ref<string | null>(null)
+const selectedOwnerId = ref<string>()
 
 const nonMemberUsers = computed(() =>
   usersStore.users.filter((u) => !project.value?.members.find((m) => m.id === u.id)),
+)
+
+const memberUsers = computed(() =>
+  usersStore.users.filter((u) => project.value?.members.find((m) => m.id === u.id)),
 )
 
 type Errors = UpdateProjectRequest & GeneralError
@@ -96,10 +102,17 @@ const onRemoveMember = async (memberId: string) => {
 }
 
 const onAddingMember = async () => {
-  isAddingMember.value = true
-  selectedMemberId.value = null
-
   await usersStore.fetchUsers()
+
+  selectedMemberId.value = null
+  isAddingMember.value = true
+}
+
+const onTransferringOwnership = async () => {
+  await usersStore.fetchUsers()
+
+  selectedOwnerId.value = project.value!.owner.id
+  isTransferringOwnership.value = true
 }
 
 const onAddMember = async () => {
@@ -110,6 +123,16 @@ const onAddMember = async () => {
     await projectsStore.addMember(project.value!, selectedMemberId.value)
   } finally {
     isAddingMember.value = false
+    isSubmitting.value = false
+  }
+}
+
+const onTransferOwnership = async () => {
+  isSubmitting.value = true
+  try {
+    await projectsStore.transferOwnership(project.value!, selectedOwnerId.value!)
+  } finally {
+    isTransferringOwnership.value = false
     isSubmitting.value = false
   }
 }
@@ -138,7 +161,27 @@ watch(
       <input v-model="description" />
       <span v-if="errors.description" class="error">{{ errors.description }}</span>
     </div>
-    <p>Owner: {{ project.ownerId }}</p>
+
+    <label>Owner:</label>
+    <p v-if="!isTransferringOwnership">{{ project.owner.name }}</p>
+    <button v-if="!isTransferringOwnership" @click="onTransferringOwnership">
+      Transfer ownership
+    </button>
+    <div v-else>
+      <select v-model="selectedOwnerId">
+        <option v-for="user in memberUsers" :key="user.id" :value="user.id">
+          {{ user.name }}
+        </option>
+      </select>
+      <button
+        @click="onTransferOwnership"
+        :disabled="selectedOwnerId === project.owner.id || isSubmitting"
+      >
+        Transfer
+      </button>
+      <button @click="isTransferringOwnership = false">Cancel</button>
+    </div>
+
     <p>Created on: {{ project.createdOn }}</p>
     <label>Members:</label>
     <ul>
