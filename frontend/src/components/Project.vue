@@ -13,22 +13,22 @@ const router = useRouter()
 const projectsStore = useProjectsStore()
 const usersStore = useUsersStore()
 
+const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
+
+const nonMemberUsers = computed(() =>
+  usersStore.users.filter((u) => !project.value?.members.find((m) => m.id === u.id)),
+)
+
 const project = ref<ProjectDto>()
 
-const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
+const selectedMemberId = ref<string | null>(null)
+const selectedOwnerId = ref<string>()
 
 const req = new UpdateProjectRequest()
 const isEditing = ref(false)
 const isTransferringOwnership = ref(false)
 const isAddingMember = ref(false)
 const isSubmitting = ref(false)
-
-const selectedMemberId = ref<string | null>(null)
-const selectedOwnerId = ref<string>()
-
-const nonMemberUsers = computed(() =>
-  usersStore.users.filter((u) => !project.value?.members.find((m) => m.id === u.id)),
-)
 
 type Errors = ValidationErrors<UpdateProjectRequest>
 

@@ -17,14 +17,11 @@ import { useUsersStore } from '@/stores/users'
 const route = useRoute()
 const router = useRouter()
 
-const issue = ref<IssueDto>()
-
-const projectsStore = useProjectsStore()
 const issuesStore = useIssuesStore()
+const projectsStore = useProjectsStore()
 const usersStore = useUsersStore()
 
 const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
-
 const issueId = computed(() => issuesStore.getIssueIdByKey(route.params.issueKey as string))
 
 const memberUsers = computed(() => projectsStore.cachedProject!.members)
@@ -33,12 +30,14 @@ const nonWatcherUsers = computed(() =>
   memberUsers.value.filter((u) => !issue.value?.watchers.find((w) => w.id === u.id)),
 )
 
+const issue = ref<IssueDto>()
+
+const selectedWatcherId = ref<string | null>()
+
 const req = new UpdateIssueRequest()
 const isEditing = ref(false)
 const isAddingWatcher = ref(false)
 const isSubmitting = ref(false)
-
-const selectedWatcherId = ref<string | null>()
 
 type Errors = ValidationErrors<UpdateIssueRequest>
 

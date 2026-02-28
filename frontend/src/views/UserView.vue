@@ -6,9 +6,9 @@ import type { UserDto } from '@/types/users'
 
 const route = useRoute()
 
-const userId = computed(() => route.params.userId as string)
-
 const usersStore = useUsersStore()
+
+const userId = computed(() => route.params.userId as string)
 
 const user = ref<UserDto>()
 
