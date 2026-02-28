@@ -118,6 +118,25 @@ const onAddWatcher = async () => {
   }
 }
 
+const onFilesSelected = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (!input.files) return
+
+  isSubmitting.value = true
+  try {
+    for (const file of input.files) {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      issue.value = await issuesStore.uploadAttachment(projectId.value!, issueId.value!, formData)
+    }
+  } finally {
+    isSubmitting.value = false
+  }
+
+  input.value = ''
+}
+
 watch(
   issueId,
   async (issueId) => {
@@ -255,6 +274,20 @@ watch(
         <button @click="onAddWatcher" :disabled="!selectedWatcherId || isSubmitting">Add</button>
         <button @click="isAddingWatcher = false">Cancel</button>
       </div>
+    </div>
+
+    <div>
+      <label>Attachments:</label>
+      <ul>
+        <li v-for="attachment in issue.attachments" :key="attachment.id">
+          {{ attachment.name }}
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <p>Upload attachments</p>
+      <input type="file" multiple @change="(e) => onFilesSelected(e)" :disabled="isSubmitting" />
     </div>
   </div>
 </template>

@@ -21,6 +21,9 @@ const issuesApi = {
 
   addWatcher: (projectId: string, issueId: string, watcherId: string) =>
     apiClient.put(`projects/${projectId}/issues/${issueId}/watchers/${watcherId}`, null),
+
+  uploadAttachment: (projectId: string, issueId: string, file: FormData) =>
+    apiClient.post<void, FormData>(`projects/${projectId}/issues/${issueId}/attachments`, file),
 }
 
 export default issuesApi

@@ -30,9 +30,10 @@ internal class UploadIssueAttachmentCommandHandler : IRequestHandler<UploadIssue
 
     public async Task Handle(UploadIssueAttachmentCommand command, CancellationToken ct)
     {
-        var projectExists = await _context.Projects.AnyAsync(p => p.Id == command.ProjectId, ct);
+        var projectOwnerId = await _context.Projects.Where(p => p.Id == command.ProjectId)
+            .Select(p => p.OwnerId).FirstOrDefaultAsync(ct);
 
-        if (!projectExists)
+        if (projectOwnerId == Guid.Empty)
         {
             throw new ProjectNotFoundException(command.ProjectId);
         }
@@ -43,7 +44,7 @@ internal class UploadIssueAttachmentCommandHandler : IRequestHandler<UploadIssue
             .FirstOrDefaultAsync(i => i.Id == command.IssueId, ct)
             ?? throw new IssueNotFoundException(command.IssueId);
 
-        _currentUser.ValidateAllowed([issue.ReporterId, issue.Project.OwnerId]);
+        _currentUser.ValidateAllowed([issue.ReporterId, projectOwnerId]);
 
         var storageKey = await _storage.UploadIssueAttachment(command.ProjectId, issue.Id,
             command.Name, command.Stream, command.MimeType, ct);

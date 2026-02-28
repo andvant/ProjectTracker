@@ -10,11 +10,12 @@ export interface ProjectDto {
   name: string
   description?: string
   owner: UsersDto
+  members: UsersDto[]
+  attachments: AttachmentDto[]
   createdBy: string
   createdOn: Date
   updatedBy: string
   updatedOn: Date
-  members: UsersDto[]
 }
 
 export class CreateProjectRequest {
@@ -52,6 +53,7 @@ export interface IssueDto {
   estimationMinutes?: number
   parentIssueId?: string
   watchers: UsersDto[]
+  attachments: AttachmentDto[]
   createdBy: string
   createdOn: Date
   updatedBy: string
@@ -89,6 +91,11 @@ export interface UserDto {
   name: string
   email: string
   registrationDate: Date
+}
+
+export interface AttachmentDto {
+  id: string
+  name: string
 }
 
 export const IssueStatus = {

@@ -82,6 +82,12 @@ export const useProjectsStore = defineStore('projects', () => {
     project.owner = user!
   }
 
+  const uploadAttachment = async (projectId: string, file: FormData): Promise<ProjectDto> => {
+    await projectsApi.uploadAttachment(projectId, file)
+
+    return await getProject(projectId)
+  }
+
   return {
     projects,
     cachedProject,
@@ -94,5 +100,6 @@ export const useProjectsStore = defineStore('projects', () => {
     addMember,
     removeMember,
     transferOwnership,
+    uploadAttachment,
   }
 })

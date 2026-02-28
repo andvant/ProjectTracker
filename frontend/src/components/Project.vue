@@ -119,6 +119,25 @@ const onTransferOwnership = async () => {
   }
 }
 
+const onFilesSelected = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (!input.files) return
+
+  isSubmitting.value = true
+  try {
+    for (const file of input.files) {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      project.value = await projectsStore.uploadAttachment(projectId.value!, formData)
+    }
+  } finally {
+    isSubmitting.value = false
+  }
+
+  input.value = ''
+}
+
 watch(
   projectId,
   async (projectId) => {
@@ -199,6 +218,20 @@ watch(
         <button @click="onAddMember" :disabled="!selectedMemberId || isSubmitting">Add</button>
         <button @click="isAddingMember = false">Cancel</button>
       </div>
+    </div>
+
+    <div>
+      <label>Attachments:</label>
+      <ul>
+        <li v-for="attachment in project.attachments" :key="attachment.id">
+          {{ attachment.name }}
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <p>Upload attachments</p>
+      <input type="file" multiple @change="(e) => onFilesSelected(e)" :disabled="isSubmitting" />
     </div>
   </div>
 </template>

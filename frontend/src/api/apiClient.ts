@@ -15,14 +15,17 @@ const sendRequest = async <TResponse, TBody = unknown>(
 ): Promise<TResponse> => {
   const { method = 'GET', body } = options
 
+  const isFormData = body instanceof FormData
+  const isJson = body && !isFormData
+
   const res = await fetch(new URL(url, BASE_URL), {
     method,
-    headers: body
+    headers: isJson
       ? {
           'Content-Type': 'application/json',
         }
       : undefined,
-    body: body ? JSON.stringify(body) : undefined,
+    body: isJson ? JSON.stringify(body) : isFormData ? body : undefined,
   })
 
   if (res.status === 204 || res.status === 304) {

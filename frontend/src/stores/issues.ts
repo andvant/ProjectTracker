@@ -71,6 +71,16 @@ export const useIssuesStore = defineStore('issues', () => {
     issue.watchers = issue.watchers.filter((w) => w.id !== watcherId)
   }
 
+  const uploadAttachment = async (
+    projectId: string,
+    issueId: string,
+    file: FormData,
+  ): Promise<IssueDto> => {
+    await issuesApi.uploadAttachment(projectId, issueId, file)
+
+    return await getIssue(projectId, issueId)
+  }
+
   return {
     issues,
     fetchIssues,
@@ -82,5 +92,6 @@ export const useIssuesStore = defineStore('issues', () => {
     updateIssue,
     addWatcher,
     removeWatcher,
+    uploadAttachment,
   }
 })

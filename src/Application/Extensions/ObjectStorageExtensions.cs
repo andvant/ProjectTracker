@@ -11,7 +11,7 @@ internal static class ObjectStorageExtensions
         string mimeType,
         CancellationToken ct)
     {
-        var storageKey = $"projects/{projectId}/issues/{issueId}/{GetRandomPrefix()}-{name}";
+        var storageKey = $"projects/{projectId}/issues/{issueId}/{GetNameWithRandomSuffix(name)}";
 
         await UploadFile(storage, stream, mimeType, storageKey, ct);
 
@@ -26,7 +26,7 @@ internal static class ObjectStorageExtensions
         string mimeType,
         CancellationToken ct)
     {
-        var storageKey = $"projects/{projectId}/{GetRandomPrefix()}-{name}";
+        var storageKey = $"projects/{projectId}/{GetNameWithRandomSuffix(name)}";
 
         await UploadFile(storage, stream, mimeType, storageKey, ct);
 
@@ -44,5 +44,8 @@ internal static class ObjectStorageExtensions
         }
     }
 
-    private static string GetRandomPrefix() => Guid.NewGuid().ToString().Substring(0, 8);
+    private static string GetNameWithRandomSuffix(string name) =>
+        $"{Path.GetFileNameWithoutExtension(name)}-{GetRandomString()}{Path.GetExtension(name)}";
+
+    private static string GetRandomString() => Guid.NewGuid().ToString().Substring(0, 8);
 }

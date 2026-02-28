@@ -22,6 +22,9 @@ const projectsApi = {
 
   transferOwnership: (projectId: string, newOwnerId: string) =>
     apiClient.put(`projects/${projectId}/new-owner/${newOwnerId}`, null),
+
+  uploadAttachment: (projectId: string, file: FormData) =>
+    apiClient.post<void, FormData>(`projects/${projectId}/attachments`, file),
 }
 
 export default projectsApi
