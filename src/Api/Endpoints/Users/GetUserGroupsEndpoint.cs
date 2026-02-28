@@ -1,4 +1,3 @@
-using ProjectTracker.Application.Common;
 using ProjectTracker.Application.Features.Users.GetUserGroups;
 
 namespace UserTracker.Api.Endpoints.Users;
@@ -19,7 +18,6 @@ internal static class GetUserGroupsEndpoint
 
             return TypedResults.Ok(userGroups);
         })
-        .RequireAuthorization(p => p.RequireRole(Roles.Admin))
         .Produces<IReadOnlyCollection<UserGroupDto>>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound);
     }

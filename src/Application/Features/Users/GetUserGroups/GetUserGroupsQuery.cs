@@ -5,23 +5,18 @@ public record GetUserGroupsQuery(Guid UserId) : IRequest<IReadOnlyCollection<Use
 internal class GetUserGroupsQueryHandler : IRequestHandler<GetUserGroupsQuery, IReadOnlyCollection<UserGroupDto>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly ICurrentUser _currentUser;
     private readonly IIdentityService _identityService;
 
     public GetUserGroupsQueryHandler(
         IApplicationDbContext context,
-        ICurrentUser currentUser,
         IIdentityService identityService)
     {
         _context = context;
-        _currentUser = currentUser;
         _identityService = identityService;
     }
 
     public async Task<IReadOnlyCollection<UserGroupDto>> Handle(GetUserGroupsQuery query, CancellationToken ct)
     {
-        _currentUser.ValidateAllowed();
-
         var userExists = await _context.Users.AnyAsync(u => u.Id == query.UserId);
 
         if (!userExists)
