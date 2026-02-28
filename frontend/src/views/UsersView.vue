@@ -2,7 +2,7 @@
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUsersStore } from '@/stores/users'
-import User from '@/components/User.vue'
+import User from '@/views/User.vue'
 
 const router = useRouter()
 

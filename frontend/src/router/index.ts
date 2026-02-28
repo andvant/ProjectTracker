@@ -3,8 +3,8 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import ProjectView from '@/views/ProjectView.vue'
 import UsersView from '@/views/UsersView.vue'
 import ProjectNew from '@/views/ProjectNew.vue'
-import Issue from '@/components/Issue.vue'
-import User from '@/components/User.vue'
+import Issue from '@/views/Issue.vue'
+import User from '@/views/User.vue'
 
 const routes: RouteRecordRaw[] = [
   {

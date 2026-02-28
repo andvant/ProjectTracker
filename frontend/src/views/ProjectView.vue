@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import Issue from '@/views/Issue.vue'
 import Project from '@/components/Project.vue'
 import Issues from '@/components/Issues.vue'
-import Issue from '@/components/Issue.vue'
 
 const route = useRoute()
 
