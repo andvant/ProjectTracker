@@ -6,7 +6,7 @@ import { CreateIssueRequest } from '@/types'
 import { IssuePriority, IssueType } from '@/types'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { useProjectsStore } from '@/stores/projects'
-import { applyErrorsFromApi, getEnumOptions } from '@/utils'
+import { applyErrorsFromApi, createDefaultErrors, getEnumOptions } from '@/utils'
 
 const route = useRoute()
 const router = useRouter()
@@ -30,22 +30,10 @@ const isSubmitting = ref(false)
 
 type Errors = ValidationErrors<CreateIssueRequest>
 
-const createDefaultErrors = (): Errors => ({
-  title: '',
-  description: '',
-  assigneeId: '',
-  type: '',
-  priority: '',
-  parentIssueId: '',
-  dueDate: '',
-  estimationMinutes: '',
-  general: '',
-})
-
-const errors = ref<Errors>(createDefaultErrors())
+const errors = ref<Errors>(createDefaultErrors(req))
 
 const validate = () => {
-  errors.value = createDefaultErrors()
+  errors.value = createDefaultErrors(req)
 
   let isValid = true
 
@@ -83,7 +71,7 @@ const onSubmit = async () => {
 }
 
 const onCreating = () => {
-  errors.value = createDefaultErrors()
+  errors.value = createDefaultErrors(req)
   Object.assign(req, new CreateIssueRequest())
   isCreating.value = true
 }

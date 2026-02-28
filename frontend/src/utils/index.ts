@@ -1,4 +1,4 @@
-import type { ProblemDetails } from '@/types/api'
+import type { ProblemDetails, ValidationErrors } from '@/types/api'
 
 interface ValueLabel {
   value: string
@@ -11,6 +11,19 @@ export const getEnumOptions = <T extends Enum>(enumObject: T) => Object.values(e
 
 export const getEnumLabel = <T extends Enum>(enumObject: T, enumValue: string) => {
   return getEnumOptions(enumObject).find((e) => e.value === enumValue)!.label
+}
+
+export const createDefaultErrors = <T extends object>(source: T): ValidationErrors<T> => {
+  const errors = {} as Record<keyof T, string>
+
+  for (const key in source) {
+    errors[key] = ''
+  }
+
+  return {
+    ...errors,
+    general: '',
+  }
 }
 
 const toCamelCase = (value: string) => value.charAt(0).toLowerCase() + value.slice(1)

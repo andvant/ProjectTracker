@@ -5,7 +5,7 @@ import { useProjectsStore } from '@/stores/projects'
 import { useIssuesStore } from '@/stores/issues'
 import { CreateProjectRequest } from '@/types'
 import { ApiError, type ValidationErrors } from '@/types/api'
-import { applyErrorsFromApi } from '@/utils'
+import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
 
 const router = useRouter()
 
@@ -17,17 +17,10 @@ const isSubmitting = ref(false)
 
 type Errors = ValidationErrors<CreateProjectRequest>
 
-const createDefaultErrors = (): Errors => ({
-  key: '',
-  name: '',
-  description: '',
-  general: '',
-})
-
-const errors = ref<Errors>(createDefaultErrors())
+const errors = ref<Errors>(createDefaultErrors(req))
 
 const validate = () => {
-  errors.value = createDefaultErrors()
+  errors.value = createDefaultErrors(req)
 
   let isValid = true
 

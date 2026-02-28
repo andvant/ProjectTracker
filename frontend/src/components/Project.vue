@@ -5,7 +5,7 @@ import { useProjectsStore } from '@/stores/projects'
 import { useUsersStore } from '@/stores/users'
 import { UpdateProjectRequest, type ProjectDto } from '@/types'
 import { ApiError, type ValidationErrors } from '@/types/api'
-import { applyErrorsFromApi } from '@/utils'
+import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
 
 const route = useRoute()
 const router = useRouter()
@@ -32,16 +32,10 @@ const nonMemberUsers = computed(() =>
 
 type Errors = ValidationErrors<UpdateProjectRequest>
 
-const createDefaultErrors = (): Errors => ({
-  name: '',
-  description: '',
-  general: '',
-})
-
-const errors = ref<Errors>(createDefaultErrors())
+const errors = ref<Errors>(createDefaultErrors(req))
 
 const validate = () => {
-  errors.value = createDefaultErrors()
+  errors.value = createDefaultErrors(req)
 
   let isValid = true
 
@@ -74,7 +68,7 @@ const onUpdateProject = async (projectId: string) => {
 }
 
 const onEditing = () => {
-  errors.value = createDefaultErrors()
+  errors.value = createDefaultErrors(req)
   req.name = project.value!.name
   req.description = project.value!.description
 

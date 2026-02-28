@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
 import { IssuePriority, IssueStatus, IssueType, type IssueDto, UpdateIssueRequest } from '@/types'
-import { applyErrorsFromApi, getEnumLabel, getEnumOptions } from '@/utils'
+import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
 import { ApiError, type ValidationErrors } from '@/types/api'
 
 const route = useRoute()
@@ -27,21 +27,10 @@ const isSubmitting = ref(false)
 
 type Errors = ValidationErrors<UpdateIssueRequest>
 
-const createDefaultErrors = (): Errors => ({
-  title: '',
-  description: '',
-  assigneeId: '',
-  status: '',
-  priority: '',
-  dueDate: '',
-  estimationMinutes: '',
-  general: '',
-})
-
-const errors = ref<Errors>(createDefaultErrors())
+const errors = ref<Errors>(createDefaultErrors(req))
 
 const validate = () => {
-  errors.value = createDefaultErrors()
+  errors.value = createDefaultErrors(req)
 
   let isValid = true
 
@@ -79,7 +68,7 @@ const onUpdateIssue = async () => {
 }
 
 const onEditing = () => {
-  errors.value = createDefaultErrors()
+  errors.value = createDefaultErrors(req)
   req.title = issue.value!.title
   req.description = issue.value!.description
   req.assigneeId = issue.value!.assignee?.id
