@@ -32,7 +32,7 @@ const nonMemberUsers = computed(() =>
 
 type Errors = ValidationErrors<UpdateProjectRequest>
 
-const createDefaultErrors = () => ({
+const createDefaultErrors = (): Errors => ({
   name: '',
   description: '',
   general: '',
@@ -152,7 +152,7 @@ watch(
     <label>Description: </label>
     <p v-if="!isEditing">{{ project.description }}</p>
     <div v-else class="form-group">
-      <input v-model="req.description" />
+      <textarea v-model="req.description"></textarea>
       <span v-if="errors.description" class="error">{{ errors.description }}</span>
     </div>
 

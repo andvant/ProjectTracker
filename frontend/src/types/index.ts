@@ -68,12 +68,12 @@ export class CreateIssueRequest {
   estimationMinutes?: number
 }
 
-export interface UpdateIssueRequest {
-  title: string
+export class UpdateIssueRequest {
+  title: string = ''
   description?: string
   assigneeId?: string
-  issueStatus: IssueStatusEnum
-  priority: IssuePriorityEnum
+  status: IssueStatusEnum = IssueStatus.Open.value
+  priority: IssuePriorityEnum = IssuePriority.Normal.value
   dueDate?: Date
   estimationMinutes?: number
 }

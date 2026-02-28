@@ -3,8 +3,9 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
-import { IssuePriority, IssueStatus, IssueType, type IssueDto } from '@/types'
-import { getEnumLabel } from '@/utils'
+import { IssuePriority, IssueStatus, IssueType, type IssueDto, UpdateIssueRequest } from '@/types'
+import { applyErrorsFromApi, getEnumLabel, getEnumOptions } from '@/utils'
+import { ApiError, type ValidationErrors } from '@/types/api'
 
 const route = useRoute()
 const router = useRouter()
@@ -18,6 +19,78 @@ const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.pr
 
 const issueId = computed(() => issuesStore.getIssueIdByKey(route.params.issueKey as string))
 
+const memberUsers = computed(() => projectsStore.cachedProject!.members)
+
+const req = new UpdateIssueRequest()
+const isEditing = ref(false)
+const isSubmitting = ref(false)
+
+type Errors = ValidationErrors<UpdateIssueRequest>
+
+const createDefaultErrors = (): Errors => ({
+  title: '',
+  description: '',
+  assigneeId: '',
+  status: '',
+  priority: '',
+  dueDate: '',
+  estimationMinutes: '',
+  general: '',
+})
+
+const errors = ref<Errors>(createDefaultErrors())
+
+const validate = () => {
+  errors.value = createDefaultErrors()
+
+  let isValid = true
+
+  if (!req.title.trim()) {
+    errors.value.title = 'Title is required'
+    isValid = false
+  }
+
+  if (req.estimationMinutes && req.estimationMinutes < 0) {
+    errors.value.estimationMinutes = 'Estimation minutes cannot be negative'
+    isValid = false
+  }
+
+  return isValid
+}
+
+const onUpdateIssue = async () => {
+  if (!validate()) return
+
+  try {
+    isSubmitting.value = true
+
+    issue.value = await issuesStore.updateIssue(projectId.value!, issueId.value!, req)
+
+    isEditing.value = false
+  } catch (e) {
+    if (e instanceof ApiError && e.problem) {
+      applyErrorsFromApi(errors.value, e.problem)
+    } else {
+      errors.value.general = 'Unexpected error occurred'
+    }
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+const onEditing = () => {
+  errors.value = createDefaultErrors()
+  req.title = issue.value!.title
+  req.description = issue.value!.description
+  req.assigneeId = issue.value!.assignee?.id
+  req.status = issue.value!.status
+  req.priority = issue.value!.priority
+  req.dueDate = issue.value!.dueDate
+  req.estimationMinutes = issue.value!.estimationMinutes
+
+  isEditing.value = true
+}
+
 const onDeleteIssue = async () => {
   router.push({ name: 'Project', params: { projectKey: route.params.projectKey } })
 
@@ -29,6 +102,12 @@ watch(
   async (issueId) => {
     if (!issueId) return
 
+    isEditing.value = false
+
+    if (!projectsStore.cachedProject) {
+      await projectsStore.getProject(projectId.value!)
+    }
+
     issue.value = await issuesStore.getIssue(projectId.value!, issueId)
   },
   { immediate: true },
@@ -36,20 +115,114 @@ watch(
 </script>
 <template>
   <div v-if="issue" class="issue">
-    <h2>{{ issue.title }}</h2>
+    <div>
+      <h2 v-if="!isEditing">{{ issue.title }}</h2>
+      <div v-else class="form-group">
+        <input v-model="req.title" />
+        <span v-if="errors.title" class="error">{{ errors.title }}</span>
+      </div>
+    </div>
+
     <p>Id: {{ issue.id }}</p>
-    <p>Description: {{ issue.description }}</p>
+
+    <div>
+      <label>Description: </label>
+      <span v-if="!isEditing">{{ issue.description }}</span>
+      <div v-else class="form-group">
+        <textarea v-model="req.description"></textarea>
+        <span v-if="errors.description" class="error">{{ errors.description }}</span>
+      </div>
+    </div>
+
     <p>Reporter: {{ issue.reporter.name }}</p>
-    <p>Assignee: {{ issue.assignee?.name ?? 'Unassigned' }}</p>
+
+    <div>
+      <label>Assignee: </label>
+      <span v-if="!isEditing">{{ issue.assignee?.name ?? '&lt;none&gt;' }}</span>
+      <div v-else class="form-group">
+        <select v-model="req.assigneeId">
+          <option v-for="user in memberUsers" :key="user.id" :value="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+        <span v-if="errors.assigneeId" class="error">{{ errors.assigneeId }}</span>
+      </div>
+    </div>
+
     <p>Type: {{ getEnumLabel(IssueType, issue.type) }}</p>
-    <p>Status: {{ getEnumLabel(IssueStatus, issue.status) }}</p>
-    <p>Priority: {{ getEnumLabel(IssuePriority, issue.priority) }}</p>
+
+    <div>
+      <label>Status: </label>
+      <span v-if="!isEditing">{{ getEnumLabel(IssueStatus, issue.status) }}</span>
+      <div v-else class="form-group">
+        <select v-model="req.status">
+          <option
+            v-for="option in getEnumOptions(IssueStatus)"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+        <span v-if="errors.status" class="error">{{ errors.status }}</span>
+      </div>
+    </div>
+
+    <div>
+      <label>Priority: </label>
+      <span v-if="!isEditing">{{ getEnumLabel(IssuePriority, issue.priority) }}</span>
+      <div v-else class="form-group">
+        <select v-model="req.priority">
+          <option
+            v-for="option in getEnumOptions(IssuePriority)"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+        <span v-if="errors.priority" class="error">{{ errors.priority }}</span>
+      </div>
+    </div>
+
+    <div>
+      <label>Due date: </label>
+      <span v-if="!isEditing">{{ issue.dueDate }}</span>
+      <div v-else class="form-group">
+        <input v-model="req.dueDate" type="date" />
+        <span v-if="errors.dueDate" class="error">{{ errors.dueDate }}</span>
+      </div>
+    </div>
+
+    <div>
+      <label>Estimation minutes: </label>
+      <span v-if="!isEditing">{{ issue.estimationMinutes }}</span>
+      <div v-else class="form-group">
+        <input v-model="req.estimationMinutes" type="number" />
+        <span v-if="errors.estimationMinutes" class="error">{{ errors.estimationMinutes }}</span>
+      </div>
+    </div>
+
     <p>Created on: {{ issue.createdOn }}</p>
     <button @click="onDeleteIssue">Delete</button>
+    <button v-if="!isEditing" @click="onEditing">Edit</button>
+    <button v-if="isEditing" @click="onUpdateIssue" :disabled="isSubmitting">Save</button>
+    <button v-if="isEditing" @click="isEditing = false">Cancel</button>
   </div>
 </template>
 <style scoped>
 .issue {
   padding: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
 }
 </style>

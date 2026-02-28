@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import issuesApi from '@/api/issuesApi'
-import type { CreateIssueRequest, IssueDto, IssuesDto } from '@/types'
+import type { CreateIssueRequest, UpdateIssueRequest, IssueDto, IssuesDto } from '@/types'
 
 export const useIssuesStore = defineStore('issues', () => {
   const issues = ref<IssuesDto[]>([])
@@ -36,6 +36,16 @@ export const useIssuesStore = defineStore('issues', () => {
     return issue
   }
 
+  const updateIssue = async (
+    projectId: string,
+    issueId: string,
+    request: UpdateIssueRequest,
+  ): Promise<IssueDto> => {
+    await issuesApi.updateIssue(projectId, issueId, request)
+
+    return await getIssue(projectId, issueId)
+  }
+
   return {
     issues,
     fetchIssues,
@@ -44,5 +54,6 @@ export const useIssuesStore = defineStore('issues', () => {
     getIssueIdByKey,
     getIssue,
     createIssue,
+    updateIssue,
   }
 })

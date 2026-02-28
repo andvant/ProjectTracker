@@ -17,7 +17,7 @@ const isSubmitting = ref(false)
 
 type Errors = ValidationErrors<CreateProjectRequest>
 
-const createDefaultErrors = () => ({
+const createDefaultErrors = (): Errors => ({
   key: '',
   name: '',
   description: '',

@@ -50,8 +50,6 @@ export const useProjectsStore = defineStore('projects', () => {
     return project
   }
 
-  const getCachedProject = () => cachedProject.value
-
   const addMember = async (project: ProjectDto, memberId: string) => {
     const usersStore = useUsersStore()
 
@@ -86,13 +84,13 @@ export const useProjectsStore = defineStore('projects', () => {
 
   return {
     projects,
+    cachedProject,
     fetchProjects,
     deleteProject,
     getProjectIdByKey,
     createProject,
     updateProject,
     getProject,
-    getCachedProject,
     addMember,
     removeMember,
     transferOwnership,

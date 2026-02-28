@@ -16,9 +16,9 @@ const projectsStore = useProjectsStore()
 
 const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
 
-const memberUsers = computed(() => projectsStore.getCachedProject()!.members)
+const memberUsers = computed(() => projectsStore.cachedProject!.members)
 
-const epicIssues = computed(() => issuesStore.issues.filter(i => i.type === IssueType.Epic.value))
+const epicIssues = computed(() => issuesStore.issues.filter((i) => i.type === IssueType.Epic.value))
 
 const onSelectIssue = (issueKey: string) => {
   router.push({ name: 'Issue', params: { issueKey } })
@@ -30,7 +30,7 @@ const isSubmitting = ref(false)
 
 type Errors = ValidationErrors<CreateIssueRequest>
 
-const createDefaultErrors = () => ({
+const createDefaultErrors = (): Errors => ({
   title: '',
   description: '',
   assigneeId: '',
@@ -89,9 +89,8 @@ const onCreating = () => {
 }
 
 watch(projectId, () => {
-    isCreating.value = false
-  }
-)
+  isCreating.value = false
+})
 </script>
 <template>
   <div>
@@ -112,7 +111,7 @@ watch(projectId, () => {
       <div class="form-group">
         <label>Type</label>
         <select v-model="req.type">
-          <option :value="undefined">{{ "<Not selected>" }}</option>
+          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
           <option
             v-for="option in getEnumOptions(IssueType)"
             :key="option.value"
@@ -127,7 +126,7 @@ watch(projectId, () => {
       <div class="form-group">
         <label>Priority</label>
         <select v-model="req.priority">
-          <option :value="undefined">{{ "<Not selected>" }}</option>
+          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
           <option
             v-for="option in getEnumOptions(IssuePriority)"
             :key="option.value"
@@ -142,7 +141,7 @@ watch(projectId, () => {
       <div class="form-group">
         <label>Assignee</label>
         <select v-model="req.assigneeId">
-          <option :value="undefined">{{ "<Not selected>" }}</option>
+          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
           <option v-for="user in memberUsers" :key="user.id" :value="user.id">
             {{ user.name }}
           </option>
@@ -153,7 +152,7 @@ watch(projectId, () => {
       <div class="form-group">
         <label>Parent issue</label>
         <select v-model="req.parentIssueId">
-          <option :value="undefined">{{ "<Not selected>" }}</option>
+          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
           <option v-for="issue in epicIssues" :key="issue.id" :value="issue.id">
             {{ issue.title }}
           </option>
@@ -162,15 +161,15 @@ watch(projectId, () => {
       </div>
 
       <div class="form-group">
-        <label>Estimation minutes</label>
-        <input v-model="req.estimationMinutes" type="number" />
-        <span v-if="errors.estimationMinutes" class="error">{{ errors.estimationMinutes }}</span>
-      </div>
-
-      <div class="form-group">
         <label>Due date</label>
         <input v-model="req.dueDate" type="date" />
         <span v-if="errors.dueDate" class="error">{{ errors.dueDate }}</span>
+      </div>
+
+      <div class="form-group">
+        <label>Estimation minutes</label>
+        <input v-model="req.estimationMinutes" type="number" />
+        <span v-if="errors.estimationMinutes" class="error">{{ errors.estimationMinutes }}</span>
       </div>
 
       <button @click="onSubmit">Create</button>
