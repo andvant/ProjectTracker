@@ -24,7 +24,7 @@ const issueId = computed(() => issuesStore.getIssueIdByKey(route.params.issueKey
 const memberUsers = computed(() => projectsStore.cachedProject!.members)
 
 const nonWatcherUsers = computed(() =>
-  usersStore.users.filter((u) => !issue.value?.watchers.find((w) => w.id === u.id)),
+  memberUsers.value.filter((u) => !issue.value?.watchers.find((w) => w.id === u.id)),
 )
 
 const req = new UpdateIssueRequest()

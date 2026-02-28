@@ -12,10 +12,10 @@ const selectedProjectKey = computed(() => route.params.projectKey)
 
 const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
 
-const newProjectSelected = computed(() => route.name === 'ProjectNew')
+const newProjectSelected = computed(() => route.name === 'NewProject')
 
 const onNewProject = () => {
-  router.push({ name: 'ProjectNew' })
+  router.push({ name: 'NewProject' })
 }
 
 const onSelectProject = (projectKey: string) => {

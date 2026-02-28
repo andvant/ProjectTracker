@@ -3,8 +3,7 @@ import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useIssuesStore } from '@/stores/issues'
-import Sidebar from '@/layouts/Sidebar.vue'
-import MainPanel from '@/layouts/MainPanel.vue'
+import Sidebar from '@/components/Sidebar.vue'
 
 const route = useRoute()
 
@@ -35,9 +34,9 @@ watch(
 <template>
   <div class="app">
     <Sidebar />
-    <MainPanel>
+    <main>
       <router-view />
-    </MainPanel>
+    </main>
   </div>
 </template>
 <style scoped>

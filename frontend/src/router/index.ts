@@ -2,9 +2,9 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import MainLayout from '@/layouts/MainLayout.vue'
 import ProjectView from '@/views/ProjectView.vue'
 import UsersView from '@/views/UsersView.vue'
-import ProjectNew from '@/views/ProjectNew.vue'
-import Issue from '@/views/Issue.vue'
-import User from '@/views/User.vue'
+import NewProjectView from '@/views/NewProjectView.vue'
+import IssueView from '@/views/IssueView.vue'
+import UserView from '@/views/UserView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -20,30 +20,26 @@ const routes: RouteRecordRaw[] = [
         path: 'projects/:projectKey',
         name: 'Project',
         component: ProjectView,
-        children: [
-          {
-            path: 'issues/:issueKey',
-            name: 'Issue',
-            component: Issue,
-          },
-        ],
+      },
+      {
+        path: 'projects/:projectKey/issues/:issueKey',
+        name: 'Issue',
+        component: IssueView,
       },
       {
         path: 'projects/new',
-        name: 'ProjectNew',
-        component: ProjectNew,
+        name: 'NewProject',
+        component: NewProjectView,
       },
       {
         path: 'users',
         name: 'Users',
         component: UsersView,
-        children: [
-          {
-            path: ':userId',
-            name: 'User',
-            component: User,
-          },
-        ],
+      },
+      {
+        path: 'users/:userId',
+        name: 'User',
+        component: UserView,
       },
     ],
   },
