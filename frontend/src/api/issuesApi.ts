@@ -15,6 +15,12 @@ const issuesApi = {
 
   updateIssue: (projectId: string, issueId: string, request: UpdateIssueRequest) =>
     apiClient.put(`projects/${projectId}/issues/${issueId}`, request),
+
+  removeWatcher: (projectId: string, issueId: string, watcherId: string) =>
+    apiClient.delete(`projects/${projectId}/issues/${issueId}/watchers/${watcherId}`),
+
+  addWatcher: (projectId: string, issueId: string, watcherId: string) =>
+    apiClient.put(`projects/${projectId}/issues/${issueId}/watchers/${watcherId}`, null),
 }
 
 export default issuesApi

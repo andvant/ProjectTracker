@@ -82,9 +82,7 @@ const onDeleteProject = async (projectId: string) => {
 }
 
 const onRemoveMember = async (memberId: string) => {
-  if (!project.value) return
-
-  await projectsStore.removeMember(project.value, memberId)
+  await projectsStore.removeMember(project.value!, memberId)
 }
 
 const onAddingMember = async () => {
@@ -105,8 +103,8 @@ const onAddMember = async () => {
   isSubmitting.value = true
   try {
     await projectsStore.addMember(project.value!, selectedMemberId.value)
-  } finally {
     isAddingMember.value = false
+  } finally {
     isSubmitting.value = false
   }
 }

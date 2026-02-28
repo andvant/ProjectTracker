@@ -6,6 +6,7 @@ import { useProjectsStore } from '@/stores/projects'
 import { IssuePriority, IssueStatus, IssueType, type IssueDto, UpdateIssueRequest } from '@/types'
 import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
 import { ApiError, type ValidationErrors } from '@/types/api'
+import { useUsersStore } from '@/stores/users'
 
 const route = useRoute()
 const router = useRouter()
@@ -14,6 +15,7 @@ const issue = ref<IssueDto>()
 
 const projectsStore = useProjectsStore()
 const issuesStore = useIssuesStore()
+const usersStore = useUsersStore()
 
 const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
 
@@ -21,9 +23,16 @@ const issueId = computed(() => issuesStore.getIssueIdByKey(route.params.issueKey
 
 const memberUsers = computed(() => projectsStore.cachedProject!.members)
 
+const nonWatcherUsers = computed(() =>
+  usersStore.users.filter((u) => !issue.value?.watchers.find((w) => w.id === u.id)),
+)
+
 const req = new UpdateIssueRequest()
 const isEditing = ref(false)
+const isAddingWatcher = ref(false)
 const isSubmitting = ref(false)
+
+const selectedWatcherId = ref<string | null>()
 
 type Errors = ValidationErrors<UpdateIssueRequest>
 
@@ -86,12 +95,36 @@ const onDeleteIssue = async () => {
   await issuesStore.deleteIssue(projectId.value!, issueId.value!)
 }
 
+const onRemoveWatcher = async (watcherId: string) => {
+  await issuesStore.removeWatcher(projectId.value!, issue.value!, watcherId)
+}
+
+const onAddingWatcher = async () => {
+  await usersStore.fetchUsers()
+
+  selectedWatcherId.value = null
+  isAddingWatcher.value = true
+}
+
+const onAddWatcher = async () => {
+  if (!selectedWatcherId.value) return
+
+  isSubmitting.value = true
+  try {
+    await issuesStore.addWatcher(projectId.value!, issue.value!, selectedWatcherId.value)
+    isAddingWatcher.value = false
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
 watch(
   issueId,
   async (issueId) => {
     if (!issueId) return
 
     isEditing.value = false
+    isAddingWatcher.value = false
 
     if (!projectsStore.cachedProject) {
       await projectsStore.getProject(projectId.value!)
@@ -193,10 +226,36 @@ watch(
     </div>
 
     <p>Created on: {{ issue.createdOn }}</p>
+
+    <label>Watchers:</label>
+    <ul>
+      <li v-for="watcher in issue.watchers" :key="watcher.id">
+        <label @click="router.push({ name: 'User', params: { userId: watcher.id } })">
+          {{ watcher.name }}
+        </label>
+        <button @click="onRemoveWatcher(watcher.id)">X</button>
+      </li>
+    </ul>
+
     <button @click="onDeleteIssue">Delete</button>
     <button v-if="!isEditing" @click="onEditing">Edit</button>
     <button v-if="isEditing" @click="onUpdateIssue" :disabled="isSubmitting">Save</button>
     <button v-if="isEditing" @click="isEditing = false">Cancel</button>
+
+    <div>
+      <button v-if="!isAddingWatcher" @click="onAddingWatcher">Add watcher</button>
+
+      <div v-else>
+        <select v-model="selectedWatcherId">
+          <option disabled :value="null">Select a user</option>
+          <option v-for="user in nonWatcherUsers" :key="user.id" :value="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+        <button @click="onAddWatcher" :disabled="!selectedWatcherId || isSubmitting">Add</button>
+        <button @click="isAddingWatcher = false">Cancel</button>
+      </div>
+    </div>
   </div>
 </template>
 <style scoped>

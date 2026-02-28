@@ -22,9 +22,10 @@ internal class RemoveWatcherCommandHandler : IRequestHandler<RemoveWatcherComman
 
     public async Task Handle(RemoveWatcherCommand command, CancellationToken ct)
     {
-        var projectExists = await _context.Projects.AnyAsync(p => p.Id == command.ProjectId, ct);
+        var projectOwnerId = await _context.Projects.Where(p => p.Id == command.ProjectId)
+            .Select(p => p.OwnerId).FirstOrDefaultAsync(ct);
 
-        if (!projectExists)
+        if (projectOwnerId == Guid.Empty)
         {
             throw new ProjectNotFoundException(command.ProjectId);
         }
@@ -39,7 +40,7 @@ internal class RemoveWatcherCommandHandler : IRequestHandler<RemoveWatcherComman
         var watcher = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.WatcherId, ct)
             ?? throw new WatcherNotFoundException(command.WatcherId);
 
-        _currentUser.ValidateAllowed([watcher.Id, issue.Project.OwnerId]);
+        _currentUser.ValidateAllowed([watcher.Id, projectOwnerId]);
 
         issue.RemoveWatcher(watcher);
 

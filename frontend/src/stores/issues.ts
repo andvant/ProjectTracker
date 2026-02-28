@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import issuesApi from '@/api/issuesApi'
 import type { CreateIssueRequest, UpdateIssueRequest, IssueDto, IssuesDto } from '@/types'
+import { useUsersStore } from '@/stores/users'
 
 export const useIssuesStore = defineStore('issues', () => {
   const issues = ref<IssuesDto[]>([])
@@ -51,6 +52,25 @@ export const useIssuesStore = defineStore('issues', () => {
     return await getIssue(projectId, issueId)
   }
 
+  const addWatcher = async (projectId: string, issue: IssueDto, watcherId: string) => {
+    const usersStore = useUsersStore()
+
+    await issuesApi.addWatcher(projectId, issue.id, watcherId)
+
+    if (!usersStore.users.length) {
+      await usersStore.fetchUsers()
+    }
+
+    const user = usersStore.users.find((u) => u.id === watcherId)
+    issue.watchers.push(user!)
+  }
+
+  const removeWatcher = async (projectId: string, issue: IssueDto, watcherId: string) => {
+    await issuesApi.removeWatcher(projectId, issue.id, watcherId)
+
+    issue.watchers = issue.watchers.filter((w) => w.id !== watcherId)
+  }
+
   return {
     issues,
     fetchIssues,
@@ -60,5 +80,7 @@ export const useIssuesStore = defineStore('issues', () => {
     getIssue,
     createIssue,
     updateIssue,
+    addWatcher,
+    removeWatcher,
   }
 })

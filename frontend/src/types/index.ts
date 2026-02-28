@@ -51,6 +51,7 @@ export interface IssueDto {
   dueDate?: Date
   estimationMinutes?: number
   parentIssueId?: string
+  watchers: UsersDto[]
   createdBy: string
   createdOn: Date
   updatedBy: string
