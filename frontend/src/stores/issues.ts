@@ -25,7 +25,12 @@ export const useIssuesStore = defineStore('issues', () => {
   }
 
   const getIssue = async (projectId: string, issueId: string) => {
-    return await issuesApi.getIssue(projectId, issueId)
+    const issue = await issuesApi.getIssue(projectId, issueId)
+
+    const existing = issues.value.find((i) => i.id === issue.id)!
+    existing.title = issue.title
+
+    return issue
   }
 
   const createIssue = async (projectId: string, request: CreateIssueRequest): Promise<IssueDto> => {
