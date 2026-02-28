@@ -1,5 +1,10 @@
 import apiClient from '@/api/apiClient'
-import type { ProjectsDto, ProjectDto, CreateProjectRequest, UpdateProjectRequest } from '@/types'
+import type {
+  ProjectsDto,
+  ProjectDto,
+  CreateProjectRequest,
+  UpdateProjectRequest,
+} from '@/types/projects'
 
 const projectsApi = {
   getProjects: () => apiClient.get<ProjectsDto[]>('projects'),

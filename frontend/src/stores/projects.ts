@@ -2,7 +2,12 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import projectsApi from '@/api/projectsApi'
 import { useUsersStore } from '@/stores/users'
-import type { CreateProjectRequest, ProjectDto, ProjectsDto, UpdateProjectRequest } from '@/types'
+import type {
+  CreateProjectRequest,
+  ProjectDto,
+  ProjectsDto,
+  UpdateProjectRequest,
+} from '@/types/projects'
 
 export const useProjectsStore = defineStore('projects', () => {
   const projects = ref<ProjectsDto[]>([])

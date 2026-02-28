@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUsersStore } from '@/stores/users'
-import type { UserDto } from '@/types'
+import type { UserDto } from '@/types/users'
 
 const route = useRoute()
 

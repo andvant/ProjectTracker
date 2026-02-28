@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import usersApi from '@/api/usersApi'
-import type { UsersDto } from '@/types'
+import type { UsersDto } from '@/types/users'
 
 export const useUsersStore = defineStore('users', () => {
   const users = ref<UsersDto[]>([])

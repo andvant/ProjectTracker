@@ -1,5 +1,5 @@
 import apiClient from '@/api/apiClient'
-import type { UsersDto, UserDto } from '@/types'
+import type { UsersDto, UserDto } from '@/types/users'
 
 const usersApi = {
   getUsers: () => apiClient.get<UsersDto[]>('users'),

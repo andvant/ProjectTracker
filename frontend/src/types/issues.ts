@@ -1,33 +1,5 @@
-export interface ProjectsDto {
-  id: string
-  key: string
-  name: string
-}
-
-export interface ProjectDto {
-  id: string
-  key: string
-  name: string
-  description?: string
-  owner: UsersDto
-  members: UsersDto[]
-  attachments: AttachmentDto[]
-  createdBy: string
-  createdOn: Date
-  updatedBy: string
-  updatedOn: Date
-}
-
-export class CreateProjectRequest {
-  key: string = ''
-  name: string = ''
-  description?: string
-}
-
-export class UpdateProjectRequest {
-  name: string = ''
-  description?: string
-}
+import type { AttachmentDto } from '@/types/attachments'
+import type { UsersDto } from '@/types/users'
 
 export interface IssuesDto {
   id: string
@@ -79,23 +51,6 @@ export class UpdateIssueRequest {
   priority: IssuePriorityEnum = IssuePriority.Normal.value
   dueDate?: Date
   estimationMinutes?: number
-}
-
-export interface UsersDto {
-  id: string
-  name: string
-}
-
-export interface UserDto {
-  id: string
-  name: string
-  email: string
-  registrationDate: Date
-}
-
-export interface AttachmentDto {
-  id: string
-  name: string
 }
 
 export const IssueStatus = {

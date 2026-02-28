@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useIssuesStore } from '@/stores/issues'
-import { CreateProjectRequest } from '@/types'
+import { CreateProjectRequest } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
 

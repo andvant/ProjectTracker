@@ -1,5 +1,5 @@
 import apiClient from '@/api/apiClient'
-import type { IssuesDto, IssueDto, CreateIssueRequest, UpdateIssueRequest } from '@/types'
+import type { IssuesDto, IssueDto, CreateIssueRequest, UpdateIssueRequest } from '@/types/issues'
 
 const issuesApi = {
   getIssues: (projectId: string) => apiClient.get<IssuesDto[]>(`projects/${projectId}/issues`),

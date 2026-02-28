@@ -3,7 +3,13 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
-import { IssuePriority, IssueStatus, IssueType, type IssueDto, UpdateIssueRequest } from '@/types'
+import {
+  IssuePriority,
+  IssueStatus,
+  IssueType,
+  type IssueDto,
+  UpdateIssueRequest,
+} from '@/types/issues'
 import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { useUsersStore } from '@/stores/users'

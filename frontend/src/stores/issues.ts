@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import issuesApi from '@/api/issuesApi'
-import type { CreateIssueRequest, UpdateIssueRequest, IssueDto, IssuesDto } from '@/types'
+import type { CreateIssueRequest, UpdateIssueRequest, IssueDto, IssuesDto } from '@/types/issues'
 import { useUsersStore } from '@/stores/users'
 
 export const useIssuesStore = defineStore('issues', () => {

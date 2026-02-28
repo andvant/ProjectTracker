@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useUsersStore } from '@/stores/users'
-import { UpdateProjectRequest, type ProjectDto } from '@/types'
+import { UpdateProjectRequest, type ProjectDto } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
 

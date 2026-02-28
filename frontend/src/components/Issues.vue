@@ -2,10 +2,9 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
-import { CreateIssueRequest } from '@/types'
-import { IssuePriority, IssueType } from '@/types'
-import { ApiError, type ValidationErrors } from '@/types/api'
 import { useProjectsStore } from '@/stores/projects'
+import { IssuePriority, IssueType, CreateIssueRequest } from '@/types/issues'
+import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi, createDefaultErrors, getEnumOptions } from '@/utils'
 
 const route = useRoute()
