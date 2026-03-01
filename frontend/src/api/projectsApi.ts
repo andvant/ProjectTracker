@@ -7,28 +7,29 @@ import type {
 } from '@/types/projects'
 
 const projectsApi = {
-  getProjects: () => apiClient.get<ProjectsDto[]>('projects'),
+  getProjects: (): Promise<ProjectsDto[]> => apiClient.get<ProjectsDto[]>('projects'),
 
-  getProject: (projectId: string) => apiClient.get<ProjectDto>(`projects/${projectId}`),
+  getProject: (projectId: string): Promise<ProjectDto> =>
+    apiClient.get<ProjectDto>(`projects/${projectId}`),
 
-  createProject: (request: CreateProjectRequest) =>
+  createProject: (request: CreateProjectRequest): Promise<ProjectDto> =>
     apiClient.post<ProjectDto, CreateProjectRequest>('projects', request),
 
-  updateProject: (projectId: string, request: UpdateProjectRequest) =>
+  updateProject: (projectId: string, request: UpdateProjectRequest): Promise<void> =>
     apiClient.put(`projects/${projectId}`, request),
 
-  deleteProject: (projectId: string) => apiClient.delete(`projects/${projectId}`),
+  deleteProject: (projectId: string): Promise<void> => apiClient.delete(`projects/${projectId}`),
 
-  removeMember: (projectId: string, memberId: string) =>
+  removeMember: (projectId: string, memberId: string): Promise<void> =>
     apiClient.delete(`projects/${projectId}/members/${memberId}`),
 
-  addMember: (projectId: string, memberId: string) =>
+  addMember: (projectId: string, memberId: string): Promise<void> =>
     apiClient.put(`projects/${projectId}/members/${memberId}`, null),
 
-  transferOwnership: (projectId: string, newOwnerId: string) =>
+  transferOwnership: (projectId: string, newOwnerId: string): Promise<void> =>
     apiClient.put(`projects/${projectId}/new-owner/${newOwnerId}`, null),
 
-  uploadAttachment: (projectId: string, file: FormData) =>
+  uploadAttachment: (projectId: string, file: FormData): Promise<void> =>
     apiClient.post<void, FormData>(`projects/${projectId}/attachments`, file),
 }
 

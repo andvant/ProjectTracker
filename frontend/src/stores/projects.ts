@@ -13,17 +13,17 @@ export const useProjectsStore = defineStore('projects', () => {
   const projects = ref<ProjectsDto[]>([])
   const cachedProject = ref<ProjectDto>()
 
-  const fetchProjects = async () => {
+  const fetchProjects = async (): Promise<void> => {
     projects.value = await projectsApi.getProjects()
   }
 
-  const deleteProject = async (projectId: string) => {
+  const deleteProject = async (projectId: string): Promise<void> => {
     projects.value = projects.value.filter((p) => p.id !== projectId)
 
     await projectsApi.deleteProject(projectId)
   }
 
-  const getProjectIdByKey = (projectKey: string) => {
+  const getProjectIdByKey = (projectKey: string): string | undefined => {
     return projects.value.find((p) => p.key === projectKey)?.id
   }
 
@@ -44,7 +44,7 @@ export const useProjectsStore = defineStore('projects', () => {
     return await getProject(projectId)
   }
 
-  const getProject = async (projectId: string) => {
+  const getProject = async (projectId: string): Promise<ProjectDto> => {
     const project = await projectsApi.getProject(projectId)
 
     cachedProject.value = project
@@ -55,7 +55,7 @@ export const useProjectsStore = defineStore('projects', () => {
     return project
   }
 
-  const addMember = async (project: ProjectDto, memberId: string) => {
+  const addMember = async (project: ProjectDto, memberId: string): Promise<void> => {
     const usersStore = useUsersStore()
 
     await projectsApi.addMember(project.id, memberId)
@@ -68,13 +68,13 @@ export const useProjectsStore = defineStore('projects', () => {
     project.members.push(user!)
   }
 
-  const removeMember = async (project: ProjectDto, memberId: string) => {
+  const removeMember = async (project: ProjectDto, memberId: string): Promise<void> => {
     await projectsApi.removeMember(project.id, memberId)
 
     project.members = project.members.filter((m) => m.id !== memberId)
   }
 
-  const transferOwnership = async (project: ProjectDto, newOwnerId: string) => {
+  const transferOwnership = async (project: ProjectDto, newOwnerId: string): Promise<void> => {
     const usersStore = useUsersStore()
 
     await projectsApi.transferOwnership(project.id, newOwnerId)

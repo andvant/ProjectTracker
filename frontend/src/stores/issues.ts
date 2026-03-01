@@ -7,25 +7,25 @@ import { useUsersStore } from '@/stores/users'
 export const useIssuesStore = defineStore('issues', () => {
   const issues = ref<IssuesDto[]>([])
 
-  const fetchIssues = async (projectId: string) => {
+  const fetchIssues = async (projectId: string): Promise<void> => {
     issues.value = await issuesApi.getIssues(projectId)
   }
 
-  const clearIssues = () => {
+  const clearIssues = (): void => {
     issues.value = []
   }
 
-  const deleteIssue = async (projectId: string, issueId: string) => {
+  const deleteIssue = async (projectId: string, issueId: string): Promise<void> => {
     issues.value = issues.value.filter((p) => p.id !== issueId)
 
     await issuesApi.deleteIssue(projectId, issueId)
   }
 
-  const getIssueIdByKey = (issueKey: string) => {
+  const getIssueIdByKey = (issueKey: string): string | undefined => {
     return issues.value.find((i) => i.key === issueKey)?.id
   }
 
-  const getIssue = async (projectId: string, issueId: string) => {
+  const getIssue = async (projectId: string, issueId: string): Promise<IssueDto> => {
     const issue = await issuesApi.getIssue(projectId, issueId)
 
     const existing = issues.value.find((i) => i.id === issue.id)!
@@ -52,7 +52,11 @@ export const useIssuesStore = defineStore('issues', () => {
     return await getIssue(projectId, issueId)
   }
 
-  const addWatcher = async (projectId: string, issue: IssueDto, watcherId: string) => {
+  const addWatcher = async (
+    projectId: string,
+    issue: IssueDto,
+    watcherId: string,
+  ): Promise<void> => {
     const usersStore = useUsersStore()
 
     await issuesApi.addWatcher(projectId, issue.id, watcherId)
@@ -65,7 +69,11 @@ export const useIssuesStore = defineStore('issues', () => {
     issue.watchers.push(user!)
   }
 
-  const removeWatcher = async (projectId: string, issue: IssueDto, watcherId: string) => {
+  const removeWatcher = async (
+    projectId: string,
+    issue: IssueDto,
+    watcherId: string,
+  ): Promise<void> => {
     await issuesApi.removeWatcher(projectId, issue.id, watcherId)
 
     issue.watchers = issue.watchers.filter((w) => w.id !== watcherId)

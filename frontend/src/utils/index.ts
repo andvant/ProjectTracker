@@ -7,11 +7,11 @@ interface ValueLabel {
 
 type Enum = Record<string, ValueLabel>
 
-export const getEnumOptions = <T extends Enum>(enumObject: T) => Object.values(enumObject)
+export const getEnumOptions = <T extends Enum>(enumObject: T): ValueLabel[] =>
+  Object.values(enumObject)
 
-export const getEnumLabel = <T extends Enum>(enumObject: T, enumValue: string) => {
-  return getEnumOptions(enumObject).find((e) => e.value === enumValue)!.label
-}
+export const getEnumLabel = <T extends Enum>(enumObject: T, enumValue: string): string =>
+  getEnumOptions(enumObject).find((e) => e.value === enumValue)!.label
 
 export const createDefaultErrors = <T extends object>(source: T): ValidationErrors<T> => {
   const errors = {} as Record<keyof T, string>
@@ -26,9 +26,12 @@ export const createDefaultErrors = <T extends object>(source: T): ValidationErro
   }
 }
 
-const toCamelCase = (value: string) => value.charAt(0).toLowerCase() + value.slice(1)
+const toCamelCase = (value: string): string => value.charAt(0).toLowerCase() + value.slice(1)
 
-export const applyErrorsFromApi = (errors: Record<string, string>, problem: ProblemDetails) => {
+export const applyErrorsFromApi = (
+  errors: Record<string, string>,
+  problem: ProblemDetails,
+): void => {
   if (!problem.errors) {
     errors['general' as keyof Record<string, string>] = problem.title || 'Unexpected error occurred'
     return

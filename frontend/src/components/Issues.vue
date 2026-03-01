@@ -19,10 +19,6 @@ const memberUsers = computed(() => projectsStore.cachedProject!.members)
 
 const epicIssues = computed(() => issuesStore.issues.filter((i) => i.type === IssueType.Epic.value))
 
-const onSelectIssue = (issueKey: string) => {
-  router.push({ name: 'Issue', params: { issueKey } })
-}
-
 const req = new CreateIssueRequest()
 const isCreating = ref(false)
 const isSubmitting = ref(false)
@@ -73,6 +69,10 @@ const onCreating = () => {
   errors.value = createDefaultErrors(req)
   Object.assign(req, new CreateIssueRequest())
   isCreating.value = true
+}
+
+const onSelectIssue = (issueKey: string) => {
+  router.push({ name: 'Issue', params: { issueKey } })
 }
 
 watch(projectId, () => {
