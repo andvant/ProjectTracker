@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import usersApi from '@/api/usersApi'
-import type { UsersDto } from '@/types/users'
+import type { UpdateUserGroupsRequest, UsersDto } from '@/types/users'
 
 export const useUsersStore = defineStore('users', () => {
   const users = ref<UsersDto[]>([])
@@ -14,9 +14,19 @@ export const useUsersStore = defineStore('users', () => {
     return await usersApi.getUser(userId)
   }
 
+  const getUserGroups = async (userId: string) => {
+    return await usersApi.getUserGroups(userId)
+  }
+
+  const updateUserGroups = async (userId: string, request: UpdateUserGroupsRequest) => {
+    await usersApi.updateUserGroups(userId, request)
+  }
+
   return {
     users,
     fetchUsers,
     getUser,
+    getUserGroups,
+    updateUserGroups,
   }
 })

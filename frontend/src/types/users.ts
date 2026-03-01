@@ -9,3 +9,14 @@ export interface UserDto {
   email: string
   registrationDate: Date
 }
+
+export interface UserGroupDto {
+  id: string
+  name: string
+  description: string
+  isMember: boolean
+}
+
+export class UpdateUserGroupsRequest {
+  groupIds: string[] = []
+}
