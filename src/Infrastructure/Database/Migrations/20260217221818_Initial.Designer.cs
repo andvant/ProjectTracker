@@ -38,7 +38,7 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_on");
+                        .HasColumnName("created_at");
 
                     b.Property<Guid?>("IssueId")
                         .HasColumnType("uuid")
@@ -64,7 +64,7 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_on");
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id")
                         .HasName("pk_attachments");
@@ -94,7 +94,7 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_on");
+                        .HasColumnName("created_at");
 
                     b.Property<string>("Description")
                         .HasColumnType("text")
@@ -152,7 +152,7 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_on");
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id")
                         .HasName("pk_issues");
@@ -207,7 +207,7 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_on");
+                        .HasColumnName("created_at");
 
                     b.Property<string>("Description")
                         .HasColumnType("text")
@@ -233,7 +233,7 @@ namespace ProjectTracker.Infrastructure.Database.Migrations
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_on");
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id")
                         .HasName("pk_projects");
