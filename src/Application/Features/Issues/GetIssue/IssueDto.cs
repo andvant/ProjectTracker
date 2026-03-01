@@ -18,9 +18,9 @@ public record IssueDto(
     int? EstimationMinutes,
     Guid? ParentIssueId,
     Guid CreatedBy,
-    DateTimeOffset CreatedOn,
+    DateTimeOffset CreatedAt,
     Guid UpdatedBy,
-    DateTimeOffset UpdatedOn,
+    DateTimeOffset UpdatedAt,
     IReadOnlyCollection<UsersDto> Watchers,
     IReadOnlyCollection<AttachmentDto> Attachments
 );

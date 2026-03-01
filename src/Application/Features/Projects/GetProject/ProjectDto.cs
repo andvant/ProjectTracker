@@ -10,9 +10,9 @@ public record ProjectDto(
     string? Description,
     UsersDto Owner,
     Guid CreatedBy,
-    DateTimeOffset CreatedOn,
+    DateTimeOffset CreatedAt,
     Guid UpdatedBy,
-    DateTimeOffset UpdatedOn,
+    DateTimeOffset UpdatedAt,
     IReadOnlyCollection<UsersDto> Members,
     IReadOnlyCollection<AttachmentDto> Attachments
 );

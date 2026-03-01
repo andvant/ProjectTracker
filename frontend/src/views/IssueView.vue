@@ -184,7 +184,7 @@ watch(
 
     <div>
       <label>Assignee: </label>
-      <span v-if="!isEditing">{{ issue.assignee?.name ?? '&lt;none&gt;' }}</span>
+      <span v-if="!isEditing">{{ issue.assignee?.name ?? '&lt;Unassigned&gt;' }}</span>
       <div v-else class="form-group">
         <select v-model="req.assigneeId">
           <option v-for="user in memberUsers" :key="user.id" :value="user.id">
@@ -249,7 +249,7 @@ watch(
       </div>
     </div>
 
-    <p>Created on: {{ issue.createdOn }}</p>
+    <p>Created at: {{ issue.createdAt }}</p>
 
     <label>Watchers:</label>
     <ul>

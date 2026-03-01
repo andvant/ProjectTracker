@@ -27,9 +27,9 @@ export interface IssueDto {
   watchers: UsersDto[]
   attachments: AttachmentDto[]
   createdBy: string
-  createdOn: Date
+  createdAt: Date
   updatedBy: string
-  updatedOn: Date
+  updatedAt: Date
 }
 
 export class CreateIssueRequest {

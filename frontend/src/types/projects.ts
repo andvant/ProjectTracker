@@ -16,9 +16,9 @@ export interface ProjectDto {
   members: UsersDto[]
   attachments: AttachmentDto[]
   createdBy: string
-  createdOn: Date
+  createdAt: Date
   updatedBy: string
-  updatedOn: Date
+  updatedAt: Date
 }
 
 export class CreateProjectRequest {

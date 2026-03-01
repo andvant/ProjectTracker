@@ -187,7 +187,7 @@ watch(
       <button @click="isTransferringOwnership = false">Cancel</button>
     </div>
 
-    <p>Created on: {{ project.createdOn }}</p>
+    <p>Created at: {{ project.createdAt }}</p>
     <label>Members:</label>
     <ul>
       <li v-for="member in project.members" :key="member.id">

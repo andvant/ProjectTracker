@@ -56,11 +56,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             if (entry.State == EntityState.Added)
             {
                 entity.CreatedBy = currentUserId;
-                entity.CreatedOn = currentTime;
+                entity.CreatedAt = currentTime;
             }
 
             entity.UpdatedBy = currentUserId;
-            entity.UpdatedOn = currentTime;
+            entity.UpdatedAt = currentTime;
         }
     }
 
