@@ -23,7 +23,8 @@ export interface IssueDto {
   priority: IssuePriorityEnum
   dueDate?: Date
   estimationMinutes?: number
-  parentIssueId?: string
+  parentIssue?: IssuesDto
+  childIssues: IssuesDto[]
   watchers: UsersDto[]
   attachments: AttachmentDto[]
   createdBy: string

@@ -3,9 +3,9 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
-import { IssuePriority, IssueType, CreateIssueRequest } from '@/types/issues'
+import { CreateIssueRequest, IssuePriority, IssueType, IssueStatus } from '@/types/issues'
 import { ApiError, type ValidationErrors } from '@/types/api'
-import { applyErrorsFromApi, createDefaultErrors, getEnumOptions } from '@/utils'
+import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
 
 const route = useRoute()
 const router = useRouter()
@@ -166,8 +166,17 @@ watch(projectId, () => {
 
   <div class="issues">
     <ul>
-      <li v-for="issue in issuesStore.issues" :key="issue.id" @click="onSelectIssue(issue.key)">
-        {{ issue.title }}
+      <li
+        v-for="issue in issuesStore.issues"
+        :key="issue.id"
+        @click="onSelectIssue(issue.key)"
+        class="issue-row"
+      >
+        <span class="issue-col">{{ issue.key }}</span>
+        <span class="issue-col">{{ issue.title }}</span>
+        <span class="issue-col">{{ getEnumLabel(IssueStatus, issue.status) }}</span>
+        <span class="issue-col">{{ getEnumLabel(IssueType, issue.type) }}</span>
+        <span class="issue-col">{{ getEnumLabel(IssuePriority, issue.priority) }}</span>
       </li>
     </ul>
   </div>
@@ -197,8 +206,23 @@ watch(projectId, () => {
   padding: 0;
 }
 
-.issues li {
+.issue-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+
   padding: 0.5rem 0;
   border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.issue-row:hover {
+  background-color: #ddd;
+}
+
+.issue-col {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

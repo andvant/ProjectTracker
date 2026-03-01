@@ -30,6 +30,8 @@ export const useIssuesStore = defineStore('issues', () => {
 
     const existing = issues.value.find((i) => i.id === issue.id)!
     existing.title = issue.title
+    existing.status = issue.status
+    existing.priority = issue.priority
 
     return issue
   }

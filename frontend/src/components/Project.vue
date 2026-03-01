@@ -188,6 +188,8 @@ watch(
     </div>
 
     <p>Created at: {{ project.createdAt }}</p>
+    <p>Updated at: {{ project.updatedAt }}</p>
+
     <label>Members:</label>
     <ul>
       <li v-for="member in project.members" :key="member.id">

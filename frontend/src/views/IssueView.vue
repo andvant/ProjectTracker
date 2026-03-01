@@ -169,6 +169,8 @@ watch(
       </div>
     </div>
 
+    <p>{{ issue.key }}</p>
+
     <p>Id: {{ issue.id }}</p>
 
     <div>
@@ -250,6 +252,20 @@ watch(
     </div>
 
     <p>Created at: {{ issue.createdAt }}</p>
+    <p>Updated at: {{ issue.updatedAt }}</p>
+
+    <div v-if="issue.parentIssue">
+      Parent issue: {{ issue.parentIssue.key }} {{ issue.parentIssue.title }}
+    </div>
+
+    <div v-if="issue.childIssues.length">
+      Child Issues:
+      <ul>
+        <li v-for="childIssue of issue.childIssues" :key="childIssue.id">
+          {{ childIssue.key }} {{ childIssue.title }}
+        </li>
+      </ul>
+    </div>
 
     <label>Watchers:</label>
     <ul>
