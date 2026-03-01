@@ -168,7 +168,12 @@ watch(
     </div>
 
     <label>Owner:</label>
-    <p v-if="!isTransferringOwnership">{{ project.owner.name }}</p>
+    <router-link
+      v-if="!isTransferringOwnership"
+      :to="{ name: 'User', params: { userId: project.owner.id } }"
+    >
+      {{ project.owner.name }}
+    </router-link>
     <button v-if="!isTransferringOwnership" @click="onTransferringOwnership">
       Transfer ownership
     </button>
@@ -193,9 +198,9 @@ watch(
     <label>Members:</label>
     <ul>
       <li v-for="member in project.members" :key="member.id">
-        <label @click="router.push({ name: 'User', params: { userId: member.id } })">
+        <router-link :to="{ name: 'User', params: { userId: member.id } }">
           {{ member.name }}
-        </label>
+        </router-link>
         <button v-if="member.id !== project.owner.id" @click="onRemoveMember(member.id)">X</button>
       </li>
     </ul>

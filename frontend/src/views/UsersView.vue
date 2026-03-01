@@ -1,15 +1,8 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useUsersStore } from '@/stores/users'
 
-const router = useRouter()
-
 const usersStore = useUsersStore()
-
-const onSelectUser = (userId: string) => {
-  router.push({ name: 'User', params: { userId } })
-}
 
 onMounted(async () => {
   await usersStore.fetchUsers()
@@ -18,8 +11,10 @@ onMounted(async () => {
 <template>
   <div class="users">
     <ul>
-      <li v-for="user in usersStore.users" :key="user.id" @click="onSelectUser(user.id)">
-        {{ user.name }}
+      <li v-for="user in usersStore.users" :key="user.id">
+        <router-link :to="{ name: 'User', params: { userId: user.id } }">
+          {{ user.name }}
+        </router-link>
       </li>
     </ul>
   </div>

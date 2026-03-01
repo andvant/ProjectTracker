@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 
 const route = useRoute()
-const router = useRouter()
 
 const projectsStore = useProjectsStore()
 
@@ -13,41 +12,36 @@ const selectedProjectKey = computed(() => route.params.projectKey)
 const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
 
 const newProjectSelected = computed(() => route.name === 'NewProject')
-
-const onNewProject = () => {
-  router.push({ name: 'NewProject' })
-}
-
-const onSelectProject = (projectKey: string) => {
-  router.push({ name: 'Project', params: { projectKey } })
-}
-
-const onClickUsers = () => {
-  router.push({ name: 'Users' })
-}
 </script>
 <template>
   <aside class="sidebar">
-    <div>
-      <p @click="onNewProject" class="button" :class="{ selected: newProjectSelected }">
-        + New project
-      </p>
+    <div class="button" :class="{ selected: newProjectSelected }">
+      <router-link :to="{ name: 'NewProject' }" custom v-slot="{ navigate, href }">
+        <div :href="href" @click="navigate">+ New project</div>
+      </router-link>
     </div>
     <div>
       <ul>
         <li
           v-for="project in projectsStore.projects"
           :key="project.id"
-          @click="onSelectProject(project.key)"
           class="button"
           :class="{ selected: project.key === selectedProjectKey }"
         >
-          {{ project.name }}
+          <router-link
+            :to="{ name: 'Project', params: { projectKey: project.key } }"
+            custom
+            v-slot="{ navigate, href }"
+          >
+            <div :href="href" @click="navigate">{{ project.name }}</div>
+          </router-link>
         </li>
       </ul>
     </div>
-    <div class="users">
-      <p @click="onClickUsers" class="users button" :class="{ selected: usersSelected }">Users</p>
+    <div class="button users" :class="{ selected: usersSelected }">
+      <router-link :to="{ name: 'Users' }" custom v-slot="{ navigate, href }">
+        <div :href="href" @click="navigate">Users</div>
+      </router-link>
     </div>
   </aside>
 </template>

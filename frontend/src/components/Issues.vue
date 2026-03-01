@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
 import { CreateIssueRequest, IssuePriority, IssueType, IssueStatus } from '@/types/issues'
@@ -8,7 +8,6 @@ import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
 
 const route = useRoute()
-const router = useRouter()
 
 const issuesStore = useIssuesStore()
 const projectsStore = useProjectsStore()
@@ -69,10 +68,6 @@ const onCreating = () => {
   errors.value = createDefaultErrors(req)
   Object.assign(req, new CreateIssueRequest())
   isCreating.value = true
-}
-
-const onSelectIssue = (issueKey: string) => {
-  router.push({ name: 'Issue', params: { issueKey } })
 }
 
 watch(projectId, () => {
@@ -166,17 +161,20 @@ watch(projectId, () => {
 
   <div class="issues">
     <ul>
-      <li
-        v-for="issue in issuesStore.issues"
-        :key="issue.id"
-        @click="onSelectIssue(issue.key)"
-        class="issue-row"
-      >
-        <span class="issue-col">{{ issue.key }}</span>
-        <span class="issue-col">{{ issue.title }}</span>
-        <span class="issue-col">{{ getEnumLabel(IssueStatus, issue.status) }}</span>
-        <span class="issue-col">{{ getEnumLabel(IssueType, issue.type) }}</span>
-        <span class="issue-col">{{ getEnumLabel(IssuePriority, issue.priority) }}</span>
+      <li v-for="issue in issuesStore.issues" :key="issue.id">
+        <router-link
+          :to="{ name: 'Issue', params: { issueKey: issue.key } }"
+          custom
+          v-slot="{ navigate, href }"
+        >
+          <div :href="href" @click="navigate" class="issue-row">
+            <span class="issue-col">{{ issue.key }}</span>
+            <span class="issue-col">{{ issue.title }}</span>
+            <span class="issue-col">{{ getEnumLabel(IssueStatus, issue.status) }}</span>
+            <span class="issue-col">{{ getEnumLabel(IssueType, issue.type) }}</span>
+            <span class="issue-col">{{ getEnumLabel(IssuePriority, issue.priority) }}</span>
+          </div>
+        </router-link>
       </li>
     </ul>
   </div>
