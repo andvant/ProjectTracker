@@ -466,7 +466,14 @@
     "enabled" : true,
     "createdTimestamp" : 1771809381370,
     "totp" : false,
-    "credentials" : [ ],
+    "credentials" : [ {
+      "id" : "2c00d8bf-c464-474e-b8e5-ed8eb3520be5",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1772339466084,
+      "secretData" : "{\"value\":\"9WZkLTqM2VwlR4MrBHnJZD1/VLqqnvvwDZbh1BxeEWE=\",\"salt\":\"mINWLCZa6cWQKgv9yrYm5w==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
+    } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "default-roles-project-tracker" ],
