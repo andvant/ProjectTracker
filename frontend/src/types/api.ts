@@ -16,7 +16,7 @@ export class ApiError extends Error {
   status: number
 
   constructor(status: number, problem?: ProblemDetails, message?: string) {
-    super(message ?? problem?.title ?? `API Error ${status}`)
+    super(`API Error: ${message || problem?.title || status}`)
 
     this.status = status
     this.problem = problem

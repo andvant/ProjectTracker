@@ -12,8 +12,6 @@ export const userManager = new UserManager({
   response_type: 'code',
   scope: 'openid profile',
 
-  automaticSilentRenew: true,
-
   userStore: new WebStorageStateStore({
     store: window.localStorage,
   }),
