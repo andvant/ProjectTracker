@@ -6,5 +6,5 @@ const signIn = async () => {
 }
 </script>
 <template>
-  <button @click="signIn">Sign in</button>
+  <div @click="signIn">Sign in</div>
 </template>

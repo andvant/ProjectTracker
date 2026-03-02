@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import SignInButton from '@/components/SignInButton.vue'
@@ -11,22 +11,27 @@ const route = useRoute()
 const projectsStore = useProjectsStore()
 
 const selectedProjectKey = computed(() => route.params.projectKey)
-
 const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
-
 const newProjectSelected = computed(() => route.name === 'NewProject')
+
+const isSignedIn = ref(false)
+
+const initSidebar = async () => {
+  isSignedIn.value = true
+  await projectsStore.fetchProjects()
+}
 
 onMounted(async () => {
   if (await userManager.getUser()) {
-    await projectsStore.fetchProjects()
+    await initSidebar()
   }
 
-  userManager.events.addUserLoaded(projectsStore.fetchProjects)
+  userManager.events.addUserLoaded(initSidebar)
 })
 </script>
 <template>
   <aside class="sidebar">
-    <div class="button" :class="{ selected: newProjectSelected }">
+    <div v-if="isSignedIn" class="button" :class="{ selected: newProjectSelected }">
       <router-link :to="{ name: 'NewProject' }" custom v-slot="{ navigate, href }">
         <div :href="href" @click="navigate">+ New project</div>
       </router-link>
@@ -49,16 +54,18 @@ onMounted(async () => {
         </li>
       </ul>
     </div>
-    <div>
-      <SignInButton />
-    </div>
-    <div>
-      <SignOutButton />
-    </div>
-    <div class="button users" :class="{ selected: usersSelected }">
-      <router-link :to="{ name: 'Users' }" custom v-slot="{ navigate, href }">
-        <div :href="href" @click="navigate">Users</div>
-      </router-link>
+    <div class="bottom">
+      <div v-if="isSignedIn" class="button" :class="{ selected: usersSelected }">
+        <router-link :to="{ name: 'Users' }" custom v-slot="{ navigate, href }">
+          <div :href="href" @click="navigate">Users</div>
+        </router-link>
+      </div>
+      <div v-if="isSignedIn" class="button">
+        <SignOutButton />
+      </div>
+      <div v-if="!isSignedIn" class="button">
+        <SignInButton />
+      </div>
     </div>
   </aside>
 </template>
@@ -87,7 +94,7 @@ onMounted(async () => {
   }
 }
 
-.users {
+.bottom {
   margin-top: auto;
 }
 

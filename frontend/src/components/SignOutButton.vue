@@ -6,5 +6,5 @@ const signOut = async () => {
 }
 </script>
 <template>
-  <button @click="signOut">Sign out</button>
+  <div @click="signOut">Sign out</div>
 </template>
