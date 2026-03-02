@@ -27,8 +27,8 @@ internal static class CreateIssueEndpoint
         {
             var command = new CreateIssueCommand(
                 projectId,
-                request.Title,
-                request.Description,
+                request.Title.Trim(),
+                request.Description?.Trim(),
                 request.AssigneeId,
                 request.Type,
                 request.Priority,

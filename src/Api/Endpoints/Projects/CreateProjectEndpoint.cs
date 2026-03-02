@@ -16,7 +16,7 @@ internal static class CreateProjectEndpoint
             ISender sender,
             CancellationToken ct) =>
         {
-            var command = new CreateProjectCommand(request.Key, request.Name, request.Description);
+            var command = new CreateProjectCommand(request.Key.Trim(), request.Name.Trim(), request.Description?.Trim());
 
             var project = await sender.Send(command, ct);
 

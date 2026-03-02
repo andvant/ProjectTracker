@@ -29,8 +29,8 @@ internal static class UpdateIssueEndpoint
             var command = new UpdateIssueCommand(
                 projectId,
                 issueId,
-                request.Title,
-                request.Description,
+                request.Title.Trim(),
+                request.Description?.Trim(),
                 request.AssigneeId,
                 request.Status,
                 request.Priority,

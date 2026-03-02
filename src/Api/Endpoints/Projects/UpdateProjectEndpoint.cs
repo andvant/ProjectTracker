@@ -15,7 +15,7 @@ internal static class UpdateProjectEndpoint
             ISender sender,
             CancellationToken ct) =>
         {
-            var command = new UpdateProjectCommand(projectId, request.Name, request.Description);
+            var command = new UpdateProjectCommand(projectId, request.Name.Trim(), request.Description?.Trim());
 
             await sender.Send(command, ct);
 
