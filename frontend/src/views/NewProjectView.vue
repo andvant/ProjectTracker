@@ -6,6 +6,10 @@ import { useIssuesStore } from '@/stores/issues'
 import { CreateProjectRequest } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
+import EntityTitle from '@/components/UI/EntityTitle.vue'
+import InputProperty from '@/components/UI/InputProperty.vue'
+import InputErrors from '@/components/UI/InputErrors.vue'
+import ControlButton from '@/components/UI/ControlButton.vue'
 
 const router = useRouter()
 
@@ -60,48 +64,29 @@ const onSubmit = async () => {
 }
 </script>
 <template>
-  <div class="project-new">
-    <h2>New project</h2>
+  <div class="wrapper">
+    <EntityTitle title="New project" />
 
-    <div class="form-group">
-      <label>Project Key</label>
+    <InputProperty label="Project Key" :error="errors.key">
       <input v-model="req.key" />
-      <span v-if="errors.key" class="error">{{ errors.key }}</span>
-    </div>
+    </InputProperty>
 
-    <div class="form-group">
-      <label>Project Name</label>
+    <InputProperty label="Project Name" :error="errors.name">
       <input v-model="req.name" />
-      <span v-if="errors.name" class="error">{{ errors.name }}</span>
-    </div>
+    </InputProperty>
 
-    <div class="form-group">
-      <label>Description</label>
+    <InputProperty label="Description" :error="errors.description">
       <textarea v-model="req.description"></textarea>
-      <span v-if="errors.description" class="error">{{ errors.description }}</span>
-    </div>
+    </InputProperty>
 
-    <div v-if="errors.general" class="error">
-      {{ errors.general }}
-    </div>
+    <InputErrors :error="errors.general" />
 
-    <button @click="onSubmit" :disabled="isSubmitting">Create</button>
+    <ControlButton @click="onSubmit" :disabled="isSubmitting" label="Create" />
   </div>
 </template>
 <style scoped>
-.project-new {
+.wrapper {
   padding: 1rem;
   max-width: 500px;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.error {
-  color: red;
-  font-size: 0.8rem;
 }
 </style>

@@ -15,6 +15,11 @@ import {
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
 import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
+import EntityTitle from '@/components/UI/EntityTitle.vue'
+import Property from '@/components/UI/Property.vue'
+import InputProperty from '@/components/UI/InputProperty.vue'
+import InputErrors from '@/components/UI/InputErrors.vue'
+import ControlButton from '@/components/UI/ControlButton.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -175,128 +180,113 @@ watch(
 )
 </script>
 <template>
-  <div v-if="issue" class="issue">
-    <div>
-      <h2 v-if="!isEditing">{{ issue.title }}</h2>
-      <div v-else class="form-group">
-        <input v-model="req.title" />
-        <span v-if="errors.title" class="error">{{ errors.title }}</span>
-      </div>
-    </div>
+  <div v-if="issue" class="wrapper">
+    <EntityTitle v-if="!isEditing" :title="`${issue.key} ${issue.title}`" />
 
-    <p>{{ issue.key }}</p>
+    <InputProperty v-if="isEditing" label="Title" :error="errors.title">
+      <input v-model="req.title" />
+    </InputProperty>
 
-    <p>Id: {{ issue.id }}</p>
-
-    <p>
-      Project:
+    <Property label="Project">
       <RouterLink
         :to="{ name: 'Project', params: { projectKey: projectsStore.cachedProject?.key } }"
       >
         {{ projectsStore.cachedProject?.name }}
       </RouterLink>
-    </p>
+    </Property>
 
-    <div>
-      <label>Description: </label>
-      <span v-if="!isEditing">{{ issue.description }}</span>
-      <div v-else class="form-group">
-        <textarea v-model="req.description"></textarea>
-        <span v-if="errors.description" class="error">{{ errors.description }}</span>
-      </div>
-    </div>
+    <Property v-if="!isEditing" label="Description">{{ issue.description }}</Property>
 
-    <div>
-      Reporter:
+    <InputProperty v-if="isEditing" label="Description" :error="errors.description">
+      <textarea v-model="req.description"></textarea>
+    </InputProperty>
+
+    <Property label="Reporter">
       <RouterLink :to="{ name: 'User', params: { userId: issue.reporter.id } }">
         {{ issue.reporter.name }}
       </RouterLink>
-    </div>
+    </Property>
 
-    <div>
-      <label>Assignee: </label>
-      <span v-if="!isEditing">
-        <span v-if="!issue.assignee">Unassigned</span>
-        <RouterLink v-else :to="{ name: 'User', params: { userId: issue.assignee.id } }">
-          {{ issue.assignee.name }}
-        </RouterLink>
-      </span>
-      <div v-else class="form-group">
-        <select v-model="req.assigneeId">
-          <option v-for="user in memberUsers" :key="user.id" :value="user.id">
-            {{ user.name }}
-          </option>
-        </select>
-        <span v-if="errors.assigneeId" class="error">{{ errors.assigneeId }}</span>
-      </div>
-    </div>
+    <Property v-if="!isEditing" label="Assignee">
+      <span v-if="!issue.assignee">Unassigned</span>
+      <RouterLink v-else :to="{ name: 'User', params: { userId: issue.assignee.id } }">
+        {{ issue.assignee.name }}
+      </RouterLink>
+    </Property>
 
-    <p>Type: {{ getEnumLabel(IssueType, issue.type) }}</p>
+    <InputProperty v-if="isEditing" label="Assignee" :error="errors.assigneeId">
+      <select v-model="req.assigneeId">
+        <option v-for="user in memberUsers" :key="user.id" :value="user.id">
+          {{ user.name }}
+        </option>
+      </select>
+    </InputProperty>
 
-    <div>
-      <label>Status: </label>
-      <span v-if="!isEditing">{{ getEnumLabel(IssueStatus, issue.status) }}</span>
-      <div v-else class="form-group">
-        <select v-model="req.status">
-          <option
-            v-for="option in getEnumOptions(IssueStatus)"
-            :key="option.value"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </option>
-        </select>
-        <span v-if="errors.status" class="error">{{ errors.status }}</span>
-      </div>
-    </div>
+    <Property label="Type">{{ getEnumLabel(IssueType, issue.type) }}</Property>
 
-    <div>
-      <label>Priority: </label>
-      <span v-if="!isEditing">{{ getEnumLabel(IssuePriority, issue.priority) }}</span>
-      <div v-else class="form-group">
-        <select v-model="req.priority">
-          <option
-            v-for="option in getEnumOptions(IssuePriority)"
-            :key="option.value"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </option>
-        </select>
-        <span v-if="errors.priority" class="error">{{ errors.priority }}</span>
-      </div>
-    </div>
+    <Property v-if="!isEditing" label="Status">
+      {{ getEnumLabel(IssueStatus, issue.status) }}
+    </Property>
 
-    <div>
-      <label>Due date: </label>
-      <span v-if="!isEditing">{{ issue.dueDate }}</span>
-      <div v-else class="form-group">
-        <input v-model="req.dueDate" type="date" />
-        <span v-if="errors.dueDate" class="error">{{ errors.dueDate }}</span>
-      </div>
-    </div>
+    <InputProperty v-if="isEditing" label="Status" :error="errors.status">
+      <select v-model="req.status">
+        <option
+          v-for="option in getEnumOptions(IssueStatus)"
+          :key="option.value"
+          :value="option.value"
+        >
+          {{ option.label }}
+        </option>
+      </select>
+    </InputProperty>
 
-    <div>
-      <label>Estimation minutes: </label>
-      <span v-if="!isEditing">{{ issue.estimationMinutes }}</span>
-      <div v-else class="form-group">
-        <input v-model="req.estimationMinutes" type="number" />
-        <span v-if="errors.estimationMinutes" class="error">{{ errors.estimationMinutes }}</span>
-      </div>
-    </div>
+    <Property v-if="!isEditing" label="Priority">
+      {{ getEnumLabel(IssuePriority, issue.priority) }}
+    </Property>
 
-    <p>Created at: {{ issue.createdAt }}</p>
-    <p>Updated at: {{ issue.updatedAt }}</p>
+    <InputProperty v-if="isEditing" label="Priority" :error="errors.priority">
+      <select v-model="req.priority">
+        <option
+          v-for="option in getEnumOptions(IssuePriority)"
+          :key="option.value"
+          :value="option.value"
+        >
+          {{ option.label }}
+        </option>
+      </select>
+    </InputProperty>
 
-    <div v-if="issue.parentIssue">
-      Parent issue:
+    <Property v-if="!isEditing" label="Due date">{{ issue.dueDate }}</Property>
+
+    <InputProperty v-if="isEditing" label="Due date" :error="errors.dueDate">
+      <input v-model="req.dueDate" type="date" />
+    </InputProperty>
+
+    <Property v-if="!isEditing" label="Estimation minutes">
+      {{ issue.estimationMinutes }}
+    </Property>
+
+    <InputProperty v-if="isEditing" label="Estimation minutes" :error="errors.estimationMinutes">
+      <input v-model="req.estimationMinutes" type="number" />
+    </InputProperty>
+
+    <InputErrors v-if="isEditing" :error="errors.general" />
+
+    <ControlButton v-if="!isEditing && canEditIssue" @click="onEditing" label="Edit" />
+    <ControlButton v-if="isEditing" @click="onUpdateIssue" :disabled="isSubmitting" label="Save" />
+    <ControlButton v-if="canEditIssue" @click="onDeleteIssue" label="Delete" />
+    <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
+
+    <Property label="Created at">{{ issue.createdAt }}</Property>
+    <Property label="Updated at">{{ issue.updatedAt }}</Property>
+
+    <Property v-if="issue.parentIssue" label="Parent issue">
       <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
         {{ issue.parentIssue.key }} {{ issue.parentIssue.title }}
       </RouterLink>
-    </div>
+    </Property>
 
-    <div v-if="issue.childIssues.length">
-      Child Issues:
+    <Property v-if="issue.childIssues.length" label="Child issues">
       <ul>
         <li v-for="childIssue of issue.childIssues" :key="childIssue.id">
           <RouterLink :to="{ name: 'Issue', params: { issueKey: childIssue.key } }">
@@ -304,25 +294,25 @@ watch(
           </RouterLink>
         </li>
       </ul>
-    </div>
+    </Property>
 
-    <label>Watchers:</label>
-    <ul>
-      <li v-for="watcher in issue.watchers" :key="watcher.id">
-        <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
-          {{ watcher.name }}
-        </RouterLink>
-        <button v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)">X</button>
-      </li>
-    </ul>
-
-    <button v-if="canEditIssue" @click="onDeleteIssue">Delete</button>
-    <button v-if="!isEditing && canEditIssue" @click="onEditing">Edit</button>
-    <button v-if="isEditing" @click="onUpdateIssue" :disabled="isSubmitting">Save</button>
-    <button v-if="isEditing" @click="isEditing = false">Cancel</button>
+    <Property label="Watchers">
+      <ul>
+        <li v-for="watcher in issue.watchers" :key="watcher.id">
+          <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
+            {{ watcher.name }}
+          </RouterLink>
+          <ControlButton v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)" label="X" />
+        </li>
+      </ul>
+    </Property>
 
     <div>
-      <button v-if="!isAddingWatcher && canEditIssue" @click="onAddingWatcher">Add watcher</button>
+      <ControlButton
+        v-if="!isAddingWatcher && canEditIssue"
+        @click="onAddingWatcher"
+        label="Add watcher"
+      />
 
       <div v-if="isAddingWatcher">
         <select v-model="selectedWatcherId">
@@ -331,39 +321,30 @@ watch(
             {{ user.name }}
           </option>
         </select>
-        <button @click="onAddWatcher" :disabled="!selectedWatcherId || isSubmitting">Add</button>
-        <button @click="isAddingWatcher = false">Cancel</button>
+        <ControlButton
+          @click="onAddWatcher"
+          :disabled="!selectedWatcherId || isSubmitting"
+          label="Add"
+        />
+        <ControlButton @click="isAddingWatcher = false" label="Cancel" />
       </div>
     </div>
 
-    <div>
-      <label>Attachments:</label>
+    <Property label="Attachments">
       <ul>
         <li v-for="attachment in issue.attachments" :key="attachment.id">
           {{ attachment.name }}
         </li>
       </ul>
-    </div>
+    </Property>
 
     <div v-if="canEditIssue">
-      <p>Upload attachments</p>
       <input type="file" multiple @change="(e) => onFilesSelected(e)" :disabled="isSubmitting" />
     </div>
   </div>
 </template>
 <style scoped>
-.issue {
+.wrapper {
   padding: 1rem;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.error {
-  color: red;
-  font-size: 0.8rem;
 }
 </style>

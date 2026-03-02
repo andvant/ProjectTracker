@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useUsersStore } from '@/stores/users'
+import EntityTitle from '@/components/UI/EntityTitle.vue'
 
 const usersStore = useUsersStore()
 
@@ -9,7 +10,9 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div class="users">
+  <div class="wrapper">
+    <EntityTitle title="Users" />
+
     <ul>
       <li v-for="user in usersStore.users" :key="user.id">
         <RouterLink :to="{ name: 'User', params: { userId: user.id } }">
@@ -20,7 +23,7 @@ onMounted(async () => {
   </div>
 </template>
 <style scoped>
-.users {
+.wrapper {
   flex: 1;
   background-color: white;
   padding: 1rem;

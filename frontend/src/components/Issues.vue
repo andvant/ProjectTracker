@@ -8,6 +8,9 @@ import { CreateIssueRequest, IssuePriority, IssueType, IssueStatus } from '@/typ
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
 import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
+import InputProperty from '@/components/UI/InputProperty.vue'
+import InputErrors from '@/components/UI/InputErrors.vue'
+import ControlButton from '@/components/UI/ControlButton.vue'
 
 const route = useRoute()
 
@@ -91,88 +94,73 @@ watch(
 )
 </script>
 <template>
-  <div v-if="projectId">
-    <button v-if="!isCreating && canCreateIssue" @click="onCreating">New</button>
-    <div v-if="isCreating">
-      <div class="form-group">
-        <label>Title</label>
-        <input v-model="req.title" />
-        <span v-if="errors.title" class="error">{{ errors.title }}</span>
-      </div>
+  <ControlButton v-if="!isCreating && canCreateIssue" @click="onCreating" label="New" />
 
-      <div class="form-group">
-        <label>Description</label>
-        <textarea v-model="req.description"></textarea>
-        <span v-if="errors.description" class="error">{{ errors.description }}</span>
-      </div>
+  <div v-if="isCreating">
+    <InputProperty label="Title" :error="errors.title">
+      <input v-model="req.title" />
+    </InputProperty>
 
-      <div class="form-group">
-        <label>Type</label>
-        <select v-model="req.type">
-          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
-          <option
-            v-for="option in getEnumOptions(IssueType)"
-            :key="option.value"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </option>
-        </select>
-        <span v-if="errors.type" class="error">{{ errors.type }}</span>
-      </div>
+    <InputProperty label="Description" :error="errors.description">
+      <textarea v-model="req.description"></textarea>
+    </InputProperty>
 
-      <div class="form-group">
-        <label>Priority</label>
-        <select v-model="req.priority">
-          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
-          <option
-            v-for="option in getEnumOptions(IssuePriority)"
-            :key="option.value"
-            :value="option.value"
-          >
-            {{ option.label }}
-          </option>
-        </select>
-        <span v-if="errors.priority" class="error">{{ errors.priority }}</span>
-      </div>
+    <InputProperty label="Type" :error="errors.type">
+      <select v-model="req.type">
+        <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
+        <option
+          v-for="option in getEnumOptions(IssueType)"
+          :key="option.value"
+          :value="option.value"
+        >
+          {{ option.label }}
+        </option>
+      </select>
+    </InputProperty>
 
-      <div class="form-group">
-        <label>Assignee</label>
-        <select v-model="req.assigneeId">
-          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
-          <option v-for="user in memberUsers" :key="user.id" :value="user.id">
-            {{ user.name }}
-          </option>
-        </select>
-        <span v-if="errors.assigneeId" class="error">{{ errors.assigneeId }}</span>
-      </div>
+    <InputProperty label="Priority" :error="errors.priority">
+      <select v-model="req.priority">
+        <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
+        <option
+          v-for="option in getEnumOptions(IssuePriority)"
+          :key="option.value"
+          :value="option.value"
+        >
+          {{ option.label }}
+        </option>
+      </select>
+    </InputProperty>
 
-      <div class="form-group">
-        <label>Parent issue</label>
-        <select v-model="req.parentIssueId">
-          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
-          <option v-for="issue in epicIssues" :key="issue.id" :value="issue.id">
-            {{ issue.title }}
-          </option>
-        </select>
-        <span v-if="errors.parentIssueId" class="error">{{ errors.parentIssueId }}</span>
-      </div>
+    <InputProperty label="Assignee" :error="errors.assigneeId">
+      <select v-model="req.assigneeId">
+        <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
+        <option v-for="user in memberUsers" :key="user.id" :value="user.id">
+          {{ user.name }}
+        </option>
+      </select>
+    </InputProperty>
 
-      <div class="form-group">
-        <label>Due date</label>
-        <input v-model="req.dueDate" type="date" />
-        <span v-if="errors.dueDate" class="error">{{ errors.dueDate }}</span>
-      </div>
+    <InputProperty label="Parent issue" :error="errors.parentIssueId">
+      <select v-model="req.parentIssueId">
+        <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
+        <option v-for="issue in epicIssues" :key="issue.id" :value="issue.id">
+          {{ issue.title }}
+        </option>
+      </select>
+    </InputProperty>
 
-      <div class="form-group">
-        <label>Estimation minutes</label>
-        <input v-model="req.estimationMinutes" type="number" />
-        <span v-if="errors.estimationMinutes" class="error">{{ errors.estimationMinutes }}</span>
-      </div>
+    <InputProperty label="Due date" :error="errors.dueDate">
+      <input v-model="req.dueDate" type="date" />
+    </InputProperty>
 
-      <button @click="onSubmit">Create</button>
-      <button @click="isCreating = false">Cancel</button>
-    </div>
+    <InputProperty label="Estimation minutes" :error="errors.estimationMinutes">
+      <input v-model="req.estimationMinutes" type="number" />
+    </InputProperty>
+
+    <InputErrors :error="errors.general" />
+
+    <ControlButton @click="onSubmit" label="Create" />
+    <ControlButton @click="isCreating = false" label="Cancel" />
   </div>
 
   <div class="issues">
@@ -196,17 +184,6 @@ watch(
   </div>
 </template>
 <style scoped>
-.form-group {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.error {
-  color: red;
-  font-size: 0.8rem;
-}
-
 .issues {
   flex: 1;
   background-color: white;

@@ -8,6 +8,11 @@ import { UpdateProjectRequest, type ProjectDto } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
 import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
+import EntityTitle from '@/components/UI/EntityTitle.vue'
+import Property from '@/components/UI/Property.vue'
+import InputProperty from '@/components/UI/InputProperty.vue'
+import InputErrors from '@/components/UI/InputErrors.vue'
+import ControlButton from '@/components/UI/ControlButton.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -161,72 +166,76 @@ watch(
 )
 </script>
 <template>
-  <div v-if="project" class="project">
-    <h2 v-if="!isEditing">{{ project.name }}</h2>
-    <div v-else class="form-group">
-      <input v-model="req.name" />
-      <span v-if="errors.name" class="error">{{ errors.name }}</span>
-    </div>
-    <p>Id: {{ project.id }}</p>
-    <label>Description: </label>
-    <p v-if="!isEditing">{{ project.description }}</p>
-    <div v-else class="form-group">
-      <textarea v-model="req.description"></textarea>
-      <span v-if="errors.description" class="error">{{ errors.description }}</span>
-    </div>
+  <div v-if="project" class="wrapper">
+    <EntityTitle v-if="!isEditing" :title="project.name" />
 
-    <label>Owner:</label>
-    <RouterLink
-      v-if="!isTransferringOwnership"
-      :to="{ name: 'User', params: { userId: project.owner.id } }"
-    >
-      {{ project.owner.name }}
-    </RouterLink>
-    <button v-if="!isTransferringOwnership && canEditProject" @click="onTransferringOwnership">
-      Transfer ownership
-    </button>
+    <InputProperty v-if="isEditing" label="Project name" :error="errors.name">
+      <input v-model="req.name" />
+    </InputProperty>
+
+    <Property v-if="!isEditing" label="Description">{{ project.description }}</Property>
+
+    <InputProperty v-if="isEditing" label="Description" :error="errors.description">
+      <textarea v-model="req.description"></textarea>
+    </InputProperty>
+
+    <InputErrors :error="errors.general" />
+
+    <ControlButton v-if="!isEditing && canEditProject" @click="onEditing" label="Edit" />
+    <ControlButton
+      v-if="isEditing"
+      @click="onUpdateProject(project.id)"
+      :disabled="isSubmitting"
+      label="Save"
+    />
+    <ControlButton v-if="canEditProject" @click="onDeleteProject(project.id)" label="Delete" />
+    <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
+
+    <Property v-if="!isTransferringOwnership" label="Owner">
+      <RouterLink :to="{ name: 'User', params: { userId: project.owner.id } }">
+        {{ project.owner.name }}
+      </RouterLink>
+    </Property>
+
+    <ControlButton
+      v-if="!isTransferringOwnership && canEditProject"
+      @click="onTransferringOwnership"
+      label="Transfer ownership"
+    />
     <div v-if="isTransferringOwnership">
       <select v-model="selectedOwnerId">
         <option v-for="user in project.members" :key="user.id" :value="user.id">
           {{ user.name }}
         </option>
       </select>
-      <button
+      <ControlButton
         @click="onTransferOwnership"
         :disabled="selectedOwnerId === project.owner.id || isSubmitting"
-      >
-        Transfer
-      </button>
-      <button @click="isTransferringOwnership = false">Cancel</button>
+        label="Transfer"
+      />
+      <ControlButton @click="isTransferringOwnership = false" label="Cancel" />
     </div>
 
-    <p>Created at: {{ project.createdAt }}</p>
-    <p>Updated at: {{ project.updatedAt }}</p>
+    <Property label="Created at">{{ project.createdAt }}</Property>
+    <Property label="Updated at">{{ project.updatedAt }}</Property>
 
-    <label>Members:</label>
-    <ul>
-      <li v-for="member in project.members" :key="member.id">
-        <RouterLink :to="{ name: 'User', params: { userId: member.id } }">
-          {{ member.name }}
-        </RouterLink>
-        <button
-          v-if="member.id !== project.owner.id && canEditProject"
-          @click="onRemoveMember(member.id)"
-        >
-          X
-        </button>
-      </li>
-    </ul>
-
-    <button v-if="canEditProject" @click="onDeleteProject(project.id)">Delete</button>
-    <button v-if="!isEditing && canEditProject" @click="onEditing">Edit</button>
-    <button v-if="isEditing" @click="onUpdateProject(project.id)" :disabled="isSubmitting">
-      Save
-    </button>
-    <button v-if="isEditing" @click="isEditing = false">Cancel</button>
+    <Property label="Members">
+      <ul>
+        <li v-for="member in project.members" :key="member.id">
+          <RouterLink :to="{ name: 'User', params: { userId: member.id } }">
+            {{ member.name }}
+          </RouterLink>
+          <ControlButton
+            v-if="member.id !== project.owner.id && canEditProject"
+            @click="onRemoveMember(member.id)"
+            label="X"
+          />
+        </li>
+      </ul>
+    </Property>
 
     <div v-if="canEditProject">
-      <button v-if="!isAddingMember" @click="onAddingMember">Add member</button>
+      <ControlButton v-if="!isAddingMember" @click="onAddingMember" label="Add member" />
 
       <div v-if="isAddingMember">
         <select v-model="selectedMemberId">
@@ -235,39 +244,30 @@ watch(
             {{ user.name }}
           </option>
         </select>
-        <button @click="onAddMember" :disabled="!selectedMemberId || isSubmitting">Add</button>
-        <button @click="isAddingMember = false">Cancel</button>
+        <ControlButton
+          @click="onAddMember"
+          :disabled="!selectedMemberId || isSubmitting"
+          label="Add"
+        />
+        <ControlButton @click="isAddingMember = false" label="Cancel" />
       </div>
     </div>
 
-    <div>
-      <label>Attachments:</label>
+    <Property label="Attachments">
       <ul>
         <li v-for="attachment in project.attachments" :key="attachment.id">
           {{ attachment.name }}
         </li>
       </ul>
-    </div>
+    </Property>
 
     <div v-if="canEditProject">
-      <p>Upload attachments</p>
       <input type="file" multiple @change="(e) => onFilesSelected(e)" :disabled="isSubmitting" />
     </div>
   </div>
 </template>
 <style scoped>
-.project {
+.wrapper {
   padding: 1rem;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.error {
-  color: red;
-  font-size: 0.8rem;
 }
 </style>

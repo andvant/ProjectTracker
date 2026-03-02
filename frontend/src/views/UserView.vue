@@ -5,6 +5,9 @@ import { useUsersStore } from '@/stores/users'
 import { useAuth } from '@/auth/useAuth'
 import { UpdateUserGroupsRequest, type UserDto, type UserGroupDto } from '@/types/users'
 import { Role } from '@/types/roles'
+import EntityTitle from '@/components/UI/EntityTitle.vue'
+import Property from '@/components/UI/Property.vue'
+import ControlButton from '@/components/UI/ControlButton.vue'
 
 const route = useRoute()
 
@@ -51,33 +54,39 @@ watch(
 )
 </script>
 <template>
-  <div v-if="user" class="user">
-    <h2>{{ user.name }}</h2>
-    <p>Id: {{ user.id }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Registration date: {{ user.registrationDate }}</p>
+  <div v-if="user" class="wrapper">
+    <EntityTitle :title="user.name" />
+    <Property label="Id">{{ user.id }}</Property>
+    <Property label="Email">{{ user.email }}</Property>
+    <Property label="Registration date">{{ user.registrationDate }}</Property>
 
     <div>
-      <label>Groups:</label>
-      <ul v-if="!isEditing">
-        <li v-for="group in userGroups?.filter((g) => g.isMember)" :key="group.id">
-          {{ group.description }}
-        </li>
-      </ul>
-      <div v-else v-for="group in userGroups" :key="group.id" class="user-option">
-        <label>
-          <input type="checkbox" :value="group.id" v-model="req.groupIds" />
-          {{ group.description }}
-        </label>
+      <Property v-if="!isEditing" label="Groups">
+        <ul v-if="!isEditing">
+          <li v-for="group in userGroups?.filter((g) => g.isMember)" :key="group.id">
+            {{ group.description }}
+          </li>
+        </ul>
+      </Property>
+
+      <div>Groups</div>
+      <div v-if="isEditing">
+        <div v-for="group in userGroups" :key="group.id">
+          <label>
+            <input type="checkbox" :value="group.id" v-model="req.groupIds" />
+            {{ group.description }}
+          </label>
+        </div>
       </div>
-      <button v-if="!isEditing && canUpdateGroups" @click="onEditing">Edit</button>
-      <button v-if="isEditing" @click="onSubmit">Submit</button>
-      <button v-if="isEditing" @click="isEditing = false">Cancel</button>
+
+      <ControlButton v-if="!isEditing && canUpdateGroups" @click="onEditing" label="Edit" />
+      <ControlButton v-if="isEditing" @click="onSubmit" label="Submit" />
+      <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
     </div>
   </div>
 </template>
 <style scoped>
-.user {
+.wrapper {
   padding: 1rem;
 }
 </style>
