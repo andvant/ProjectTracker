@@ -1,3 +1,4 @@
+import { userManager } from '@/auth/authService'
 import { ApiError, type ProblemDetails } from '@/types/api'
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -15,16 +16,27 @@ const sendRequest = async <TResponse, TBody = unknown>(
 ): Promise<TResponse> => {
   const { method = 'GET', body } = options
 
+  const user = await userManager.getUser()
+  const accessToken = user?.access_token
+
+  if (!accessToken) {
+    throw new Error('access token not set')
+  }
+
   const isFormData = body instanceof FormData
   const isJson = body && !isFormData
 
+  const headers: HeadersInit = {
+    Authorization: `Bearer ${accessToken}`,
+  }
+
+  if (isJson) {
+    headers['Content-Type'] = 'application/json'
+  }
+
   const res = await fetch(new URL(url, BASE_URL), {
     method,
-    headers: isJson
-      ? {
-          'Content-Type': 'application/json',
-        }
-      : undefined,
+    headers,
     body: isJson ? JSON.stringify(body) : isFormData ? body : undefined,
   })
 

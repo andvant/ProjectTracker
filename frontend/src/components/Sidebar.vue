@@ -2,6 +2,9 @@
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
+import SignInButton from '@/components/SignInButton.vue'
+import SignOutButton from '@/components/SignOutButton.vue'
+import { userManager } from '@/auth/authService'
 
 const route = useRoute()
 
@@ -14,7 +17,11 @@ const usersSelected = computed(() => route.name === 'Users' || route.name === 'U
 const newProjectSelected = computed(() => route.name === 'NewProject')
 
 onMounted(async () => {
-  await projectsStore.fetchProjects()
+  if (await userManager.getUser()) {
+    await projectsStore.fetchProjects()
+  }
+
+  userManager.events.addUserLoaded(projectsStore.fetchProjects)
 })
 </script>
 <template>
@@ -41,6 +48,12 @@ onMounted(async () => {
           </router-link>
         </li>
       </ul>
+    </div>
+    <div>
+      <SignInButton />
+    </div>
+    <div>
+      <SignOutButton />
     </div>
     <div class="button users" :class="{ selected: usersSelected }">
       <router-link :to="{ name: 'Users' }" custom v-slot="{ navigate, href }">

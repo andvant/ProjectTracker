@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { AUTH_CALLBACK_ROUTE } from '@/auth/authService'
 import MainLayout from '@/layouts/MainLayout.vue'
 import ProjectView from '@/views/ProjectView.vue'
 import UsersView from '@/views/UsersView.vue'
 import NewProjectView from '@/views/NewProjectView.vue'
 import IssueView from '@/views/IssueView.vue'
 import UserView from '@/views/UserView.vue'
+import AuthCallbackView from '@/views/AuthCallbackView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -43,7 +45,11 @@ const routes: RouteRecordRaw[] = [
         component: UserView,
       },
       {
-        path: '/:pathMatch(.*)*',
+        path: AUTH_CALLBACK_ROUTE,
+        component: AuthCallbackView,
+      },
+      {
+        path: ':pathMatch(.*)*',
         name: 'NotFound',
         component: NotFoundView,
       },
