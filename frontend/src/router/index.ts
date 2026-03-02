@@ -5,6 +5,7 @@ import UsersView from '@/views/UsersView.vue'
 import NewProjectView from '@/views/NewProjectView.vue'
 import IssueView from '@/views/IssueView.vue'
 import UserView from '@/views/UserView.vue'
+import NotFoundView from '@/views/NotFoundView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -40,6 +41,11 @@ const routes: RouteRecordRaw[] = [
         path: 'users/:userId',
         name: 'User',
         component: UserView,
+      },
+      {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: NotFoundView,
       },
     ],
   },

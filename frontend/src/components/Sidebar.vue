@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 
@@ -12,6 +12,10 @@ const selectedProjectKey = computed(() => route.params.projectKey)
 const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
 
 const newProjectSelected = computed(() => route.name === 'NewProject')
+
+onMounted(async () => {
+  await projectsStore.fetchProjects()
+})
 </script>
 <template>
   <aside class="sidebar">

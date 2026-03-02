@@ -70,12 +70,20 @@ const onCreating = () => {
   isCreating.value = true
 }
 
-watch(projectId, () => {
-  isCreating.value = false
-})
+watch(
+  projectId,
+  async (projectId) => {
+    if (!projectId) return
+
+    isCreating.value = false
+
+    await issuesStore.fetchIssues(projectId)
+  },
+  { immediate: true },
+)
 </script>
 <template>
-  <div>
+  <div v-if="projectId">
     <button v-if="!isCreating" @click="onCreating">New</button>
     <div v-else>
       <div class="form-group">
