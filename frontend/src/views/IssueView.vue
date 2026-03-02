@@ -186,11 +186,11 @@ watch(
 
     <p>
       Project:
-      <router-link
+      <RouterLink
         :to="{ name: 'Project', params: { projectKey: projectsStore.cachedProject?.key } }"
       >
         {{ projectsStore.cachedProject?.name }}
-      </router-link>
+      </RouterLink>
     </p>
 
     <div>
@@ -204,18 +204,18 @@ watch(
 
     <div>
       Reporter:
-      <router-link :to="{ name: 'User', params: { userId: issue.reporter.id } }">
+      <RouterLink :to="{ name: 'User', params: { userId: issue.reporter.id } }">
         {{ issue.reporter.name }}
-      </router-link>
+      </RouterLink>
     </div>
 
     <div>
       <label>Assignee: </label>
       <span v-if="!isEditing">
         <span v-if="!issue.assignee">Unassigned</span>
-        <router-link v-else :to="{ name: 'User', params: { userId: issue.assignee.id } }">
+        <RouterLink v-else :to="{ name: 'User', params: { userId: issue.assignee.id } }">
           {{ issue.assignee.name }}
-        </router-link>
+        </RouterLink>
       </span>
       <div v-else class="form-group">
         <select v-model="req.assigneeId">
@@ -286,18 +286,18 @@ watch(
 
     <div v-if="issue.parentIssue">
       Parent issue:
-      <router-link :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
+      <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
         {{ issue.parentIssue.key }} {{ issue.parentIssue.title }}
-      </router-link>
+      </RouterLink>
     </div>
 
     <div v-if="issue.childIssues.length">
       Child Issues:
       <ul>
         <li v-for="childIssue of issue.childIssues" :key="childIssue.id">
-          <router-link :to="{ name: 'Issue', params: { issueKey: childIssue.key } }">
+          <RouterLink :to="{ name: 'Issue', params: { issueKey: childIssue.key } }">
             {{ childIssue.key }} {{ childIssue.title }}
-          </router-link>
+          </RouterLink>
         </li>
       </ul>
     </div>
@@ -305,9 +305,9 @@ watch(
     <label>Watchers:</label>
     <ul>
       <li v-for="watcher in issue.watchers" :key="watcher.id">
-        <router-link :to="{ name: 'User', params: { userId: watcher.id } }">
+        <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
           {{ watcher.name }}
-        </router-link>
+        </RouterLink>
         <button v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)">X</button>
       </li>
     </ul>

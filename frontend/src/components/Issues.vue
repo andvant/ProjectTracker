@@ -178,7 +178,7 @@ watch(
   <div class="issues">
     <ul>
       <li v-for="issue in issuesStore.issues" :key="issue.id">
-        <router-link
+        <RouterLink
           :to="{ name: 'Issue', params: { issueKey: issue.key } }"
           custom
           v-slot="{ navigate, href }"
@@ -190,7 +190,7 @@ watch(
             <span class="issue-col">{{ getEnumLabel(IssueType, issue.type) }}</span>
             <span class="issue-col">{{ getEnumLabel(IssuePriority, issue.priority) }}</span>
           </div>
-        </router-link>
+        </RouterLink>
       </li>
     </ul>
   </div>

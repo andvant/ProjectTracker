@@ -176,12 +176,12 @@ watch(
     </div>
 
     <label>Owner:</label>
-    <router-link
+    <RouterLink
       v-if="!isTransferringOwnership"
       :to="{ name: 'User', params: { userId: project.owner.id } }"
     >
       {{ project.owner.name }}
-    </router-link>
+    </RouterLink>
     <button v-if="!isTransferringOwnership && canEditProject" @click="onTransferringOwnership">
       Transfer ownership
     </button>
@@ -206,9 +206,9 @@ watch(
     <label>Members:</label>
     <ul>
       <li v-for="member in project.members" :key="member.id">
-        <router-link :to="{ name: 'User', params: { userId: member.id } }">
+        <RouterLink :to="{ name: 'User', params: { userId: member.id } }">
           {{ member.name }}
-        </router-link>
+        </RouterLink>
         <button
           v-if="member.id !== project.owner.id && canEditProject"
           @click="onRemoveMember(member.id)"

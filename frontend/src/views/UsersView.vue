@@ -12,9 +12,9 @@ onMounted(async () => {
   <div class="users">
     <ul>
       <li v-for="user in usersStore.users" :key="user.id">
-        <router-link :to="{ name: 'User', params: { userId: user.id } }">
+        <RouterLink :to="{ name: 'User', params: { userId: user.id } }">
           {{ user.name }}
-        </router-link>
+        </RouterLink>
       </li>
     </ul>
   </div>

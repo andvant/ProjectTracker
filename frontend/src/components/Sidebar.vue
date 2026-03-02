@@ -34,9 +34,9 @@ onMounted(async () => {
       class="button"
       :class="{ selected: newProjectSelected }"
     >
-      <router-link :to="{ name: 'NewProject' }" custom v-slot="{ navigate, href }">
+      <RouterLink :to="{ name: 'NewProject' }" custom v-slot="{ navigate, href }">
         <div :href="href" @click="navigate">+ New project</div>
-      </router-link>
+      </RouterLink>
     </div>
     <div>
       <ul>
@@ -46,13 +46,13 @@ onMounted(async () => {
           class="button"
           :class="{ selected: project.key === selectedProjectKey }"
         >
-          <router-link
+          <RouterLink
             :to="{ name: 'Project', params: { projectKey: project.key } }"
             custom
             v-slot="{ navigate, href }"
           >
             <div :href="href" @click="navigate">{{ project.name }}</div>
-          </router-link>
+          </RouterLink>
         </li>
       </ul>
     </div>
@@ -60,9 +60,9 @@ onMounted(async () => {
       <UserMenu v-if="isSignedIn" :userName="userName!" :userId="userId!" class="button" />
 
       <div v-if="isSignedIn" class="button" :class="{ selected: usersSelected }">
-        <router-link :to="{ name: 'Users' }" custom v-slot="{ navigate, href }">
+        <RouterLink :to="{ name: 'Users' }" custom v-slot="{ navigate, href }">
           <div :href="href" @click="navigate">Users</div>
-        </router-link>
+        </RouterLink>
       </div>
 
       <div v-if="!isSignedIn" class="button">
