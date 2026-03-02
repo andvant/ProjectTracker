@@ -154,18 +154,22 @@ const onFilesSelected = async (event: Event) => {
 }
 
 watch(
-  issueId,
-  async (issueId) => {
-    if (!issueId) return
+  [projectId, issueId],
+  async ([projectId, issueId]) => {
+    if (!projectId) return
 
     isEditing.value = false
     isAddingWatcher.value = false
 
     if (!projectsStore.cachedProject) {
-      await projectsStore.getProject(projectId.value!)
+      await projectsStore.getProject(projectId)
     }
 
-    issue.value = await issuesStore.getIssue(projectId.value!, issueId)
+    if (!issueId) {
+      await issuesStore.fetchIssues(projectId)
+    } else {
+      issue.value = await issuesStore.getIssue(projectId, issueId)
+    }
   },
   { immediate: true },
 )
