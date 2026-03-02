@@ -56,7 +56,7 @@ watch(
 <template>
   <div v-if="user" class="wrapper">
     <EntityTitle :title="user.name" />
-    <Property label="Id">{{ user.id }}</Property>
+
     <Property label="Email">{{ user.email }}</Property>
     <Property label="Registration date">{{ user.registrationDate }}</Property>
 
