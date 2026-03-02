@@ -40,7 +40,7 @@ internal class RemoveWatcherCommandHandler : IRequestHandler<RemoveWatcherComman
         var watcher = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.WatcherId, ct)
             ?? throw new WatcherNotFoundException(command.WatcherId);
 
-        _currentUser.ValidateAllowed([watcher.Id, projectOwnerId]);
+        _currentUser.ValidateAllowed([issue.ReporterId, projectOwnerId]);
 
         issue.RemoveWatcher(watcher);
 

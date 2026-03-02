@@ -3,8 +3,10 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useUsersStore } from '@/stores/users'
+import { useAuth } from '@/auth/useAuth'
 import { UpdateProjectRequest, type ProjectDto } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
+import { Role } from '@/types/roles'
 import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
 
 const route = useRoute()
@@ -13,10 +15,16 @@ const router = useRouter()
 const projectsStore = useProjectsStore()
 const usersStore = useUsersStore()
 
+const { hasRole, userId } = useAuth()
+
 const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
 
 const nonMemberUsers = computed(() =>
   usersStore.users.filter((u) => !project.value?.members.find((m) => m.id === u.id)),
+)
+
+const canEditProject = computed(
+  () => hasRole(Role.Admin) || userId.value === project.value?.owner.id,
 )
 
 const project = ref<ProjectDto>()
@@ -174,10 +182,10 @@ watch(
     >
       {{ project.owner.name }}
     </router-link>
-    <button v-if="!isTransferringOwnership" @click="onTransferringOwnership">
+    <button v-if="!isTransferringOwnership && canEditProject" @click="onTransferringOwnership">
       Transfer ownership
     </button>
-    <div v-else>
+    <div v-if="isTransferringOwnership">
       <select v-model="selectedOwnerId">
         <option v-for="user in project.members" :key="user.id" :value="user.id">
           {{ user.name }}
@@ -201,21 +209,26 @@ watch(
         <router-link :to="{ name: 'User', params: { userId: member.id } }">
           {{ member.name }}
         </router-link>
-        <button v-if="member.id !== project.owner.id" @click="onRemoveMember(member.id)">X</button>
+        <button
+          v-if="member.id !== project.owner.id && canEditProject"
+          @click="onRemoveMember(member.id)"
+        >
+          X
+        </button>
       </li>
     </ul>
 
-    <button @click="onDeleteProject(project.id)">Delete</button>
-    <button v-if="!isEditing" @click="onEditing">Edit</button>
+    <button v-if="canEditProject" @click="onDeleteProject(project.id)">Delete</button>
+    <button v-if="!isEditing && canEditProject" @click="onEditing">Edit</button>
     <button v-if="isEditing" @click="onUpdateProject(project.id)" :disabled="isSubmitting">
       Save
     </button>
     <button v-if="isEditing" @click="isEditing = false">Cancel</button>
 
-    <div>
+    <div v-if="canEditProject">
       <button v-if="!isAddingMember" @click="onAddingMember">Add member</button>
 
-      <div v-else>
+      <div v-if="isAddingMember">
         <select v-model="selectedMemberId">
           <option disabled :value="null">Select a user</option>
           <option v-for="user in nonMemberUsers" :key="user.id" :value="user.id">
@@ -236,7 +249,7 @@ watch(
       </ul>
     </div>
 
-    <div>
+    <div v-if="canEditProject">
       <p>Upload attachments</p>
       <input type="file" multiple @change="(e) => onFilesSelected(e)" :disabled="isSubmitting" />
     </div>

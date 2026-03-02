@@ -2,13 +2,19 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useUsersStore } from '@/stores/users'
+import { useAuth } from '@/auth/useAuth'
 import { UpdateUserGroupsRequest, type UserDto, type UserGroupDto } from '@/types/users'
+import { Role } from '@/types/roles'
 
 const route = useRoute()
 
 const usersStore = useUsersStore()
 
+const { hasRole } = useAuth()
+
 const userId = computed(() => route.params.userId as string)
+
+const canUpdateGroups = computed(() => hasRole(Role.Admin))
 
 const user = ref<UserDto>()
 const userGroups = ref<UserGroupDto[]>()
@@ -64,7 +70,7 @@ watch(
           {{ group.description }}
         </label>
       </div>
-      <button v-if="!isEditing" @click="onEditing">Edit</button>
+      <button v-if="!isEditing && canUpdateGroups" @click="onEditing">Edit</button>
       <button v-if="isEditing" @click="onSubmit">Submit</button>
       <button v-if="isEditing" @click="isEditing = false">Cancel</button>
     </div>

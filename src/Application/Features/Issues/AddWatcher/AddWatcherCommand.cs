@@ -39,7 +39,7 @@ internal class AddWatcherCommandHandler : IRequestHandler<AddWatcherCommand>
         var watcher = await _context.Users.FirstOrDefaultAsync(u => u.Id == command.WatcherId, ct)
             ?? throw new WatcherNotFoundException(command.WatcherId);
 
-        _currentUser.ValidateAllowed([watcher.Id, issue.Project.OwnerId]);
+        _currentUser.ValidateAllowed([issue.ReporterId, issue.Project.OwnerId]);
 
         issue.AddWatcher(watcher);
 

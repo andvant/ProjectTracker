@@ -3,8 +3,10 @@ import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
+import { useAuth } from '@/auth/useAuth'
 import { CreateIssueRequest, IssuePriority, IssueType, IssueStatus } from '@/types/issues'
 import { ApiError, type ValidationErrors } from '@/types/api'
+import { Role } from '@/types/roles'
 import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
 
 const route = useRoute()
@@ -12,11 +14,17 @@ const route = useRoute()
 const issuesStore = useIssuesStore()
 const projectsStore = useProjectsStore()
 
+const { hasRole, userId } = useAuth()
+
 const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
 
 const memberUsers = computed(() => projectsStore.cachedProject!.members)
 
 const epicIssues = computed(() => issuesStore.issues.filter((i) => i.type === IssueType.Epic.value))
+
+const canCreateIssue = computed(
+  () => hasRole(Role.Admin) || memberUsers.value.map((m) => m.id).includes(userId.value!),
+)
 
 const req = new CreateIssueRequest()
 const isCreating = ref(false)
@@ -84,8 +92,8 @@ watch(
 </script>
 <template>
   <div v-if="projectId">
-    <button v-if="!isCreating" @click="onCreating">New</button>
-    <div v-else>
+    <button v-if="!isCreating && canCreateIssue" @click="onCreating">New</button>
+    <div v-if="isCreating">
       <div class="form-group">
         <label>Title</label>
         <input v-model="req.title" />

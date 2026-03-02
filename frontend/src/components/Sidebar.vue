@@ -2,19 +2,22 @@
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
+import { useAuth } from '@/auth/useAuth'
+import { Role } from '@/types/roles'
 import UserMenu from '@/components/UserMenu.vue'
 import SignInButton from '@/components/SignInButton.vue'
-import { useAuth } from '@/auth/useAuth'
 
 const route = useRoute()
 
 const projectsStore = useProjectsStore()
 
-const { isSignedIn, userId, userName, onUserLoaded } = useAuth()
+const { isSignedIn, userId, userName, onUserLoaded, hasRole } = useAuth()
 
 const selectedProjectKey = computed(() => route.params.projectKey)
 const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
 const newProjectSelected = computed(() => route.name === 'NewProject')
+
+const canCreateProject = computed(() => hasRole([Role.Admin, Role.ProjectManager]))
 
 onMounted(async () => {
   if (isSignedIn.value) {
@@ -26,7 +29,11 @@ onMounted(async () => {
 </script>
 <template>
   <aside class="sidebar">
-    <div v-if="isSignedIn" class="button" :class="{ selected: newProjectSelected }">
+    <div
+      v-if="isSignedIn && canCreateProject"
+      class="button"
+      :class="{ selected: newProjectSelected }"
+    >
       <router-link :to="{ name: 'NewProject' }" custom v-slot="{ navigate, href }">
         <div :href="href" @click="navigate">+ New project</div>
       </router-link>

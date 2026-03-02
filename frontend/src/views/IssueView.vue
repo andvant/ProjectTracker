@@ -3,6 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
+import { useUsersStore } from '@/stores/users'
+import { useAuth } from '@/auth/useAuth'
 import {
   IssuePriority,
   IssueStatus,
@@ -10,9 +12,9 @@ import {
   type IssueDto,
   UpdateIssueRequest,
 } from '@/types/issues'
-import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
 import { ApiError, type ValidationErrors } from '@/types/api'
-import { useUsersStore } from '@/stores/users'
+import { Role } from '@/types/roles'
+import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,6 +23,8 @@ const issuesStore = useIssuesStore()
 const projectsStore = useProjectsStore()
 const usersStore = useUsersStore()
 
+const { hasRole, userId } = useAuth()
+
 const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
 const issueId = computed(() => issuesStore.getIssueIdByKey(route.params.issueKey as string))
 
@@ -28,6 +32,13 @@ const memberUsers = computed(() => projectsStore.cachedProject!.members)
 
 const nonWatcherUsers = computed(() =>
   memberUsers.value.filter((u) => !issue.value?.watchers.find((w) => w.id === u.id)),
+)
+
+const canEditIssue = computed(
+  () =>
+    hasRole(Role.Admin) ||
+    userId.value === projectsStore.cachedProject?.owner.id ||
+    userId.value === issue.value?.reporter.id,
 )
 
 const issue = ref<IssueDto>()
@@ -297,19 +308,19 @@ watch(
         <router-link :to="{ name: 'User', params: { userId: watcher.id } }">
           {{ watcher.name }}
         </router-link>
-        <button @click="onRemoveWatcher(watcher.id)">X</button>
+        <button v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)">X</button>
       </li>
     </ul>
 
-    <button @click="onDeleteIssue">Delete</button>
-    <button v-if="!isEditing" @click="onEditing">Edit</button>
+    <button v-if="canEditIssue" @click="onDeleteIssue">Delete</button>
+    <button v-if="!isEditing && canEditIssue" @click="onEditing">Edit</button>
     <button v-if="isEditing" @click="onUpdateIssue" :disabled="isSubmitting">Save</button>
     <button v-if="isEditing" @click="isEditing = false">Cancel</button>
 
     <div>
-      <button v-if="!isAddingWatcher" @click="onAddingWatcher">Add watcher</button>
+      <button v-if="!isAddingWatcher && canEditIssue" @click="onAddingWatcher">Add watcher</button>
 
-      <div v-else>
+      <div v-if="isAddingWatcher">
         <select v-model="selectedWatcherId">
           <option disabled :value="null">Select a user</option>
           <option v-for="user in nonWatcherUsers" :key="user.id" :value="user.id">
@@ -330,7 +341,7 @@ watch(
       </ul>
     </div>
 
-    <div>
+    <div v-if="canEditIssue">
       <p>Upload attachments</p>
       <input type="file" multiple @change="(e) => onFilesSelected(e)" :disabled="isSubmitting" />
     </div>
