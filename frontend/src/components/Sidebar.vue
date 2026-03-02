@@ -1,40 +1,27 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import type { User } from 'oidc-client-ts'
-import { userManager } from '@/auth/authService'
 import { useProjectsStore } from '@/stores/projects'
 import UserMenu from '@/components/UserMenu.vue'
 import SignInButton from '@/components/SignInButton.vue'
+import { useAuth } from '@/auth/useAuth'
 
 const route = useRoute()
 
 const projectsStore = useProjectsStore()
 
+const { isSignedIn, userId, userName, onUserLoaded } = useAuth()
+
 const selectedProjectKey = computed(() => route.params.projectKey)
 const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
 const newProjectSelected = computed(() => route.name === 'NewProject')
 
-const isSignedIn = ref(false)
-const userId = ref<string>('')
-const userName = ref<string>('')
-
-const initSidebar = async (user: User) => {
-  userId.value = user.profile.sub!
-  userName.value = user.profile.preferred_username!
-  isSignedIn.value = true
-
-  await projectsStore.fetchProjects()
-}
-
 onMounted(async () => {
-  const user = await userManager.getUser()
-
-  if (user) {
-    await initSidebar(user)
+  if (isSignedIn.value) {
+    await projectsStore.fetchProjects()
   }
 
-  userManager.events.addUserLoaded(initSidebar)
+  onUserLoaded(projectsStore.fetchProjects)
 })
 </script>
 <template>
@@ -63,7 +50,7 @@ onMounted(async () => {
       </ul>
     </div>
     <div class="bottom">
-      <UserMenu v-if="isSignedIn" :userName="userName" :userId="userId" class="button" />
+      <UserMenu v-if="isSignedIn" :userName="userName!" :userId="userId!" class="button" />
 
       <div v-if="isSignedIn" class="button" :class="{ selected: usersSelected }">
         <router-link :to="{ name: 'Users' }" custom v-slot="{ navigate, href }">

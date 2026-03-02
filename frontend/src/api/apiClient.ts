@@ -1,4 +1,4 @@
-import { userManager } from '@/auth/authService'
+import { useAuth } from '@/auth/useAuth'
 import { ApiError, type ProblemDetails } from '@/types/api'
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -10,16 +10,15 @@ interface RequestOptions<TBody = unknown> {
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
+const { accessToken } = useAuth()
+
 const sendRequest = async <TResponse, TBody = unknown>(
   url: string,
   options: RequestOptions<TBody> = {},
 ): Promise<TResponse> => {
   const { method = 'GET', body } = options
 
-  const user = await userManager.getUser()
-  const accessToken = user?.access_token
-
-  if (!accessToken) {
+  if (!accessToken.value) {
     throw new Error('access token not set')
   }
 
@@ -27,7 +26,7 @@ const sendRequest = async <TResponse, TBody = unknown>(
   const isJson = body && !isFormData
 
   const headers: HeadersInit = {
-    Authorization: `Bearer ${accessToken}`,
+    Authorization: `Bearer ${accessToken.value}`,
   }
 
   if (isJson) {
