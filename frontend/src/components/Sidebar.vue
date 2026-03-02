@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useProjectsStore } from '@/stores/projects'
-import SignInButton from '@/components/SignInButton.vue'
-import SignOutButton from '@/components/SignOutButton.vue'
+import type { User } from 'oidc-client-ts'
 import { userManager } from '@/auth/authService'
+import { useProjectsStore } from '@/stores/projects'
+import UserMenu from '@/components/UserMenu.vue'
+import SignInButton from '@/components/SignInButton.vue'
 
 const route = useRoute()
 
@@ -15,15 +16,22 @@ const usersSelected = computed(() => route.name === 'Users' || route.name === 'U
 const newProjectSelected = computed(() => route.name === 'NewProject')
 
 const isSignedIn = ref(false)
+const userId = ref<string>('')
+const userName = ref<string>('')
 
-const initSidebar = async () => {
+const initSidebar = async (user: User) => {
+  userId.value = user.profile.sub!
+  userName.value = user.profile.preferred_username!
   isSignedIn.value = true
+
   await projectsStore.fetchProjects()
 }
 
 onMounted(async () => {
-  if (await userManager.getUser()) {
-    await initSidebar()
+  const user = await userManager.getUser()
+
+  if (user) {
+    await initSidebar(user)
   }
 
   userManager.events.addUserLoaded(initSidebar)
@@ -55,14 +63,14 @@ onMounted(async () => {
       </ul>
     </div>
     <div class="bottom">
+      <UserMenu v-if="isSignedIn" :userName="userName" :userId="userId" class="button" />
+
       <div v-if="isSignedIn" class="button" :class="{ selected: usersSelected }">
         <router-link :to="{ name: 'Users' }" custom v-slot="{ navigate, href }">
           <div :href="href" @click="navigate">Users</div>
         </router-link>
       </div>
-      <div v-if="isSignedIn" class="button">
-        <SignOutButton />
-      </div>
+
       <div v-if="!isSignedIn" class="button">
         <SignInButton />
       </div>
@@ -71,11 +79,21 @@ onMounted(async () => {
 </template>
 <style scoped>
 .sidebar {
-  width: 200px;
+  width: 180px;
   background-color: #11214a;
   padding: 1rem;
   display: flex;
   flex-direction: column;
+}
+
+.sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.bottom {
+  margin-top: auto;
 }
 
 .button {
@@ -85,7 +103,7 @@ onMounted(async () => {
   font-size: 1.2rem;
   cursor: pointer;
   margin: 0;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0.2rem;
   border-bottom: 1px solid #eee;
 
   &.selected {
@@ -94,13 +112,7 @@ onMounted(async () => {
   }
 }
 
-.bottom {
-  margin-top: auto;
-}
-
-.sidebar ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.button:hover:not(.selected) {
+  background: rgba(255, 255, 255, 0.1);
 }
 </style>
