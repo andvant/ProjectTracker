@@ -81,7 +81,7 @@ watch(
       </div>
 
       <ControlButton v-if="!isEditing && canUpdateGroups" @click="onEditing" label="Edit" />
-      <ControlButton v-if="isEditing" @click="onSubmit" label="Submit" />
+      <ControlButton v-if="isEditing" @click="onSubmit" label="Submit" type="primary" />
       <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
     </div>
   </div>

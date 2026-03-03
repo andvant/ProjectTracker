@@ -187,9 +187,15 @@ watch(
       @click="onUpdateProject(project.id)"
       :disabled="isSubmitting"
       label="Save"
+      type="primary"
     />
-    <ControlButton v-if="canEditProject" @click="onDeleteProject(project.id)" label="Delete" />
     <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
+    <ControlButton
+      v-if="canEditProject"
+      @click="onDeleteProject(project.id)"
+      label="Delete project"
+      type="danger"
+    />
 
     <Property v-if="!isTransferringOwnership" label="Owner">
       <RouterLink :to="{ name: 'User', params: { userId: project.owner.id } }">
@@ -203,15 +209,19 @@ watch(
       label="Transfer ownership"
     />
     <div v-if="isTransferringOwnership">
-      <select v-model="selectedOwnerId">
-        <option v-for="user in project.members" :key="user.id" :value="user.id">
-          {{ user.name }}
-        </option>
-      </select>
+      <label>
+        <div>Owner</div>
+        <select v-model="selectedOwnerId">
+          <option v-for="user in project.members" :key="user.id" :value="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+      </label>
       <ControlButton
         @click="onTransferOwnership"
         :disabled="selectedOwnerId === project.owner.id || isSubmitting"
         label="Transfer"
+        type="primary"
       />
       <ControlButton @click="isTransferringOwnership = false" label="Cancel" />
     </div>
@@ -228,7 +238,7 @@ watch(
           <ControlButton
             v-if="member.id !== project.owner.id && canEditProject"
             @click="onRemoveMember(member.id)"
-            label="X"
+            type="remove"
           />
         </li>
       </ul>
@@ -248,6 +258,7 @@ watch(
           @click="onAddMember"
           :disabled="!selectedMemberId || isSubmitting"
           label="Add"
+          type="primary"
         />
         <ControlButton @click="isAddingMember = false" label="Cancel" />
       </div>

@@ -81,7 +81,7 @@ const onSubmit = async () => {
 
     <InputErrors :error="errors.general" />
 
-    <ControlButton @click="onSubmit" :disabled="isSubmitting" label="Create" />
+    <ControlButton @click="onSubmit" :disabled="isSubmitting" label="Create" type="primary" />
   </div>
 </template>
 <style scoped>

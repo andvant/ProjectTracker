@@ -94,7 +94,7 @@ watch(
 )
 </script>
 <template>
-  <ControlButton v-if="!isCreating && canCreateIssue" @click="onCreating" label="New" />
+  <ControlButton v-if="!isCreating && canCreateIssue" @click="onCreating" label="New issue" />
 
   <div v-if="isCreating">
     <InputProperty label="Title" :error="errors.title">
@@ -159,7 +159,7 @@ watch(
 
     <InputErrors :error="errors.general" />
 
-    <ControlButton @click="onSubmit" label="Create" />
+    <ControlButton @click="onSubmit" label="Create" type="primary" />
     <ControlButton @click="isCreating = false" label="Cancel" />
   </div>
 

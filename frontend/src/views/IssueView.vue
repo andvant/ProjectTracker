@@ -279,9 +279,15 @@ watch(
     <InputErrors v-if="isEditing" :error="errors.general" />
 
     <ControlButton v-if="!isEditing && canEditIssue" @click="onEditing" label="Edit" />
-    <ControlButton v-if="isEditing" @click="onUpdateIssue" :disabled="isSubmitting" label="Save" />
-    <ControlButton v-if="canEditIssue" @click="onDeleteIssue" label="Delete" />
+    <ControlButton
+      v-if="isEditing"
+      @click="onUpdateIssue"
+      :disabled="isSubmitting"
+      label="Save"
+      type="primary"
+    />
     <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
+    <ControlButton v-if="canEditIssue" @click="onDeleteIssue" label="Delete issue" type="danger" />
 
     <Property label="Created at">{{ formatDate(issue.createdAt) }}</Property>
     <Property label="Updated at">{{ formatDate(issue.updatedAt) }}</Property>
@@ -308,7 +314,7 @@ watch(
           <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
             {{ watcher.name }}
           </RouterLink>
-          <ControlButton v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)" label="X" />
+          <ControlButton v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)" type="remove" />
         </li>
       </ul>
     </Property>
@@ -331,6 +337,7 @@ watch(
           @click="onAddWatcher"
           :disabled="!selectedWatcherId || isSubmitting"
           label="Add"
+          type="primary"
         />
         <ControlButton @click="isAddingWatcher = false" label="Cancel" />
       </div>
