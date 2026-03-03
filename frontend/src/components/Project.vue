@@ -237,7 +237,7 @@ watch(
     <Property label="Updated">{{ formatDate(project.updatedAt) }}</Property>
 
     <Property label="Members">
-      <ul>
+      <ul class="list">
         <li v-for="member in project.members" :key="member.id">
           <RouterLink :to="{ name: 'User', params: { userId: member.id } }">
             {{ member.name }}
@@ -272,7 +272,7 @@ watch(
     </div>
 
     <Property label="Attachments">
-      <ul v-if="project.attachments.length">
+      <ul v-if="project.attachments.length" class="list">
         <li v-for="attachment in project.attachments" :key="attachment.id">
           {{ attachment.name }}
         </li>

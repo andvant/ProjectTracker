@@ -172,12 +172,8 @@ watch(
   <div class="issues">
     <ul>
       <li v-for="issue in issuesStore.issues" :key="issue.id">
-        <RouterLink
-          :to="{ name: 'Issue', params: { issueKey: issue.key } }"
-          custom
-          v-slot="{ navigate, href }"
-        >
-          <div :href="href" @click="navigate" class="issue-row">
+        <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.key } }">
+          <div class="issue-row">
             <span class="issue-col">{{ issue.key }}</span>
             <span class="issue-col">{{ issue.title }}</span>
             <span class="issue-col">{{ getEnumLabel(IssueStatus, issue.status) }}</span>
@@ -214,12 +210,16 @@ watch(
 }
 
 .issue-row:hover {
-  background-color: #ddd;
+  background-color: #eee;
 }
 
 .issue-col {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+a:hover {
+  text-decoration: none;
 }
 </style>

@@ -13,7 +13,7 @@ onMounted(async () => {
   <div class="wrapper">
     <EntityTitle title="Users" />
 
-    <ul>
+    <ul class="list">
       <li v-for="user in usersStore.users" :key="user.id">
         <RouterLink :to="{ name: 'User', params: { userId: user.id } }">
           {{ user.name }}

@@ -65,7 +65,7 @@ watch(
 
     <div>
       <Property v-if="!isEditing" label="Groups">
-        <ul v-if="memberGroups.length">
+        <ul v-if="memberGroups.length" class="list">
           <li v-for="group in memberGroups" :key="group.id">
             {{ group.description }}
           </li>
@@ -102,5 +102,9 @@ watch(
 <style scoped>
 .wrapper {
   padding: 1rem;
+}
+
+.list {
+  width: 100%;
 }
 </style>

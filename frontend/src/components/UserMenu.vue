@@ -57,7 +57,7 @@ onUnmounted(() => {
   top: 0;
   left: 100%;
   min-width: 140px;
-  background: #222;
+  background: #15223d;
   border-radius: 8px;
   padding: 6px;
   margin-left: 20px;

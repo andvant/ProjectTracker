@@ -34,9 +34,7 @@ onMounted(async () => {
       class="button"
       :class="{ selected: newProjectSelected }"
     >
-      <RouterLink :to="{ name: 'NewProject' }" custom v-slot="{ navigate, href }">
-        <div :href="href" @click="navigate">+ New project</div>
-      </RouterLink>
+      <RouterLink :to="{ name: 'NewProject' }"><div>+ New project</div></RouterLink>
     </div>
     <div>
       <ul>
@@ -46,12 +44,8 @@ onMounted(async () => {
           class="button"
           :class="{ selected: project.key === selectedProjectKey }"
         >
-          <RouterLink
-            :to="{ name: 'Project', params: { projectKey: project.key } }"
-            custom
-            v-slot="{ navigate, href }"
-          >
-            <div :href="href" @click="navigate">{{ project.name }}</div>
+          <RouterLink :to="{ name: 'Project', params: { projectKey: project.key } }">
+            <div>{{ project.name }}</div>
           </RouterLink>
         </li>
       </ul>
@@ -60,9 +54,7 @@ onMounted(async () => {
       <UserMenu v-if="isSignedIn" :userName="userName!" :userId="userId!" class="button" />
 
       <div v-if="isSignedIn" class="button" :class="{ selected: usersSelected }">
-        <RouterLink :to="{ name: 'Users' }" custom v-slot="{ navigate, href }">
-          <div :href="href" @click="navigate">Users</div>
-        </RouterLink>
+        <RouterLink :to="{ name: 'Users' }"><div>Users</div></RouterLink>
       </div>
 
       <div v-if="!isSignedIn" class="button">
@@ -97,7 +89,7 @@ onMounted(async () => {
   font-size: 1.2rem;
   cursor: pointer;
   margin: 0;
-  padding: 0.5rem 0.2rem;
+  padding: 0.5rem 0.3rem;
   border-bottom: 1px solid #eee;
 
   &.selected {
@@ -108,5 +100,9 @@ onMounted(async () => {
 
 .button:hover:not(.selected) {
   background: rgba(255, 255, 255, 0.08);
+}
+
+a:hover {
+  text-decoration: none;
 }
 </style>

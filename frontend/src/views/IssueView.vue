@@ -315,7 +315,7 @@ watch(
     </Property>
 
     <Property v-if="issue.childIssues.length" label="Child issues">
-      <ul>
+      <ul class="list">
         <li v-for="childIssue of issue.childIssues" :key="childIssue.id">
           <RouterLink :to="{ name: 'Issue', params: { issueKey: childIssue.key } }">
             {{ childIssue.key }} {{ childIssue.title }}
@@ -325,7 +325,7 @@ watch(
     </Property>
 
     <Property label="Watchers">
-      <ul>
+      <ul class="list">
         <li v-for="watcher in issue.watchers" :key="watcher.id">
           <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
             {{ watcher.name }}
@@ -360,7 +360,7 @@ watch(
     </div>
 
     <Property label="Attachments">
-      <ul v-if="issue.attachments.length">
+      <ul v-if="issue.attachments.length" class="list">
         <li v-for="attachment in issue.attachments" :key="attachment.id">
           {{ attachment.name }}
         </li>
