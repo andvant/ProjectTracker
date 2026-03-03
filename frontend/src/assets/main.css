@@ -32,6 +32,11 @@ textarea {
 
 select {
   width: 200px;
+  cursor: pointer;
+}
+
+select:hover {
+  background-color: #fbfbfb;
 }
 
 input:focus,

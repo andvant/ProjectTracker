@@ -39,6 +39,7 @@ const isEmpty = computed(() => {
 
 .label {
   font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .unset {

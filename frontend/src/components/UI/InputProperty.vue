@@ -27,8 +27,8 @@ defineProps<{
 }
 
 .label {
+  font-size: 0.95rem;
   font-weight: 600;
-  color: var(--color-text-muted);
   margin-bottom: 0.2rem;
 }
 

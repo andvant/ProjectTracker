@@ -74,7 +74,7 @@ onMounted(async () => {
 <style scoped>
 .sidebar {
   width: 180px;
-  background-color: #11214a;
+  background-color: #15223d;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -101,12 +101,12 @@ onMounted(async () => {
   border-bottom: 1px solid #eee;
 
   &.selected {
-    background-color: rgba(255, 255, 255, 0.2);
-    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.15);
+    font-weight: 500;
   }
 }
 
 .button:hover:not(.selected) {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
 }
 </style>

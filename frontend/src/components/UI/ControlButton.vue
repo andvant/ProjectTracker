@@ -15,7 +15,7 @@ const cssClass = computed(() => {
 })
 </script>
 <template>
-  <button class="btn" :class="cssClass">{{ type === 'remove' ? 'X' : label }}</button>
+  <button class="btn" :class="cssClass">{{ type === 'remove' ? '✖' : label }}</button>
 </template>
 <style scoped>
 .btn {
@@ -31,7 +31,8 @@ const cssClass = computed(() => {
   background-color: #fff;
   color: var(--color-red);
   border-color: #ddd;
-  padding: 0.2rem 0.3rem;
+  border-radius: 20px;
+  padding: 0.2rem 0.4rem;
   margin: 0 0.5rem;
   font-size: 0.7rem;
 }
@@ -70,6 +71,6 @@ const cssClass = computed(() => {
 }
 
 .btn-default:hover {
-  background-color: #f0f0f0;
+  background-color: #f2f2f2;
 }
 </style>
