@@ -20,6 +20,7 @@ import {
   formatDate,
   getEnumLabel,
   getEnumOptions,
+  removeNonDigits,
 } from '@/utils'
 import EntityTitle from '@/components/UI/EntityTitle.vue'
 import Property from '@/components/UI/Property.vue'
@@ -145,6 +146,10 @@ const onAddWatcher = async () => {
   }
 }
 
+const fileInputRef = ref<HTMLInputElement>()
+
+const openFileDialog = () => fileInputRef.value!.click()
+
 const onFilesSelected = async (event: Event) => {
   const input = event.target as HTMLInputElement
   if (!input.files) return
@@ -268,12 +273,12 @@ watch(
       <input v-model="req.dueDate" type="date" />
     </InputProperty>
 
-    <Property v-if="!isEditing" label="Estimation minutes">
+    <Property v-if="!isEditing" label="Estimation (minutes)">
       {{ issue.estimationMinutes }}
     </Property>
 
-    <InputProperty v-if="isEditing" label="Estimation minutes" :error="errors.estimationMinutes">
-      <input v-model="req.estimationMinutes" type="number" />
+    <InputProperty v-if="isEditing" label="Estimation (minutes)" :error="errors.estimationMinutes">
+      <input v-model="req.estimationMinutes" type="text" @input="removeNonDigits" />
     </InputProperty>
 
     <InputErrors v-if="isEditing" :error="errors.general" />
@@ -289,8 +294,8 @@ watch(
     <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
     <ControlButton v-if="canEditIssue" @click="onDeleteIssue" label="Delete issue" type="danger" />
 
-    <Property label="Created at">{{ formatDate(issue.createdAt) }}</Property>
-    <Property label="Updated at">{{ formatDate(issue.updatedAt) }}</Property>
+    <Property label="Created">{{ formatDate(issue.createdAt) }}</Property>
+    <Property label="Updated">{{ formatDate(issue.updatedAt) }}</Property>
 
     <Property v-if="issue.parentIssue" label="Parent issue">
       <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
@@ -344,7 +349,7 @@ watch(
     </div>
 
     <Property label="Attachments">
-      <ul>
+      <ul v-if="issue.attachments.length">
         <li v-for="attachment in issue.attachments" :key="attachment.id">
           {{ attachment.name }}
         </li>
@@ -352,7 +357,14 @@ watch(
     </Property>
 
     <div v-if="canEditIssue">
-      <input type="file" multiple @change="(e) => onFilesSelected(e)" :disabled="isSubmitting" />
+      <input
+        ref="fileInputRef"
+        type="file"
+        multiple
+        @change="(e) => onFilesSelected(e)"
+        style="display: none"
+      />
+      <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
     </div>
   </div>
 </template>

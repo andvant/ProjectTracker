@@ -23,6 +23,8 @@ const canUpdateGroups = computed(() => hasRole(Role.Admin))
 const user = ref<UserDto>()
 const userGroups = ref<UserGroupDto[]>()
 
+const memberGroups = computed(() => userGroups.value?.filter((g) => g.isMember) ?? [])
+
 const req = reactive(new UpdateUserGroupsRequest())
 const isEditing = ref(false)
 const isSubmitting = ref(false)
@@ -63,8 +65,8 @@ watch(
 
     <div>
       <Property v-if="!isEditing" label="Groups">
-        <ul v-if="!isEditing">
-          <li v-for="group in userGroups?.filter((g) => g.isMember)" :key="group.id">
+        <ul v-if="memberGroups.length">
+          <li v-for="group in memberGroups" :key="group.id">
             {{ group.description }}
           </li>
         </ul>

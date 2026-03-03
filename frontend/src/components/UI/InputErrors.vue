@@ -8,7 +8,8 @@ defineProps<{
 </template>
 <style scoped>
 .error {
-  color: red;
-  font-size: 0.8rem;
+  color: #f22;
+  font-size: 0.85rem;
+  font-weight: 350;
 }
 </style>

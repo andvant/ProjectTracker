@@ -56,3 +56,8 @@ export const formatDate = (dateString?: string): string | undefined => {
     timeStyle: 'short',
   }).format(date)
 }
+
+export const removeNonDigits = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  target.value = target.value.replace(/[^0-9]/, '')
+}

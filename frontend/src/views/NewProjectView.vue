@@ -67,11 +67,15 @@ const onSubmit = async () => {
   <div class="wrapper">
     <EntityTitle title="New project" />
 
-    <InputProperty label="Project Key" :error="errors.key">
+    <InputProperty
+      label="Project key"
+      :error="errors.key"
+      subtitle="Used in URLs and as a prefix in issues' keys that belong to this project"
+    >
       <input v-model="req.key" />
     </InputProperty>
 
-    <InputProperty label="Project Name" :error="errors.name">
+    <InputProperty label="Project name" :error="errors.name">
       <input v-model="req.name" />
     </InputProperty>
 

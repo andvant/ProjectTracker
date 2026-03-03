@@ -3,14 +3,18 @@ import InputErrors from '@/components/UI/InputErrors.vue'
 
 defineProps<{
   label: string
+  subtitle?: string
   error?: string
 }>()
 </script>
 <template>
   <div class="wrapper">
     <label>
-      <div>{{ label }}</div>
-      <slot></slot>
+      <div class="label">{{ label }}</div>
+      <div class="input">
+        <slot></slot>
+      </div>
+      <div v-if="subtitle" class="subtitle">{{ subtitle }}</div>
     </label>
     <InputErrors :error="error" />
   </div>
@@ -20,5 +24,17 @@ defineProps<{
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 350;
 }
 </style>

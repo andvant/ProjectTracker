@@ -132,6 +132,10 @@ const onTransferOwnership = async () => {
   }
 }
 
+const fileInputRef = ref<HTMLInputElement>()
+
+const openFileDialog = () => fileInputRef.value!.click()
+
 const onFilesSelected = async (event: Event) => {
   const input = event.target as HTMLInputElement
   if (!input.files) return
@@ -208,15 +212,12 @@ watch(
       @click="onTransferringOwnership"
       label="Transfer ownership"
     />
-    <div v-if="isTransferringOwnership">
-      <label>
-        <div>Owner</div>
-        <select v-model="selectedOwnerId">
-          <option v-for="user in project.members" :key="user.id" :value="user.id">
-            {{ user.name }}
-          </option>
-        </select>
-      </label>
+    <InputProperty v-if="isTransferringOwnership" label="Owner">
+      <select v-model="selectedOwnerId">
+        <option v-for="user in project.members" :key="user.id" :value="user.id">
+          {{ user.name }}
+        </option>
+      </select>
       <ControlButton
         @click="onTransferOwnership"
         :disabled="selectedOwnerId === project.owner.id || isSubmitting"
@@ -224,10 +225,10 @@ watch(
         type="primary"
       />
       <ControlButton @click="isTransferringOwnership = false" label="Cancel" />
-    </div>
+    </InputProperty>
 
-    <Property label="Created at">{{ formatDate(project.createdAt) }}</Property>
-    <Property label="Updated at">{{ formatDate(project.updatedAt) }}</Property>
+    <Property label="Created">{{ formatDate(project.createdAt) }}</Property>
+    <Property label="Updated">{{ formatDate(project.updatedAt) }}</Property>
 
     <Property label="Members">
       <ul>
@@ -265,7 +266,7 @@ watch(
     </div>
 
     <Property label="Attachments">
-      <ul>
+      <ul v-if="project.attachments.length">
         <li v-for="attachment in project.attachments" :key="attachment.id">
           {{ attachment.name }}
         </li>
@@ -273,7 +274,14 @@ watch(
     </Property>
 
     <div v-if="canEditProject">
-      <input type="file" multiple @change="(e) => onFilesSelected(e)" :disabled="isSubmitting" />
+      <input
+        ref="fileInputRef"
+        type="file"
+        multiple
+        @change="onFilesSelected"
+        style="display: none"
+      />
+      <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
     </div>
   </div>
 </template>

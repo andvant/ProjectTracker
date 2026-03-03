@@ -7,7 +7,13 @@ import { useAuth } from '@/auth/useAuth'
 import { CreateIssueRequest, IssuePriority, IssueType, IssueStatus } from '@/types/issues'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
-import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
+import {
+  applyErrorsFromApi,
+  createDefaultErrors,
+  getEnumLabel,
+  getEnumOptions,
+  removeNonDigits,
+} from '@/utils'
 import InputProperty from '@/components/UI/InputProperty.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
@@ -153,8 +159,8 @@ watch(
       <input v-model="req.dueDate" type="date" />
     </InputProperty>
 
-    <InputProperty label="Estimation minutes" :error="errors.estimationMinutes">
-      <input v-model="req.estimationMinutes" type="number" />
+    <InputProperty label="Estimation (minutes)" :error="errors.estimationMinutes">
+      <input v-model="req.estimationMinutes" type="text" @input="removeNonDigits" />
     </InputProperty>
 
     <InputErrors :error="errors.general" />
