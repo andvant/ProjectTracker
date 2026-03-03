@@ -102,7 +102,7 @@ onMounted(async () => {
 
   &.selected {
     background-color: rgba(255, 255, 255, 0.2);
-    font-weight: bold;
+    font-weight: 600;
   }
 }
 

@@ -14,6 +14,5 @@ import Sidebar from '@/components/Sidebar.vue'
   display: flex;
   height: 100vh;
   width: 100%;
-  font-family: sans-serif;
 }
 </style>

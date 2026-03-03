@@ -167,7 +167,7 @@ watch(
 </script>
 <template>
   <div v-if="project" class="wrapper">
-    <EntityTitle v-if="!isEditing" :title="project.name" />
+    <EntityTitle v-if="!isEditing" :title="project.name" :subtitle="project.key" />
 
     <InputProperty v-if="isEditing" label="Project name" :error="errors.name">
       <input v-model="req.name" />

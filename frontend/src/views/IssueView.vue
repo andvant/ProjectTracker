@@ -187,7 +187,7 @@ watch(
 </script>
 <template>
   <div v-if="issue" class="wrapper">
-    <EntityTitle v-if="!isEditing" :title="`${issue.key} ${issue.title}`" />
+    <EntityTitle v-if="!isEditing" :title="issue.title" :subtitle="issue.key" />
 
     <InputProperty v-if="isEditing" label="Title" :error="errors.title">
       <input v-model="req.title" />
@@ -214,7 +214,7 @@ watch(
     </Property>
 
     <Property v-if="!isEditing" label="Assignee">
-      <span v-if="!issue.assignee">Unassigned</span>
+      <span v-if="!issue.assignee" class="unassigned">Unassigned</span>
       <RouterLink v-else :to="{ name: 'User', params: { userId: issue.assignee.id } }">
         {{ issue.assignee.name }}
       </RouterLink>
@@ -359,5 +359,9 @@ watch(
 <style scoped>
 .wrapper {
   padding: 1rem;
+}
+
+.unassigned {
+  color: #6b6e76;
 }
 </style>

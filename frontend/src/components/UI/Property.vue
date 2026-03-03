@@ -23,17 +23,25 @@ const isEmpty = computed(() => {
 </script>
 <template>
   <div class="wrapper">
-    <div v-if="label">
+    <div v-if="label" class="label">
       {{ label }}
     </div>
     <div>
       <slot v-if="!isEmpty"></slot>
-      <span v-else>None</span>
+      <span v-else class="unset">None</span>
     </div>
   </div>
 </template>
 <style scoped>
 .wrapper {
-  padding: 10px 0px;
+  padding: 0;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.unset {
+  color: #6b6e76;
 }
 </style>
