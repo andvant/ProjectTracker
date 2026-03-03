@@ -362,6 +362,6 @@ watch(
 }
 
 .unassigned {
-  color: #6b6e76;
+  color: var(--color-text-muted);
 }
 </style>

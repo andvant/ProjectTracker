@@ -42,6 +42,6 @@ const isEmpty = computed(() => {
 }
 
 .unset {
-  color: #6b6e76;
+  color: var(--color-text-muted);
 }
 </style>

@@ -24,6 +24,6 @@ defineProps<{
 .entity-subtitle {
   margin-top: 0;
   font-size: 1rem;
-  color: #6b6e76;
+  color: var(--color-text-muted);
 }
 </style>
