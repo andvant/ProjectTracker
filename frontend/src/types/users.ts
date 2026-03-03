@@ -7,7 +7,7 @@ export interface UserDto {
   id: string
   name: string
   email: string
-  registrationDate: Date
+  registrationDate: string
 }
 
 export interface UserGroupDto {

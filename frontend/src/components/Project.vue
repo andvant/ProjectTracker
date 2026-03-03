@@ -7,7 +7,7 @@ import { useAuth } from '@/auth/useAuth'
 import { UpdateProjectRequest, type ProjectDto } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
-import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
+import { applyErrorsFromApi, createDefaultErrors, formatDate } from '@/utils'
 import EntityTitle from '@/components/UI/EntityTitle.vue'
 import Property from '@/components/UI/Property.vue'
 import InputProperty from '@/components/UI/InputProperty.vue'
@@ -216,8 +216,8 @@ watch(
       <ControlButton @click="isTransferringOwnership = false" label="Cancel" />
     </div>
 
-    <Property label="Created at">{{ project.createdAt }}</Property>
-    <Property label="Updated at">{{ project.updatedAt }}</Property>
+    <Property label="Created at">{{ formatDate(project.createdAt) }}</Property>
+    <Property label="Updated at">{{ formatDate(project.updatedAt) }}</Property>
 
     <Property label="Members">
       <ul>

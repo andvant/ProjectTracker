@@ -21,16 +21,16 @@ export interface IssueDto {
   status: IssueStatusEnum
   type: IssueTypeEnum
   priority: IssuePriorityEnum
-  dueDate?: Date
+  dueDate?: string
   estimationMinutes?: number
   parentIssue?: IssuesDto
   childIssues: IssuesDto[]
   watchers: UsersDto[]
   attachments: AttachmentDto[]
   createdBy: string
-  createdAt: Date
+  createdAt: string
   updatedBy: string
-  updatedAt: Date
+  updatedAt: string
 }
 
 export class CreateIssueRequest {

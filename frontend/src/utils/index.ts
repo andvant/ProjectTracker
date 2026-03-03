@@ -45,3 +45,14 @@ export const applyErrorsFromApi = (
     }
   }
 }
+
+export const formatDate = (dateString?: string): string | undefined => {
+  if (!dateString) return undefined
+
+  const date = new Date(dateString)
+
+  return new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'long',
+    timeStyle: 'short',
+  }).format(date)
+}

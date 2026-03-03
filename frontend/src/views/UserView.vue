@@ -5,6 +5,7 @@ import { useUsersStore } from '@/stores/users'
 import { useAuth } from '@/auth/useAuth'
 import { UpdateUserGroupsRequest, type UserDto, type UserGroupDto } from '@/types/users'
 import { Role } from '@/types/roles'
+import { formatDate } from '@/utils'
 import EntityTitle from '@/components/UI/EntityTitle.vue'
 import Property from '@/components/UI/Property.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
@@ -58,7 +59,7 @@ watch(
     <EntityTitle :title="user.name" />
 
     <Property label="Email">{{ user.email }}</Property>
-    <Property label="Registration date">{{ user.registrationDate }}</Property>
+    <Property label="Registration date">{{ formatDate(user.registrationDate) }}</Property>
 
     <div>
       <Property v-if="!isEditing" label="Groups">
@@ -69,8 +70,8 @@ watch(
         </ul>
       </Property>
 
-      <div>Groups</div>
       <div v-if="isEditing">
+        <div>Groups</div>
         <div v-for="group in userGroups" :key="group.id">
           <label>
             <input type="checkbox" :value="group.id" v-model="req.groupIds" />

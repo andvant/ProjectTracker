@@ -14,7 +14,13 @@ import {
 } from '@/types/issues'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
-import { applyErrorsFromApi, createDefaultErrors, getEnumLabel, getEnumOptions } from '@/utils'
+import {
+  applyErrorsFromApi,
+  createDefaultErrors,
+  formatDate,
+  getEnumLabel,
+  getEnumOptions,
+} from '@/utils'
 import EntityTitle from '@/components/UI/EntityTitle.vue'
 import Property from '@/components/UI/Property.vue'
 import InputProperty from '@/components/UI/InputProperty.vue'
@@ -104,7 +110,7 @@ const onEditing = () => {
   req.assigneeId = issue.value!.assignee?.id
   req.status = issue.value!.status
   req.priority = issue.value!.priority
-  req.dueDate = issue.value!.dueDate
+  req.dueDate = issue.value!.dueDate ? new Date(issue.value!.dueDate) : undefined
   req.estimationMinutes = issue.value!.estimationMinutes
 
   isEditing.value = true
@@ -256,7 +262,7 @@ watch(
       </select>
     </InputProperty>
 
-    <Property v-if="!isEditing" label="Due date">{{ issue.dueDate }}</Property>
+    <Property v-if="!isEditing" label="Due date">{{ formatDate(issue.dueDate) }}</Property>
 
     <InputProperty v-if="isEditing" label="Due date" :error="errors.dueDate">
       <input v-model="req.dueDate" type="date" />
@@ -277,8 +283,8 @@ watch(
     <ControlButton v-if="canEditIssue" @click="onDeleteIssue" label="Delete" />
     <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
 
-    <Property label="Created at">{{ issue.createdAt }}</Property>
-    <Property label="Updated at">{{ issue.updatedAt }}</Property>
+    <Property label="Created at">{{ formatDate(issue.createdAt) }}</Property>
+    <Property label="Updated at">{{ formatDate(issue.updatedAt) }}</Property>
 
     <Property v-if="issue.parentIssue" label="Parent issue">
       <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
