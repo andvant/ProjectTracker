@@ -291,8 +291,19 @@ watch(
       label="Save"
       type="primary"
     />
-    <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
-    <ControlButton v-if="canEditIssue" @click="onDeleteIssue" label="Delete issue" type="danger" />
+    <ControlButton
+      v-if="isEditing"
+      @click="isEditing = false"
+      :disabled="isSubmitting"
+      label="Cancel"
+    />
+    <ControlButton
+      v-if="canEditIssue"
+      @click="onDeleteIssue"
+      :disabled="isSubmitting"
+      label="Delete issue"
+      type="danger"
+    />
 
     <Property label="Created">{{ formatDate(issue.createdAt) }}</Property>
     <Property label="Updated">{{ formatDate(issue.updatedAt) }}</Property>

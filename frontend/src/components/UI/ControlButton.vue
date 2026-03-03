@@ -73,4 +73,10 @@ const cssClass = computed(() => {
 .btn-default:hover {
   background-color: #f2f2f2;
 }
+
+.btn:disabled {
+  background-color: #aaa;
+  border-color: #aaa;
+  color: #fff;
+}
 </style>

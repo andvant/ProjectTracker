@@ -193,10 +193,16 @@ watch(
       label="Save"
       type="primary"
     />
-    <ControlButton v-if="isEditing" @click="isEditing = false" label="Cancel" />
+    <ControlButton
+      v-if="isEditing"
+      @click="isEditing = false"
+      :disabled="isSubmitting"
+      label="Cancel"
+    />
     <ControlButton
       v-if="canEditProject"
       @click="onDeleteProject(project.id)"
+      :disabled="isSubmitting"
       label="Delete project"
       type="danger"
     />
