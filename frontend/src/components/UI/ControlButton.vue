@@ -29,29 +29,29 @@ const cssClass = computed(() => {
 
 .btn-remove {
   background-color: #fff;
-  color: #cf222e;
+  color: var(--color-red);
   border-color: #ddd;
-  padding: 0.3rem;
+  padding: 0.2rem 0.3rem;
   margin: 0 0.5rem;
   font-size: 0.7rem;
 }
 
 .btn-remove:hover {
-  background-color: #cf222e;
+  background-color: var(--color-red);
   color: #fff;
-  border-color: #cf222e;
+  border-color: var(--color-red);
 }
 
 .btn-danger {
   background-color: #fff;
-  color: #cf222e;
+  color: var(--color-red);
   border-color: #ddd;
 }
 
 .btn-danger:hover {
-  background-color: #cf222e;
+  background-color: var(--color-red);
   color: #fff;
-  border-color: #cf222e;
+  border-color: var(--color-red);
 }
 
 .btn-primary {

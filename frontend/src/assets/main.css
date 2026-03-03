@@ -9,6 +9,7 @@ body {
 
 :root {
   --color-text-muted: #6b6e76;
+  --color-red: #cf222e;
 }
 
 input,
