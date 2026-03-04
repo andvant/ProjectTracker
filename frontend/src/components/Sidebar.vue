@@ -65,7 +65,7 @@ onMounted(async () => {
 </template>
 <style scoped>
 .sidebar {
-  width: 180px;
+  width: 200px;
   background-color: #15223d;
   padding: 1rem;
   display: flex;

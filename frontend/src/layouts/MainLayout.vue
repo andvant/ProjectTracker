@@ -4,7 +4,7 @@ import Sidebar from '@/components/Sidebar.vue'
 <template>
   <div class="app">
     <Sidebar />
-    <main>
+    <main class="main">
       <RouterView />
     </main>
   </div>
@@ -13,6 +13,11 @@ import Sidebar from '@/components/Sidebar.vue'
 .app {
   display: flex;
   height: 100vh;
+  width: 100%;
+}
+
+.main {
+  overflow-y: auto;
   width: 100%;
 }
 </style>

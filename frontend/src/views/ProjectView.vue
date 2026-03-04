@@ -220,25 +220,6 @@ watch(
     </div>
 
     <div class="project-column">
-      <Property label="Attachments">
-        <ul v-if="project.attachments.length" class="list">
-          <li v-for="attachment in project.attachments" :key="attachment.id">
-            {{ attachment.name }}
-          </li>
-        </ul>
-      </Property>
-
-      <div v-if="canEditProject">
-        <input
-          ref="fileInputRef"
-          type="file"
-          multiple
-          @change="onFilesSelected"
-          style="display: none"
-        />
-        <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
-      </div>
-
       <Property v-if="!isTransferringOwnership" label="Owner">
         <RouterLink :to="{ name: 'User', params: { userId: project.owner.id } }">
           {{ project.owner.name }}
@@ -269,6 +250,25 @@ watch(
           </div>
         </div>
       </InputProperty>
+
+      <Property label="Attachments">
+        <ul v-if="project.attachments.length" class="list">
+          <li v-for="attachment in project.attachments" :key="attachment.id">
+            {{ attachment.name }}
+          </li>
+        </ul>
+      </Property>
+
+      <div v-if="canEditProject">
+        <input
+          ref="fileInputRef"
+          type="file"
+          multiple
+          @change="onFilesSelected"
+          style="display: none"
+        />
+        <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
+      </div>
 
       <Property label="Created">{{ formatDate(project.createdAt) }}</Property>
       <Property label="Updated">{{ formatDate(project.updatedAt) }}</Property>
