@@ -180,39 +180,46 @@ watch(
       <ViewTitle v-if="!isEditing" :title="project.name" :subtitle="project.key" />
 
       <InputProperty v-if="isEditing" label="Project name" :error="errors.name">
-        <input v-model="req.name" />
+        <input v-model="req.name" class="text-input" />
       </InputProperty>
 
       <Property v-if="!isEditing" label="Description">{{ project.description }}</Property>
 
       <InputProperty v-if="isEditing" label="Description" :error="errors.description">
-        <textarea v-model="req.description"></textarea>
+        <textarea v-model="req.description" class="text-input"></textarea>
       </InputProperty>
 
       <InputErrors :error="errors.general" />
 
-      <ControlButton v-if="!isEditing && canEditProject" @click="onEditing" label="Edit" />
-      <ControlButton
-        v-if="isEditing"
-        @click="onUpdateProject(project.id)"
-        :disabled="isSubmitting"
-        label="Save"
-        type="primary"
-      />
-      <ControlButton
-        v-if="isEditing"
-        @click="isEditing = false"
-        :disabled="isSubmitting"
-        label="Cancel"
-      />
-      <ControlButton
-        v-if="canEditProject"
-        @click="onDeleteProject(project.id)"
-        :disabled="isSubmitting"
-        label="Delete project"
-        type="danger"
-      />
+      <div>
+        <ControlButton v-if="!isEditing && canEditProject" @click="onEditing" label="Edit" />
+        <ControlButton
+          v-if="isEditing"
+          @click="onUpdateProject(project.id)"
+          :disabled="isSubmitting"
+          label="Save"
+          type="primary"
+        />
+        <ControlButton
+          v-if="isEditing"
+          @click="isEditing = false"
+          :disabled="isSubmitting"
+          label="Cancel"
+        />
+        <ControlButton
+          v-if="canEditProject"
+          @click="onDeleteProject(project.id)"
+          :disabled="isSubmitting"
+          label="Delete project"
+          type="danger"
+        />
+      </div>
 
+      <NewIssue />
+      <Issues v-if="issuesStore.issues.length" />
+    </div>
+
+    <div class="project-column">
       <Property label="Attachments">
         <ul v-if="project.attachments.length" class="list">
           <li v-for="attachment in project.attachments" :key="attachment.id">
@@ -232,11 +239,6 @@ watch(
         <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
       </div>
 
-      <NewIssue />
-      <Issues v-if="issuesStore.issues.length" />
-    </div>
-
-    <div class="project-column">
       <Property v-if="!isTransferringOwnership" label="Owner">
         <RouterLink :to="{ name: 'User', params: { userId: project.owner.id } }">
           {{ project.owner.name }}
@@ -248,19 +250,24 @@ watch(
         @click="onTransferringOwnership"
         label="Transfer ownership"
       />
+
       <InputProperty v-if="isTransferringOwnership" label="Owner">
-        <select v-model="selectedOwnerId">
-          <option v-for="user in project.members" :key="user.id" :value="user.id">
-            {{ user.name }}
-          </option>
-        </select>
-        <ControlButton
-          @click="onTransferOwnership"
-          :disabled="selectedOwnerId === project.owner.id || isSubmitting"
-          label="Transfer"
-          type="primary"
-        />
-        <ControlButton @click="isTransferringOwnership = false" label="Cancel" />
+        <div class="user-select">
+          <select v-model="selectedOwnerId">
+            <option v-for="user in project.members" :key="user.id" :value="user.id">
+              {{ user.name }}
+            </option>
+          </select>
+          <div>
+            <ControlButton
+              @click="onTransferOwnership"
+              :disabled="selectedOwnerId === project.owner.id || isSubmitting"
+              label="Transfer"
+              type="primary"
+            />
+            <ControlButton @click="isTransferringOwnership = false" label="Cancel" />
+          </div>
+        </div>
       </InputProperty>
 
       <Property label="Created">{{ formatDate(project.createdAt) }}</Property>
@@ -281,16 +288,20 @@ watch(
         </ul>
       </Property>
 
-      <div v-if="canEditProject">
-        <ControlButton v-if="!isAddingMember" @click="onAddingMember" label="Add member" />
+      <ControlButton
+        v-if="!isAddingMember && canEditProject"
+        @click="onAddingMember"
+        label="Add member"
+      />
 
-        <div v-if="isAddingMember">
-          <select v-model="selectedMemberId">
-            <option disabled :value="null">Select a user</option>
-            <option v-for="user in nonMemberUsers" :key="user.id" :value="user.id">
-              {{ user.name }}
-            </option>
-          </select>
+      <div v-if="isAddingMember" class="user-select">
+        <select v-model="selectedMemberId">
+          <option disabled :value="null">Select a user</option>
+          <option v-for="user in nonMemberUsers" :key="user.id" :value="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+        <div>
           <ControlButton
             @click="onAddMember"
             :disabled="!selectedMemberId || isSubmitting"
@@ -305,10 +316,9 @@ watch(
 </template>
 <style scoped>
 .project-wrapper {
-  padding: 1rem;
+  padding: 2rem;
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
+  grid-template-columns: 3fr 1fr;
   align-items: start;
   width: 70vw;
 }
@@ -316,6 +326,16 @@ watch(
 .project-column {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.user-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.text-input {
+  width: 400px;
 }
 </style>

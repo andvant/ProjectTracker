@@ -72,15 +72,15 @@ const onSubmit = async () => {
       :error="errors.key"
       subtitle="Used in URLs and as a prefix in issues' keys that belong to this project"
     >
-      <input v-model="req.key" />
+      <input v-model="req.key" class="text-input" />
     </InputProperty>
 
     <InputProperty label="Project name" :error="errors.name">
-      <input v-model="req.name" />
+      <input v-model="req.name" class="text-input" />
     </InputProperty>
 
     <InputProperty label="Description" :error="errors.description">
-      <textarea v-model="req.description"></textarea>
+      <textarea v-model="req.description" class="text-input"></textarea>
     </InputProperty>
 
     <InputErrors :error="errors.general" />
@@ -96,8 +96,7 @@ const onSubmit = async () => {
   gap: 1.5rem;
 }
 
-input,
-textarea {
+.text-input {
   width: 400px;
 }
 </style>

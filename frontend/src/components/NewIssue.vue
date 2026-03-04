@@ -88,13 +88,13 @@ watch(projectId, async () => {
 <template>
   <ControlButton v-if="!isCreating && canCreateIssue" @click="onCreating" label="New issue" />
 
-  <div v-if="isCreating">
+  <div v-if="isCreating" class="new-issue-wrapper">
     <InputProperty label="Title" :error="errors.title">
-      <input v-model="req.title" />
+      <input v-model="req.title" class="text-input" />
     </InputProperty>
 
     <InputProperty label="Description" :error="errors.description">
-      <textarea v-model="req.description"></textarea>
+      <textarea v-model="req.description" class="text-input"></textarea>
     </InputProperty>
 
     <InputProperty label="Type" :error="errors.type">
@@ -151,7 +151,20 @@ watch(projectId, async () => {
 
     <InputErrors :error="errors.general" />
 
-    <ControlButton @click="onSubmit" label="Create" type="primary" />
-    <ControlButton @click="isCreating = false" label="Cancel" />
+    <div>
+      <ControlButton @click="onSubmit" label="Create" type="primary" />
+      <ControlButton @click="isCreating = false" label="Cancel" />
+    </div>
   </div>
 </template>
+<style scoped>
+.new-issue-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.text-input {
+  width: 400px;
+}
+</style>

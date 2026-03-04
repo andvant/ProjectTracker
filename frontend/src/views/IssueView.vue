@@ -417,6 +417,6 @@ watch(
 }
 
 .text-input {
-  min-width: 400px;
+  width: 400px;
 }
 </style>

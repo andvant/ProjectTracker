@@ -13,7 +13,7 @@ const goToIssue = (issueKey: string) => {
 const issuesStore = useIssuesStore()
 </script>
 <template>
-  <div class="issues">
+  <div class="issues-wrapper">
     <table class="issues-table">
       <thead>
         <tr>
@@ -46,16 +46,13 @@ const issuesStore = useIssuesStore()
   </div>
 </template>
 <style scoped>
-.issues {
+.issues-wrapper {
   flex: 1;
-  padding: 1rem;
-  overflow-y: auto;
-  width: 60vw;
+  width: 95%;
 }
 
 .issues-table {
   border-collapse: collapse;
-  width: 100%;
 }
 
 .issues-table th,
