@@ -11,6 +11,7 @@ import { Role } from '@/types/roles'
 import { applyErrorsFromApi, createDefaultErrors, formatDate } from '@/utils'
 import NewIssue from '@/components/NewIssue.vue'
 import Issues from '@/components/Issues.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 import ViewTitle from '@/components/UI/ViewTitle.vue'
 import Property from '@/components/UI/Property.vue'
 import InputProperty from '@/components/UI/InputProperty.vue'
@@ -40,6 +41,7 @@ const project = ref<ProjectDto>()
 
 const selectedMemberId = ref<string | null>(null)
 const selectedOwnerId = ref<string>()
+const showConfirmModal = ref(false)
 
 const req = new UpdateProjectRequest()
 const isEditing = ref(false)
@@ -92,10 +94,11 @@ const onEditing = () => {
   isEditing.value = true
 }
 
-const onDeleteProject = async (projectId: string) => {
+const onDeleteProject = async () => {
   router.push({ name: 'Home' })
 
-  await projectsStore.deleteProject(projectId)
+  await projectsStore.deleteProject(projectId.value!)
+  showConfirmModal.value = false
 }
 
 const onRemoveMember = async (memberId: string) => {
@@ -208,7 +211,7 @@ watch(
         />
         <ControlButton
           v-if="canEditProject"
-          @click="onDeleteProject(project.id)"
+          @click="showConfirmModal = true"
           :disabled="isSubmitting"
           label="Delete project"
           type="danger"
@@ -312,6 +315,13 @@ watch(
         </div>
       </div>
     </div>
+
+    <ConfirmModal
+      :show="showConfirmModal"
+      :title="`Delete project ${project!.key}`"
+      @cancel="showConfirmModal = false"
+      @confirm="onDeleteProject"
+    />
   </div>
 </template>
 <style scoped>

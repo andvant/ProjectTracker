@@ -22,6 +22,7 @@ import {
   getEnumOptions,
   removeNonDigits,
 } from '@/utils'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 import ViewTitle from '@/components/UI/ViewTitle.vue'
 import Property from '@/components/UI/Property.vue'
 import InputProperty from '@/components/UI/InputProperty.vue'
@@ -56,6 +57,7 @@ const canEditIssue = computed(
 const issue = ref<IssueDto>()
 
 const selectedWatcherId = ref<string | null>()
+const showConfirmModal = ref(false)
 
 const req = new UpdateIssueRequest()
 const isEditing = ref(false)
@@ -122,6 +124,7 @@ const onDeleteIssue = async () => {
   router.push({ name: 'Project', params: { projectKey: route.params.projectKey } })
 
   await issuesStore.deleteIssue(projectId.value!, issueId.value!)
+  showConfirmModal.value = false
 }
 
 const onRemoveWatcher = async (watcherId: string) => {
@@ -225,7 +228,7 @@ watch(
         />
         <ControlButton
           v-if="canEditIssue"
-          @click="onDeleteIssue"
+          @click="showConfirmModal = true"
           :disabled="isSubmitting"
           label="Delete issue"
           type="danger"
@@ -389,6 +392,13 @@ watch(
         </div>
       </div>
     </div>
+
+    <ConfirmModal
+      :show="showConfirmModal"
+      :title="`Delete issue ${issue!.key}`"
+      @cancel="showConfirmModal = false"
+      @confirm="onDeleteIssue"
+    />
   </div>
 </template>
 <style scoped>
