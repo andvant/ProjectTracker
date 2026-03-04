@@ -41,7 +41,7 @@ export class CreateIssueRequest {
   type?: IssueTypeEnum
   priority?: IssuePriorityEnum
   parentIssueId?: string
-  dueDate?: Date
+  dueDate?: string
   estimationMinutes?: number
 }
 
@@ -51,7 +51,7 @@ export class UpdateIssueRequest {
   assigneeId?: string
   status: IssueStatusEnum = IssueStatus.Open.value
   priority: IssuePriorityEnum = IssuePriority.Normal.value
-  dueDate?: Date
+  dueDate?: string
   estimationMinutes?: number
 }
 

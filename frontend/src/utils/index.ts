@@ -46,14 +46,17 @@ export const applyErrorsFromApi = (
   }
 }
 
-export const formatDate = (dateString?: string): string | undefined => {
+export const formatDate = (
+  dateString?: string,
+  includeTime: boolean = true,
+): string | undefined => {
   if (!dateString) return undefined
 
   const date = new Date(dateString)
 
   return new Intl.DateTimeFormat('en-GB', {
     dateStyle: 'long',
-    timeStyle: 'short',
+    timeStyle: includeTime ? 'short' : undefined,
   }).format(date)
 }
 

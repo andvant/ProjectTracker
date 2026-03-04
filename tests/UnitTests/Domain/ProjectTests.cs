@@ -10,6 +10,7 @@ namespace ProjectTracker.UnitTests.Domain;
 public class ProjectTests
 {
     private readonly DateTimeOffset _currentTime = DateTimeOffset.UtcNow;
+    private readonly DateOnly _currentDate = DateOnly.FromDateTime(DateTime.Now);
 
     [Theory]
     [AutoData]
@@ -43,7 +44,7 @@ public class ProjectTests
         var project = new Project("TP", "Test Project", reporter, "test desc", _currentTime);
 
         var issue = project.CreateIssue(1, "test", "test desc", reporter,
-            null, null, null, null, _currentTime.AddDays(1), _currentTime, 60);
+            null, null, null, null, _currentDate.AddDays(1), _currentDate, 60);
 
         issue.ShouldNotBeNull();
         issue.Assignee.ShouldBeNull();
@@ -68,7 +69,7 @@ public class ProjectTests
         project.AddMember(memberAssignee, _currentTime);
 
         var issue = project.CreateIssue(1, "test", "test desc", reporter,
-            memberAssignee, null, null, null, _currentTime.AddDays(1), _currentTime, 60);
+            memberAssignee, null, null, null, _currentDate.AddDays(1), _currentDate, 60);
 
         issue.ShouldNotBeNull();
         issue.Assignee.ShouldBe(memberAssignee);
@@ -83,11 +84,11 @@ public class ProjectTests
     public void Throw_if_new_issue_past_due_date(User owner)
     {
         var project = new Project("TP", "Test Project", owner, "test desc", _currentTime);
-        var pastDate = _currentTime.AddDays(-1);
+        var pastDate = _currentDate.AddDays(-1);
 
         var exception = Should.Throw<PastDueDateException>(() =>
             project.CreateIssue(1, "test", "test desc", owner,
-            null, null, null, null, pastDate, _currentTime, 60));
+            null, null, null, null, pastDate, _currentDate, 60));
 
         exception.DueDate.ShouldBe(pastDate);
     }
@@ -100,7 +101,7 @@ public class ProjectTests
 
         var exception = Should.Throw<AssigneeNotMemberException>(() =>
             project.CreateIssue(1, "test", "test desc", owner,
-            nonMemberAssignee, null, null, null, _currentTime.AddDays(1), _currentTime, 60));
+            nonMemberAssignee, null, null, null, _currentDate.AddDays(1), _currentDate, 60));
 
         exception.AssigneeId.ShouldBe(nonMemberAssignee.Id);
     }
@@ -114,7 +115,7 @@ public class ProjectTests
         project.AddMember(member, _currentTime);
 
         var issue = project.CreateIssue(1, "test", "test desc", member,
-            member, null, null, null, _currentTime.AddDays(1), _currentTime, 60);
+            member, null, null, null, _currentDate.AddDays(1), _currentDate, 60);
 
         project.RemoveMember(member);
 
@@ -142,10 +143,10 @@ public class ProjectTests
         var childProject = new Project("TP", "Test Project", owner, "test desc", _currentTime);
 
         var parentIssue = parentProject.CreateIssue(1, "test", "test desc", owner,
-            null, IssueType.Task, null, null, _currentTime.AddDays(1), _currentTime, 60);
+            null, IssueType.Task, null, null, _currentDate.AddDays(1), _currentDate, 60);
 
         var exception = Should.Throw<ParentIssueWrongProjectException>(() => childProject.CreateIssue(2, "test", "test desc",
-            owner, null, null, null, parentIssue, _currentTime.AddDays(1), _currentTime, 60));
+            owner, null, null, null, parentIssue, _currentDate.AddDays(1), _currentDate, 60));
 
         exception.ExpectedProjectId.ShouldBe(childProject.Id);
     }
@@ -157,10 +158,10 @@ public class ProjectTests
         var project = new Project("TP", "Test Project", owner, "test desc", _currentTime);
 
         var parentIssue = project.CreateIssue(1, "test", "test desc", owner,
-            null, IssueType.Task, null, null, _currentTime.AddDays(1), _currentTime, 60);
+            null, IssueType.Task, null, null, _currentDate.AddDays(1), _currentDate, 60);
 
         var exception = Should.Throw<ParentIssueWrongTypeException>(() => project.CreateIssue(2, "test", "test desc", owner,
-            null, null, null, parentIssue, _currentTime.AddDays(1), _currentTime, 60));
+            null, null, null, parentIssue, _currentDate.AddDays(1), _currentDate, 60));
 
         exception.ParentIssueId.ShouldBe(parentIssue.Id);
         exception.ExpectedType.ShouldBe(IssueType.Epic);
@@ -173,9 +174,9 @@ public class ProjectTests
         var project = new Project("TP", "Test Project", owner, "test desc", _currentTime);
 
         var parentIssue = project.CreateIssue(1, "test", "test desc", owner,
-            null, IssueType.Epic, null, null, _currentTime.AddDays(1), _currentTime, 60);
+            null, IssueType.Epic, null, null, _currentDate.AddDays(1), _currentDate, 60);
 
         Should.Throw<ChildIssueWrongTypeException>(() => project.CreateIssue(2, "test", "test desc", owner,
-            null, IssueType.Epic, null, parentIssue, _currentTime.AddDays(1), _currentTime, 60));
+            null, IssueType.Epic, null, parentIssue, _currentDate.AddDays(1), _currentDate, 60));
     }
 }

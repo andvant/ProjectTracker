@@ -45,8 +45,8 @@ public class Project : AuditableEntity
         IssueType? type,
         IssuePriority? priority,
         Issue? parentIssue,
-        DateTimeOffset? dueDate,
-        DateTimeOffset currentTime,
+        DateOnly? dueDate,
+        DateOnly currentDate,
         int? estimationMinutes)
     {
         var issue = new Issue(
@@ -60,7 +60,7 @@ public class Project : AuditableEntity
             priority,
             parentIssue,
             dueDate,
-            currentTime,
+            currentDate,
             estimationMinutes);
 
         Issues ??= new List<Issue>();

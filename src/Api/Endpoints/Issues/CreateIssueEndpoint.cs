@@ -11,7 +11,7 @@ public record CreateIssueRequest(
     IssueType? Type,
     IssuePriority? Priority,
     Guid? ParentIssueId,
-    DateTimeOffset? DueDate,
+    DateOnly? DueDate,
     int? EstimationMinutes);
 
 internal static class CreateIssueEndpoint

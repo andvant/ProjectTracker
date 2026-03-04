@@ -11,7 +11,7 @@ public record CreateIssueCommand(
     IssueType? Type,
     IssuePriority? Priority,
     Guid? ParentIssueId,
-    DateTimeOffset? DueDate,
+    DateOnly? DueDate,
     int? EstimationMinutes) : IRequest<IssueDto>;
 
 internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, IssueDto>
@@ -77,7 +77,7 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
             command.Priority,
             parentIssue,
             command.DueDate,
-            _timeProvider.GetUtcNow(),
+            _timeProvider.Today(),
             command.EstimationMinutes);
 
         await _context.SaveChangesAsync(ct);
@@ -106,7 +106,7 @@ public class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
         RuleFor(c => c.Title).Must(Title.IsValid).WithMessage(Title.ValidationMessage);
         RuleFor(c => c.Type).IsInEnum();
         RuleFor(c => c.Priority).IsInEnum();
-        RuleFor(c => c.DueDate).GreaterThanOrEqualTo(timeProvider.GetUtcNow()).When(c => c.DueDate.HasValue)
+        RuleFor(c => c.DueDate).GreaterThanOrEqualTo(timeProvider.Today()).When(c => c.DueDate.HasValue)
             .WithMessage("Due date must be in the future.");
         RuleFor(c => c.EstimationMinutes).GreaterThanOrEqualTo(0).When(c => c.EstimationMinutes.HasValue);
         RuleFor(c => c.ParentIssueId).Null().When(c => c.Type == IssueType.Epic)

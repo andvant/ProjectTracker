@@ -114,7 +114,7 @@ const onEditing = () => {
   req.assigneeId = issue.value!.assignee?.id
   req.status = issue.value!.status
   req.priority = issue.value!.priority
-  req.dueDate = issue.value!.dueDate ? new Date(issue.value!.dueDate) : undefined
+  req.dueDate = issue.value!.dueDate
   req.estimationMinutes = issue.value!.estimationMinutes
 
   isEditing.value = true
@@ -336,7 +336,7 @@ watch(
         </select>
       </InputProperty>
 
-      <Property v-if="!isEditing" label="Due date">{{ formatDate(issue.dueDate) }}</Property>
+      <Property v-if="!isEditing" label="Due date">{{ formatDate(issue.dueDate, false) }}</Property>
 
       <InputProperty v-if="isEditing" label="Due date" :error="errors.dueDate">
         <input v-model="req.dueDate" type="date" />

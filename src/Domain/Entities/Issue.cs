@@ -15,7 +15,7 @@ public class Issue : AuditableEntity
     public IssueStatus Status { get; private set; }
     public IssueType Type { get; private set; }
     public IssuePriority Priority { get; private set; }
-    public DateTimeOffset? DueDate { get; private set; }
+    public DateOnly? DueDate { get; private set; }
     public int? EstimationMinutes { get; private set; }
     public Guid? ParentIssueId { get; private set; }
     public Issue? ParentIssue { get; private set; }
@@ -46,11 +46,11 @@ public class Issue : AuditableEntity
         IssueType? type,
         IssuePriority? priority,
         Issue? parentIssue,
-        DateTimeOffset? dueDate,
-        DateTimeOffset currentTime,
+        DateOnly? dueDate,
+        DateOnly currentDate,
         int? estimationMinutes)
     {
-        ValidateDetails(project, reporter, assignee, dueDate, currentTime, estimationMinutes, type, parentIssue);
+        ValidateDetails(project, reporter, assignee, dueDate, currentDate, estimationMinutes, type, parentIssue);
 
         Key = new IssueKey(project.Key, number);
         Number = number;
@@ -86,11 +86,11 @@ public class Issue : AuditableEntity
         User? assignee,
         IssueStatus status,
         IssuePriority priority,
-        DateTimeOffset? dueDate,
-        DateTimeOffset currentTime,
+        DateOnly? dueDate,
+        DateOnly currentDate,
         int? estimationMinutes)
     {
-        ValidateDetails(Project, null, assignee, dueDate, currentTime, estimationMinutes, null, null);
+        ValidateDetails(Project, null, assignee, dueDate, currentDate, estimationMinutes, null, null);
 
         Title = title;
         Description = description;
@@ -146,8 +146,8 @@ public class Issue : AuditableEntity
         Project project,
         User? reporter,
         User? assignee,
-        DateTimeOffset? dueDate,
-        DateTimeOffset currentTime,
+        DateOnly? dueDate,
+        DateOnly currentDate,
         int? estimationMinutes,
         IssueType? type,
         Issue? parentIssue)
@@ -160,7 +160,7 @@ public class Issue : AuditableEntity
         {
             throw new ReporterNotMemberException(reporter.Id);
         }
-        if (dueDate.HasValue && dueDate < currentTime)
+        if (dueDate.HasValue && dueDate < currentDate)
         {
             throw new PastDueDateException(dueDate.Value);
         }

@@ -15,7 +15,7 @@ public record IssueDto(
     IssueStatus Status,
     IssueType Type,
     IssuePriority Priority,
-    DateTimeOffset? DueDate,
+    DateOnly? DueDate,
     int? EstimationMinutes,
     Guid CreatedBy,
     DateTimeOffset CreatedAt,

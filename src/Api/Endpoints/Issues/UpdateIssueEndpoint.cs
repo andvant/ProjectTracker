@@ -9,7 +9,7 @@ public record UpdateIssueRequest(
     Guid? AssigneeId,
     IssueStatus Status,
     IssuePriority Priority,
-    DateTimeOffset? DueDate,
+    DateOnly? DueDate,
     int? EstimationMinutes
 );
 
