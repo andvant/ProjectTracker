@@ -8,6 +8,7 @@ import { Role } from '@/types/roles'
 import { formatDate } from '@/utils'
 import EntityTitle from '@/components/UI/EntityTitle.vue'
 import Property from '@/components/UI/Property.vue'
+import InputProperty from '@/components/UI/InputProperty.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
 
 const route = useRoute()
@@ -72,15 +73,14 @@ watch(
         </ul>
       </Property>
 
-      <div v-if="isEditing">
-        <div>Groups</div>
+      <InputProperty v-if="isEditing" label="Groups">
         <div v-for="group in userGroups" :key="group.id">
-          <label>
+          <label class="check-option">
             <input type="checkbox" :value="group.id" v-model="req.groupIds" />
-            {{ group.description }}
+            <div>{{ group.description }}</div>
           </label>
         </div>
-      </div>
+      </InputProperty>
 
       <ControlButton v-if="!isEditing && canUpdateGroups" @click="onEditing" label="Edit" />
       <ControlButton
@@ -102,6 +102,16 @@ watch(
 <style scoped>
 .wrapper {
   padding: 1rem;
+}
+
+.check-option {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.check-option input {
+  width: 1rem;
 }
 
 .list {
