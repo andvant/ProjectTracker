@@ -30,7 +30,7 @@ const routes: RouteRecordRaw[] = [
         component: IssueView,
       },
       {
-        path: 'projects/new',
+        path: 'new-project',
         name: 'NewProject',
         component: NewProjectView,
       },
