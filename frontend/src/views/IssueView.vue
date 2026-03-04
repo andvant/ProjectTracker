@@ -191,151 +191,175 @@ watch(
 )
 </script>
 <template>
-  <div v-if="issue" class="wrapper">
-    <EntityTitle v-if="!isEditing" :title="issue.title" :subtitle="issue.key" />
+  <div v-if="issue" class="issue-wrapper">
+    <div class="issue-column">
+      <EntityTitle v-if="!isEditing" :title="issue.title" :subtitle="issue.key" />
 
-    <InputProperty v-if="isEditing" label="Title" :error="errors.title">
-      <input v-model="req.title" />
-    </InputProperty>
+      <InputProperty v-if="isEditing" label="Title" :error="errors.title">
+        <input v-model="req.title" />
+      </InputProperty>
 
-    <Property label="Project">
-      <RouterLink
-        :to="{ name: 'Project', params: { projectKey: projectsStore.cachedProject?.key } }"
+      <Property v-if="!isEditing" label="Description">{{ issue.description }}</Property>
+
+      <Property label="Attachments">
+        <ul v-if="issue.attachments.length" class="list">
+          <li v-for="attachment in issue.attachments" :key="attachment.id">
+            {{ attachment.name }}
+          </li>
+        </ul>
+      </Property>
+
+      <div v-if="canEditIssue">
+        <input
+          ref="fileInputRef"
+          type="file"
+          multiple
+          @change="(e) => onFilesSelected(e)"
+          style="display: none"
+        />
+        <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
+      </div>
+    </div>
+
+    <div class="issue-column">
+      <Property label="Project">
+        <RouterLink
+          :to="{ name: 'Project', params: { projectKey: projectsStore.cachedProject?.key } }"
+        >
+          {{ projectsStore.cachedProject?.name }}
+        </RouterLink>
+      </Property>
+      <InputProperty v-if="isEditing" label="Description" :error="errors.description">
+        <textarea v-model="req.description"></textarea>
+      </InputProperty>
+
+      <Property label="Reporter">
+        <RouterLink :to="{ name: 'User', params: { userId: issue.reporter.id } }">
+          {{ issue.reporter.name }}
+        </RouterLink>
+      </Property>
+
+      <Property v-if="!isEditing" label="Assignee">
+        <span v-if="!issue.assignee" class="unassigned">Unassigned</span>
+        <RouterLink v-else :to="{ name: 'User', params: { userId: issue.assignee.id } }">
+          {{ issue.assignee.name }}
+        </RouterLink>
+      </Property>
+
+      <InputProperty v-if="isEditing" label="Assignee" :error="errors.assigneeId">
+        <select v-model="req.assigneeId">
+          <option v-for="user in memberUsers" :key="user.id" :value="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+      </InputProperty>
+
+      <Property label="Type">{{ getEnumLabel(IssueType, issue.type) }}</Property>
+
+      <Property v-if="!isEditing" label="Status">
+        {{ getEnumLabel(IssueStatus, issue.status) }}
+      </Property>
+
+      <InputProperty v-if="isEditing" label="Status" :error="errors.status">
+        <select v-model="req.status">
+          <option
+            v-for="option in getEnumOptions(IssueStatus)"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+      </InputProperty>
+
+      <Property v-if="!isEditing" label="Priority">
+        {{ getEnumLabel(IssuePriority, issue.priority) }}
+      </Property>
+
+      <InputProperty v-if="isEditing" label="Priority" :error="errors.priority">
+        <select v-model="req.priority">
+          <option
+            v-for="option in getEnumOptions(IssuePriority)"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
+      </InputProperty>
+
+      <Property v-if="!isEditing" label="Due date">{{ formatDate(issue.dueDate) }}</Property>
+
+      <InputProperty v-if="isEditing" label="Due date" :error="errors.dueDate">
+        <input v-model="req.dueDate" type="date" />
+      </InputProperty>
+
+      <Property v-if="!isEditing" label="Estimation (minutes)">
+        {{ issue.estimationMinutes }}
+      </Property>
+
+      <InputProperty
+        v-if="isEditing"
+        label="Estimation (minutes)"
+        :error="errors.estimationMinutes"
       >
-        {{ projectsStore.cachedProject?.name }}
-      </RouterLink>
-    </Property>
+        <input v-model="req.estimationMinutes" type="text" @input="removeNonDigits" />
+      </InputProperty>
 
-    <Property v-if="!isEditing" label="Description">{{ issue.description }}</Property>
+      <InputErrors v-if="isEditing" :error="errors.general" />
 
-    <InputProperty v-if="isEditing" label="Description" :error="errors.description">
-      <textarea v-model="req.description"></textarea>
-    </InputProperty>
+      <ControlButton v-if="!isEditing && canEditIssue" @click="onEditing" label="Edit" />
+      <ControlButton
+        v-if="isEditing"
+        @click="onUpdateIssue"
+        :disabled="isSubmitting"
+        label="Save"
+        type="primary"
+      />
+      <ControlButton
+        v-if="isEditing"
+        @click="isEditing = false"
+        :disabled="isSubmitting"
+        label="Cancel"
+      />
+      <ControlButton
+        v-if="canEditIssue"
+        @click="onDeleteIssue"
+        :disabled="isSubmitting"
+        label="Delete issue"
+        type="danger"
+      />
 
-    <Property label="Reporter">
-      <RouterLink :to="{ name: 'User', params: { userId: issue.reporter.id } }">
-        {{ issue.reporter.name }}
-      </RouterLink>
-    </Property>
+      <Property label="Created">{{ formatDate(issue.createdAt) }}</Property>
+      <Property label="Updated">{{ formatDate(issue.updatedAt) }}</Property>
 
-    <Property v-if="!isEditing" label="Assignee">
-      <span v-if="!issue.assignee" class="unassigned">Unassigned</span>
-      <RouterLink v-else :to="{ name: 'User', params: { userId: issue.assignee.id } }">
-        {{ issue.assignee.name }}
-      </RouterLink>
-    </Property>
+      <Property v-if="issue.parentIssue" label="Parent issue">
+        <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
+          {{ issue.parentIssue.key }} {{ issue.parentIssue.title }}
+        </RouterLink>
+      </Property>
 
-    <InputProperty v-if="isEditing" label="Assignee" :error="errors.assigneeId">
-      <select v-model="req.assigneeId">
-        <option v-for="user in memberUsers" :key="user.id" :value="user.id">
-          {{ user.name }}
-        </option>
-      </select>
-    </InputProperty>
+      <Property v-if="issue.childIssues.length" label="Child issues">
+        <ul class="list">
+          <li v-for="childIssue of issue.childIssues" :key="childIssue.id">
+            <RouterLink :to="{ name: 'Issue', params: { issueKey: childIssue.key } }">
+              {{ childIssue.key }} {{ childIssue.title }}
+            </RouterLink>
+          </li>
+        </ul>
+      </Property>
 
-    <Property label="Type">{{ getEnumLabel(IssueType, issue.type) }}</Property>
+      <Property label="Watchers">
+        <ul class="list">
+          <li v-for="watcher in issue.watchers" :key="watcher.id">
+            <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
+              {{ watcher.name }}
+            </RouterLink>
+            <ControlButton v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)" type="remove" />
+          </li>
+        </ul>
+      </Property>
 
-    <Property v-if="!isEditing" label="Status">
-      {{ getEnumLabel(IssueStatus, issue.status) }}
-    </Property>
-
-    <InputProperty v-if="isEditing" label="Status" :error="errors.status">
-      <select v-model="req.status">
-        <option
-          v-for="option in getEnumOptions(IssueStatus)"
-          :key="option.value"
-          :value="option.value"
-        >
-          {{ option.label }}
-        </option>
-      </select>
-    </InputProperty>
-
-    <Property v-if="!isEditing" label="Priority">
-      {{ getEnumLabel(IssuePriority, issue.priority) }}
-    </Property>
-
-    <InputProperty v-if="isEditing" label="Priority" :error="errors.priority">
-      <select v-model="req.priority">
-        <option
-          v-for="option in getEnumOptions(IssuePriority)"
-          :key="option.value"
-          :value="option.value"
-        >
-          {{ option.label }}
-        </option>
-      </select>
-    </InputProperty>
-
-    <Property v-if="!isEditing" label="Due date">{{ formatDate(issue.dueDate) }}</Property>
-
-    <InputProperty v-if="isEditing" label="Due date" :error="errors.dueDate">
-      <input v-model="req.dueDate" type="date" />
-    </InputProperty>
-
-    <Property v-if="!isEditing" label="Estimation (minutes)">
-      {{ issue.estimationMinutes }}
-    </Property>
-
-    <InputProperty v-if="isEditing" label="Estimation (minutes)" :error="errors.estimationMinutes">
-      <input v-model="req.estimationMinutes" type="text" @input="removeNonDigits" />
-    </InputProperty>
-
-    <InputErrors v-if="isEditing" :error="errors.general" />
-
-    <ControlButton v-if="!isEditing && canEditIssue" @click="onEditing" label="Edit" />
-    <ControlButton
-      v-if="isEditing"
-      @click="onUpdateIssue"
-      :disabled="isSubmitting"
-      label="Save"
-      type="primary"
-    />
-    <ControlButton
-      v-if="isEditing"
-      @click="isEditing = false"
-      :disabled="isSubmitting"
-      label="Cancel"
-    />
-    <ControlButton
-      v-if="canEditIssue"
-      @click="onDeleteIssue"
-      :disabled="isSubmitting"
-      label="Delete issue"
-      type="danger"
-    />
-
-    <Property label="Created">{{ formatDate(issue.createdAt) }}</Property>
-    <Property label="Updated">{{ formatDate(issue.updatedAt) }}</Property>
-
-    <Property v-if="issue.parentIssue" label="Parent issue">
-      <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
-        {{ issue.parentIssue.key }} {{ issue.parentIssue.title }}
-      </RouterLink>
-    </Property>
-
-    <Property v-if="issue.childIssues.length" label="Child issues">
-      <ul class="list">
-        <li v-for="childIssue of issue.childIssues" :key="childIssue.id">
-          <RouterLink :to="{ name: 'Issue', params: { issueKey: childIssue.key } }">
-            {{ childIssue.key }} {{ childIssue.title }}
-          </RouterLink>
-        </li>
-      </ul>
-    </Property>
-
-    <Property label="Watchers">
-      <ul class="list">
-        <li v-for="watcher in issue.watchers" :key="watcher.id">
-          <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
-            {{ watcher.name }}
-          </RouterLink>
-          <ControlButton v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)" type="remove" />
-        </li>
-      </ul>
-    </Property>
-
-    <div>
       <ControlButton
         v-if="!isAddingWatcher && canEditIssue"
         @click="onAddingWatcher"
@@ -358,30 +382,22 @@ watch(
         <ControlButton @click="isAddingWatcher = false" label="Cancel" />
       </div>
     </div>
-
-    <Property label="Attachments">
-      <ul v-if="issue.attachments.length" class="list">
-        <li v-for="attachment in issue.attachments" :key="attachment.id">
-          {{ attachment.name }}
-        </li>
-      </ul>
-    </Property>
-
-    <div v-if="canEditIssue">
-      <input
-        ref="fileInputRef"
-        type="file"
-        multiple
-        @change="(e) => onFilesSelected(e)"
-        style="display: none"
-      />
-      <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
-    </div>
   </div>
 </template>
 <style scoped>
-.wrapper {
+.issue-wrapper {
   padding: 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  align-items: start;
+  width: 70vw;
+}
+
+.issue-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .unassigned {
