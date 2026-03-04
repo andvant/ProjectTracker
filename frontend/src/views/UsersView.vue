@@ -25,7 +25,6 @@ onMounted(async () => {
 <style scoped>
 .wrapper {
   flex: 1;
-  background-color: white;
   padding: 1rem;
   overflow-y: auto;
 }
@@ -38,6 +37,6 @@ onMounted(async () => {
 
 .users li {
   padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-grey);
 }
 </style>

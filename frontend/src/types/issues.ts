@@ -5,6 +5,7 @@ export interface IssuesDto {
   id: string
   key: string
   title: string
+  assignee?: UsersDto
   status: IssueStatusEnum
   type: IssueTypeEnum
   priority: IssuePriorityEnum

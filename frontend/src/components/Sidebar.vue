@@ -90,7 +90,7 @@ onMounted(async () => {
   cursor: pointer;
   margin: 0;
   padding: 0.5rem 0.3rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-grey);
 
   &.selected {
     background-color: rgba(255, 255, 255, 0.15);

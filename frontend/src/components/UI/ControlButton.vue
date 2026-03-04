@@ -28,7 +28,7 @@ const cssClass = computed(() => {
 }
 
 .btn-remove {
-  background-color: #fff;
+  background-color: white;
   color: var(--color-red);
   border-color: #ddd;
   border-radius: 20px;
@@ -39,25 +39,25 @@ const cssClass = computed(() => {
 
 .btn-remove:hover {
   background-color: var(--color-red);
-  color: #fff;
+  color: white;
   border-color: var(--color-red);
 }
 
 .btn-danger {
-  background-color: #fff;
+  background-color: white;
   color: var(--color-red);
   border-color: #ddd;
 }
 
 .btn-danger:hover {
   background-color: var(--color-red);
-  color: #fff;
+  color: white;
   border-color: var(--color-red);
 }
 
 .btn-primary {
   background-color: #1868db;
-  color: #fff;
+  color: white;
 }
 
 .btn-primary:hover {
@@ -65,7 +65,7 @@ const cssClass = computed(() => {
 }
 
 .btn-default {
-  background-color: #fff;
+  background-color: white;
   color: #333;
   border-color: #ddd;
 }
@@ -77,6 +77,6 @@ const cssClass = computed(() => {
 .btn:disabled {
   background-color: #aaa;
   border-color: #aaa;
-  color: #fff;
+  color: white;
 }
 </style>
