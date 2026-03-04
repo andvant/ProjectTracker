@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useUsersStore } from '@/stores/users'
-import EntityTitle from '@/components/UI/EntityTitle.vue'
+import ViewTitle from '@/components/UI/ViewTitle.vue'
 
 const usersStore = useUsersStore()
 
@@ -10,8 +10,8 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <div class="wrapper">
-    <EntityTitle title="Users" />
+  <div class="users-wrapper">
+    <ViewTitle title="Users" />
 
     <ul class="list">
       <li v-for="user in usersStore.users" :key="user.id">
@@ -23,20 +23,14 @@ onMounted(async () => {
   </div>
 </template>
 <style scoped>
-.wrapper {
-  flex: 1;
-  padding: 1rem;
-  overflow-y: auto;
+.users-wrapper {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.users ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.users li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--color-grey);
+.list {
+  margin-top: 0;
 }
 </style>

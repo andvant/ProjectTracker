@@ -6,7 +6,7 @@ import { useIssuesStore } from '@/stores/issues'
 import { CreateProjectRequest } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
-import EntityTitle from '@/components/UI/EntityTitle.vue'
+import ViewTitle from '@/components/UI/ViewTitle.vue'
 import InputProperty from '@/components/UI/InputProperty.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
@@ -64,8 +64,8 @@ const onSubmit = async () => {
 }
 </script>
 <template>
-  <div class="wrapper">
-    <EntityTitle title="New project" />
+  <div class="new-project-wrapper">
+    <ViewTitle title="New project" />
 
     <InputProperty
       label="Project key"
@@ -89,8 +89,15 @@ const onSubmit = async () => {
   </div>
 </template>
 <style scoped>
-.wrapper {
-  padding: 1rem;
-  max-width: 500px;
+.new-project-wrapper {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+input,
+textarea {
+  width: 400px;
 }
 </style>

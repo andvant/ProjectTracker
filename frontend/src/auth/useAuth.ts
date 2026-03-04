@@ -21,7 +21,7 @@ export const initAuth = async () => {
   user.value = await userManager.getUser()
 }
 
-const onUserLoaded = async (callback: () => Promise<void>) => {
+const onUserLoaded = (callback: () => Promise<void>) => {
   userManager.events.addUserLoaded(async () => {
     await initAuth()
     await callback()

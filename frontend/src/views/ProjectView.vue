@@ -11,7 +11,7 @@ import { Role } from '@/types/roles'
 import { applyErrorsFromApi, createDefaultErrors, formatDate } from '@/utils'
 import NewIssue from '@/components/NewIssue.vue'
 import Issues from '@/components/Issues.vue'
-import EntityTitle from '@/components/UI/EntityTitle.vue'
+import ViewTitle from '@/components/UI/ViewTitle.vue'
 import Property from '@/components/UI/Property.vue'
 import InputProperty from '@/components/UI/InputProperty.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
@@ -177,7 +177,7 @@ watch(
 <template>
   <div v-if="project" class="project-wrapper">
     <div class="project-column">
-      <EntityTitle v-if="!isEditing" :title="project.name" :subtitle="project.key" />
+      <ViewTitle v-if="!isEditing" :title="project.name" :subtitle="project.key" />
 
       <InputProperty v-if="isEditing" label="Project name" :error="errors.name">
         <input v-model="req.name" />

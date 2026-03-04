@@ -6,7 +6,7 @@ import { useAuth } from '@/auth/useAuth'
 import { UpdateUserGroupsRequest, type UserDto, type UserGroupDto } from '@/types/users'
 import { Role } from '@/types/roles'
 import { formatDate } from '@/utils'
-import EntityTitle from '@/components/UI/EntityTitle.vue'
+import ViewTitle from '@/components/UI/ViewTitle.vue'
 import Property from '@/components/UI/Property.vue'
 import InputProperty from '@/components/UI/InputProperty.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
@@ -58,30 +58,30 @@ watch(
 )
 </script>
 <template>
-  <div v-if="user" class="wrapper">
-    <EntityTitle :title="user.name" />
+  <div v-if="user" class="user-wrapper">
+    <ViewTitle :title="user.name" />
 
     <Property label="Email">{{ user.email }}</Property>
     <Property label="Registration date">{{ formatDate(user.registrationDate) }}</Property>
 
+    <Property v-if="!isEditing" label="Groups">
+      <ul v-if="memberGroups.length" class="list">
+        <li v-for="group in memberGroups" :key="group.id">
+          {{ group.description }}
+        </li>
+      </ul>
+    </Property>
+
+    <InputProperty v-if="isEditing" label="Groups">
+      <div v-for="group in userGroups" :key="group.id">
+        <label class="group-option">
+          <input type="checkbox" :value="group.id" v-model="req.groupIds" />
+          <div>{{ group.description }}</div>
+        </label>
+      </div>
+    </InputProperty>
+
     <div>
-      <Property v-if="!isEditing" label="Groups">
-        <ul v-if="memberGroups.length" class="list">
-          <li v-for="group in memberGroups" :key="group.id">
-            {{ group.description }}
-          </li>
-        </ul>
-      </Property>
-
-      <InputProperty v-if="isEditing" label="Groups">
-        <div v-for="group in userGroups" :key="group.id">
-          <label class="check-option">
-            <input type="checkbox" :value="group.id" v-model="req.groupIds" />
-            <div>{{ group.description }}</div>
-          </label>
-        </div>
-      </InputProperty>
-
       <ControlButton v-if="!isEditing && canUpdateGroups" @click="onEditing" label="Edit" />
       <ControlButton
         v-if="isEditing"
@@ -100,17 +100,21 @@ watch(
   </div>
 </template>
 <style scoped>
-.wrapper {
-  padding: 1rem;
+.user-wrapper {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.check-option {
+.group-option {
   display: flex;
   align-items: center;
   gap: 0.2rem;
+  margin-top: 1rem;
 }
 
-.check-option input {
+.group-option input {
   width: 1rem;
 }
 

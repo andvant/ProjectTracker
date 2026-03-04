@@ -19,22 +19,23 @@ const cssClass = computed(() => {
 </template>
 <style scoped>
 .btn {
-  font-size: 0.9rem;
+  margin: 0 0.5rem 0 0;
   padding: 0.35rem 0.75rem;
-  margin: 0 0.3rem;
+  font-size: 0.9rem;
   border-radius: 6px;
   border: 1px solid transparent;
   cursor: pointer;
+  align-self: flex-start;
 }
 
 .btn-remove {
-  background-color: white;
-  color: var(--color-red);
+  margin: 0 0.5rem;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.7rem;
   border-color: #ddd;
   border-radius: 20px;
-  padding: 0.2rem 0.4rem;
-  margin: 0 0.5rem;
-  font-size: 0.7rem;
+  background-color: white;
+  color: var(--color-red);
 }
 
 .btn-remove:hover {

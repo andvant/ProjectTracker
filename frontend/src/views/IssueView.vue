@@ -22,7 +22,7 @@ import {
   getEnumOptions,
   removeNonDigits,
 } from '@/utils'
-import EntityTitle from '@/components/UI/EntityTitle.vue'
+import ViewTitle from '@/components/UI/ViewTitle.vue'
 import Property from '@/components/UI/Property.vue'
 import InputProperty from '@/components/UI/InputProperty.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
@@ -90,6 +90,7 @@ const onUpdateIssue = async () => {
   try {
     isSubmitting.value = true
 
+    req.dueDate ||= undefined
     issue.value = await issuesStore.updateIssue(projectId.value!, issueId.value!, req)
 
     isEditing.value = false
@@ -193,13 +194,59 @@ watch(
 <template>
   <div v-if="issue" class="issue-wrapper">
     <div class="issue-column">
-      <EntityTitle v-if="!isEditing" :title="issue.title" :subtitle="issue.key" />
+      <ViewTitle v-if="!isEditing" :title="issue.title" :subtitle="issue.key" />
 
       <InputProperty v-if="isEditing" label="Title" :error="errors.title">
-        <input v-model="req.title" />
+        <input v-model="req.title" class="text-input" />
       </InputProperty>
 
       <Property v-if="!isEditing" label="Description">{{ issue.description }}</Property>
+
+      <InputProperty v-if="isEditing" label="Description" :error="errors.description">
+        <textarea v-model="req.description" class="text-input"></textarea>
+      </InputProperty>
+
+      <InputErrors v-if="isEditing" :error="errors.general" />
+
+      <div>
+        <ControlButton v-if="!isEditing && canEditIssue" @click="onEditing" label="Edit" />
+        <ControlButton
+          v-if="isEditing"
+          @click="onUpdateIssue"
+          :disabled="isSubmitting"
+          label="Save"
+          type="primary"
+        />
+        <ControlButton
+          v-if="isEditing"
+          @click="isEditing = false"
+          :disabled="isSubmitting"
+          label="Cancel"
+        />
+        <ControlButton
+          v-if="canEditIssue"
+          @click="onDeleteIssue"
+          :disabled="isSubmitting"
+          label="Delete issue"
+          type="danger"
+        />
+      </div>
+
+      <Property v-if="issue.parentIssue" label="Parent issue">
+        <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
+          {{ issue.parentIssue.key }} {{ issue.parentIssue.title }}
+        </RouterLink>
+      </Property>
+
+      <Property v-if="issue.childIssues.length" label="Child issues">
+        <ul class="list">
+          <li v-for="childIssue of issue.childIssues" :key="childIssue.id">
+            <RouterLink :to="{ name: 'Issue', params: { issueKey: childIssue.key } }">
+              {{ childIssue.key }} {{ childIssue.title }}
+            </RouterLink>
+          </li>
+        </ul>
+      </Property>
 
       <Property label="Attachments">
         <ul v-if="issue.attachments.length" class="list">
@@ -229,9 +276,6 @@ watch(
           {{ projectsStore.cachedProject?.name }}
         </RouterLink>
       </Property>
-      <InputProperty v-if="isEditing" label="Description" :error="errors.description">
-        <textarea v-model="req.description"></textarea>
-      </InputProperty>
 
       <Property label="Reporter">
         <RouterLink :to="{ name: 'User', params: { userId: issue.reporter.id } }">
@@ -248,6 +292,7 @@ watch(
 
       <InputProperty v-if="isEditing" label="Assignee" :error="errors.assigneeId">
         <select v-model="req.assigneeId">
+          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
           <option v-for="user in memberUsers" :key="user.id" :value="user.id">
             {{ user.name }}
           </option>
@@ -306,51 +351,11 @@ watch(
         <input v-model="req.estimationMinutes" type="text" @input="removeNonDigits" />
       </InputProperty>
 
-      <InputErrors v-if="isEditing" :error="errors.general" />
-
-      <ControlButton v-if="!isEditing && canEditIssue" @click="onEditing" label="Edit" />
-      <ControlButton
-        v-if="isEditing"
-        @click="onUpdateIssue"
-        :disabled="isSubmitting"
-        label="Save"
-        type="primary"
-      />
-      <ControlButton
-        v-if="isEditing"
-        @click="isEditing = false"
-        :disabled="isSubmitting"
-        label="Cancel"
-      />
-      <ControlButton
-        v-if="canEditIssue"
-        @click="onDeleteIssue"
-        :disabled="isSubmitting"
-        label="Delete issue"
-        type="danger"
-      />
-
       <Property label="Created">{{ formatDate(issue.createdAt) }}</Property>
       <Property label="Updated">{{ formatDate(issue.updatedAt) }}</Property>
 
-      <Property v-if="issue.parentIssue" label="Parent issue">
-        <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
-          {{ issue.parentIssue.key }} {{ issue.parentIssue.title }}
-        </RouterLink>
-      </Property>
-
-      <Property v-if="issue.childIssues.length" label="Child issues">
-        <ul class="list">
-          <li v-for="childIssue of issue.childIssues" :key="childIssue.id">
-            <RouterLink :to="{ name: 'Issue', params: { issueKey: childIssue.key } }">
-              {{ childIssue.key }} {{ childIssue.title }}
-            </RouterLink>
-          </li>
-        </ul>
-      </Property>
-
       <Property label="Watchers">
-        <ul class="list">
+        <ul v-if="issue.watchers.length" class="list">
           <li v-for="watcher in issue.watchers" :key="watcher.id">
             <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
               {{ watcher.name }}
@@ -366,30 +371,31 @@ watch(
         label="Add watcher"
       />
 
-      <div v-if="isAddingWatcher">
+      <div v-if="isAddingWatcher" class="user-select">
         <select v-model="selectedWatcherId">
           <option disabled :value="null">Select a user</option>
           <option v-for="user in nonWatcherUsers" :key="user.id" :value="user.id">
             {{ user.name }}
           </option>
         </select>
-        <ControlButton
-          @click="onAddWatcher"
-          :disabled="!selectedWatcherId || isSubmitting"
-          label="Add"
-          type="primary"
-        />
-        <ControlButton @click="isAddingWatcher = false" label="Cancel" />
+        <div>
+          <ControlButton
+            @click="onAddWatcher"
+            :disabled="!selectedWatcherId || isSubmitting"
+            label="Add"
+            type="primary"
+          />
+          <ControlButton @click="isAddingWatcher = false" label="Cancel" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 <style scoped>
 .issue-wrapper {
-  padding: 1rem;
+  padding: 2rem;
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
+  grid-template-columns: 3fr 1fr;
   align-items: start;
   width: 70vw;
 }
@@ -397,10 +403,20 @@ watch(
 .issue-column {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.user-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .unassigned {
   color: var(--color-text-muted);
+}
+
+.text-input {
+  min-width: 400px;
 }
 </style>

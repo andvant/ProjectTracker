@@ -21,7 +21,6 @@ defineProps<{
 </template>
 <style scoped>
 .wrapper {
-  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
 }
