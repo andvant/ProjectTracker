@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
@@ -61,7 +61,7 @@ const issue = ref<IssueDto>()
 const selectedWatcherId = ref<string | null>()
 const showConfirmModal = ref(false)
 
-const req = new UpdateIssueRequest()
+const req = reactive(new UpdateIssueRequest())
 const isEditing = ref(false)
 const isAddingWatcher = ref(false)
 const isSubmitting = ref(false)

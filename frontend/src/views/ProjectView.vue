@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useIssuesStore } from '@/stores/issues'
@@ -44,7 +44,7 @@ const selectedMemberId = ref<string | null>(null)
 const selectedOwnerId = ref<string>()
 const showConfirmModal = ref(false)
 
-const req = new UpdateProjectRequest()
+const req = reactive(new UpdateProjectRequest())
 const isEditing = ref(false)
 const isTransferringOwnership = ref(false)
 const isAddingMember = ref(false)

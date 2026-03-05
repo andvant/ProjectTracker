@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projects'
 import { useIssuesStore } from '@/stores/issues'
@@ -16,7 +16,7 @@ const router = useRouter()
 const projectsStore = useProjectsStore()
 const issuesStore = useIssuesStore()
 
-const req = new CreateProjectRequest()
+const req = reactive(new CreateProjectRequest())
 const isSubmitting = ref(false)
 
 type Errors = ValidationErrors<CreateProjectRequest>

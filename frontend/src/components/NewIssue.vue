@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useIssuesStore } from '@/stores/issues'
 import { useProjectsStore } from '@/stores/projects'
@@ -29,7 +29,7 @@ const canCreateIssue = computed(
   () => hasRole(Role.Admin) || memberUsers.value.map((m) => m.id).includes(userId.value!),
 )
 
-const req = new CreateIssueRequest()
+const req = reactive(new CreateIssueRequest())
 const isCreating = ref(false)
 const isSubmitting = ref(false)
 
