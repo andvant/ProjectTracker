@@ -11,7 +11,6 @@ internal static class AddMemberEndpoint
             Guid projectId,
             Guid memberId,
             ISender sender,
-            ILogger<Program> logger,
             CancellationToken ct) =>
         {
             var command = new AddMemberCommand(projectId, memberId);

@@ -11,7 +11,6 @@ internal static class RemoveMemberEndpoint
             Guid projectId,
             Guid memberId,
             ISender sender,
-            ILogger<Program> logger,
             CancellationToken ct) =>
         {
             var command = new RemoveMemberCommand(projectId, memberId);

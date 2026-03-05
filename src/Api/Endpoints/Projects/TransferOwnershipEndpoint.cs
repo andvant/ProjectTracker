@@ -11,7 +11,6 @@ internal static class TransferOwnershipEndpoint
             Guid projectId,
             Guid newOwnerId,
             ISender sender,
-            ILogger<Program> logger,
             CancellationToken ct) =>
         {
             var command = new TransferOwnershipCommand(projectId, newOwnerId);

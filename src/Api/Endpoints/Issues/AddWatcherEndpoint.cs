@@ -12,7 +12,6 @@ internal static class AddWatcherEndpoint
             Guid issueId,
             Guid watcherId,
             ISender sender,
-            ILogger<Program> logger,
             CancellationToken ct) =>
         {
             var command = new AddWatcherCommand(projectId, issueId, watcherId);

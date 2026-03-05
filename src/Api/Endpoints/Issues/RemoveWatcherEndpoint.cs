@@ -12,7 +12,6 @@ internal static class RemoveWatcherEndpoint
             Guid issueId,
             Guid watcherId,
             ISender sender,
-            ILogger<Program> logger,
             CancellationToken ct) =>
         {
             var command = new RemoveWatcherCommand(projectId, issueId, watcherId);

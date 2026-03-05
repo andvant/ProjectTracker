@@ -23,7 +23,6 @@ internal static class UpdateIssueEndpoint
             Guid issueId,
             UpdateIssueRequest request,
             ISender sender,
-            ILogger<Program> logger,
             CancellationToken ct) =>
         {
             var command = new UpdateIssueCommand(
