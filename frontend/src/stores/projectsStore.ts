@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import projectsApi from '@/api/projectsApi'
-import { useUsersStore } from '@/stores/users'
+import { useUsersStore } from '@/stores/usersStore'
 import type {
   CreateProjectRequest,
   ProjectDto,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useUsersStore } from '@/stores/users'
+import { useUsersStore } from '@/stores/usersStore'
 import { useAuth } from '@/auth/useAuth'
 import { UpdateUserGroupsRequest, type UserDto, type UserGroupDto } from '@/types/users'
 import { Role } from '@/types/roles'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { useIssuesStore } from '@/stores/issues'
+import { useIssuesStore } from '@/stores/issuesStore'
 import { type IssueDto, IssueStatus, AddCommentRequest } from '@/types/issues'
 import type { UsersDto } from '@/types/users'
 import { ApiError, type ValidationErrors } from '@/types/api'

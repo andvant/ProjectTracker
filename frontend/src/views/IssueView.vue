@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useIssuesStore } from '@/stores/issues'
-import { useProjectsStore } from '@/stores/projects'
-import { useUsersStore } from '@/stores/users'
+import { useIssuesStore } from '@/stores/issuesStore'
+import { useProjectsStore } from '@/stores/projectsStore'
+import { useUsersStore } from '@/stores/usersStore'
 import issuesApi from '@/api/issuesApi'
 import { useAuth } from '@/auth/useAuth'
 import {

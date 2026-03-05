@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useIssuesStore } from '@/stores/issues'
-import { useProjectsStore } from '@/stores/projects'
+import { useIssuesStore } from '@/stores/issuesStore'
+import { useProjectsStore } from '@/stores/projectsStore'
 import { useAuth } from '@/auth/useAuth'
 import { CreateIssueRequest, IssuePriority, IssueType } from '@/types/issues'
 import { ApiError, type ValidationErrors } from '@/types/api'

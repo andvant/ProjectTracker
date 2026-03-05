@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useProjectsStore } from '@/stores/projects'
-import { useIssuesStore } from '@/stores/issues'
-import { useUsersStore } from '@/stores/users'
+import { useProjectsStore } from '@/stores/projectsStore'
+import { useIssuesStore } from '@/stores/issuesStore'
+import { useUsersStore } from '@/stores/usersStore'
 import projectsApi from '@/api/projectsApi'
 import { useAuth } from '@/auth/useAuth'
 import { UpdateProjectRequest, type ProjectDto } from '@/types/projects'

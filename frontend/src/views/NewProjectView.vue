@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useProjectsStore } from '@/stores/projects'
-import { useIssuesStore } from '@/stores/issues'
+import { useProjectsStore } from '@/stores/projectsStore'
+import { useIssuesStore } from '@/stores/issuesStore'
 import { CreateProjectRequest } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi, createDefaultErrors } from '@/utils'

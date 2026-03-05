@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useUsersStore } from '@/stores/users'
+import { useUsersStore } from '@/stores/usersStore'
 import ViewTitle from '@/components/UI/ViewTitle.vue'
 
 const usersStore = useUsersStore()

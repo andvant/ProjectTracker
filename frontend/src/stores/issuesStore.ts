@@ -8,7 +8,7 @@ import type {
   IssuesDto,
   AddCommentRequest,
 } from '@/types/issues'
-import { useUsersStore } from '@/stores/users'
+import { useUsersStore } from '@/stores/usersStore'
 
 export const useIssuesStore = defineStore('issues', () => {
   const issues = ref<IssuesDto[]>([])

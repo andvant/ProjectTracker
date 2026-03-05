@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useProjectsStore } from '@/stores/projects'
+import { useProjectsStore } from '@/stores/projectsStore'
 import { useAuth } from '@/auth/useAuth'
 import { Role } from '@/types/roles'
 import UserMenu from '@/components/UserMenu.vue'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { useIssuesStore } from '@/stores/issues'
+import { useIssuesStore } from '@/stores/issuesStore'
 import { IssuePriority, IssueType, IssueStatus } from '@/types/issues'
 import { getEnumLabel } from '@/utils'
 
