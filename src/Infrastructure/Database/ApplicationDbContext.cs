@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Issue> Issues => Set<Issue>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Attachment> Attachments => Set<Attachment>();
+    public DbSet<Comment> Comments => Set<Comment>();
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,

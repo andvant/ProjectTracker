@@ -24,5 +24,6 @@ public record IssueDto(
     IssuesDto? ParentIssue,
     IReadOnlyCollection<IssuesDto> ChildIssues,
     IReadOnlyCollection<UsersDto> Watchers,
-    IReadOnlyCollection<AttachmentDto> Attachments
+    IReadOnlyCollection<AttachmentDto> Attachments,
+    IReadOnlyCollection<CommentDto> Comments
 );
