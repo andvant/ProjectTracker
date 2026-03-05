@@ -6,7 +6,13 @@ import { CreateIssueRequest, IssuePriority, IssueType } from '@/types/issues'
 import type { UsersDto } from '@/types/users'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
-import { applyErrorsFromApi, createDefaultErrors, getEnumOptions, removeNonDigits } from '@/utils'
+import {
+  applyErrorsFromApi,
+  createDefaultErrors,
+  getEnumOptions,
+  removeNonDigits,
+  timespanToMinutes,
+} from '@/utils'
 import LabelInput from '@/components/UI/LabelInput.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
@@ -27,6 +33,8 @@ const canCreateIssue = computed(
 )
 
 const req = reactive(new CreateIssueRequest())
+const estimationHours = ref('')
+const estimationMinutes = ref('')
 const isCreating = ref(false)
 const isSubmitting = ref(false)
 
@@ -44,11 +52,6 @@ const validate = () => {
     isValid = false
   }
 
-  if (req.estimationMinutes && req.estimationMinutes < 0) {
-    errors.value.estimationMinutes = 'Estimation minutes cannot be negative'
-    isValid = false
-  }
-
   return isValid
 }
 
@@ -58,6 +61,7 @@ const onSubmit = async () => {
   try {
     isSubmitting.value = true
 
+    req.estimationMinutes = timespanToMinutes(estimationHours.value, estimationMinutes.value)
     await issuesStore.createIssue(props.projectId, req)
 
     isCreating.value = false
@@ -145,8 +149,22 @@ watch(
       <input v-model="req.dueDate" type="date" />
     </LabelInput>
 
-    <LabelInput label="Estimation (minutes)" :error="errors.estimationMinutes">
-      <input v-model="req.estimationMinutes" type="text" @input="removeNonDigits" />
+    <LabelInput label="Estimation" :error="errors.estimationMinutes">
+      <div class="estimation">
+        <input
+          v-model="estimationHours"
+          type="text"
+          @input="estimationHours = removeNonDigits(estimationHours)"
+          maxlength="3"
+        />
+        <span>:</span>
+        <input
+          v-model="estimationMinutes"
+          type="text"
+          @input="estimationMinutes = removeNonDigits(estimationMinutes)"
+          maxlength="2"
+        />
+      </div>
     </LabelInput>
 
     <InputErrors :error="errors.general" />
@@ -166,5 +184,15 @@ watch(
 
 .text-input {
   width: 500px;
+}
+
+.estimation {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.estimation input {
+  width: 1.6rem;
 }
 </style>

@@ -60,7 +60,16 @@ export const formatDate = (
   }).format(date)
 }
 
-export const removeNonDigits = (e: Event) => {
-  const target = e.target as HTMLInputElement
-  target.value = target.value.replace(/[^0-9]/, '')
-}
+export const removeNonDigits = (value: string): string => value.replace(/[^0-9]/g, '')
+
+export const timespanToMinutes = (hours?: string, minutes?: string): number | undefined =>
+  hours || minutes ? parseInt(hours || '0') * 60 + parseInt(minutes || '0') : undefined
+
+export const minutesToTimespan = (minutes?: number): string =>
+  minutes ? `${Math.floor(minutes / 60)}h ${minutes % 60}m` : ''
+
+export const getHoursFromTotalMinutes = (minutes?: number): string =>
+  minutes ? Math.floor(minutes / 60).toString() : ''
+
+export const getMinutesFromTotalMinutes = (minutes?: number): string =>
+  minutes ? (minutes % 60).toString() : ''

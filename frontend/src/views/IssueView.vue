@@ -21,6 +21,10 @@ import {
   formatDate,
   getEnumLabel,
   getEnumOptions,
+  minutesToTimespan,
+  timespanToMinutes,
+  getHoursFromTotalMinutes,
+  getMinutesFromTotalMinutes,
   removeNonDigits,
 } from '@/utils'
 import Comments from '@/components/Comments.vue'
@@ -62,6 +66,8 @@ const selectedWatcherId = ref<string | null>()
 const showConfirmModal = ref(false)
 
 const req = reactive(new UpdateIssueRequest())
+const estimationHours = ref('')
+const estimationMinutes = ref('')
 const isEditing = ref(false)
 const isAddingWatcher = ref(false)
 const isSubmitting = ref(false)
@@ -80,11 +86,6 @@ const validate = () => {
     isValid = false
   }
 
-  if (req.estimationMinutes && req.estimationMinutes < 0) {
-    errors.value.estimationMinutes = 'Estimation minutes cannot be negative'
-    isValid = false
-  }
-
   return isValid
 }
 
@@ -95,6 +96,7 @@ const onUpdateIssue = async () => {
     isSubmitting.value = true
 
     req.dueDate ||= undefined
+    req.estimationMinutes = timespanToMinutes(estimationHours.value, estimationMinutes.value)
     issue.value = await issuesStore.updateIssue(projectId.value!, issueId.value!, req)
 
     isEditing.value = false
@@ -117,7 +119,8 @@ const onEditing = () => {
   req.status = issue.value!.status
   req.priority = issue.value!.priority
   req.dueDate = issue.value!.dueDate
-  req.estimationMinutes = issue.value!.estimationMinutes
+  estimationHours.value = getHoursFromTotalMinutes(issue.value!.estimationMinutes)
+  estimationMinutes.value = getMinutesFromTotalMinutes(issue.value!.estimationMinutes)
 
   isEditing.value = true
 }
@@ -364,12 +367,26 @@ watch(
         <input v-model="req.dueDate" type="date" />
       </LabelInput>
 
-      <LabelProperty v-if="!isEditing" label="Estimation (minutes)">
-        {{ issue.estimationMinutes }}
+      <LabelProperty v-if="!isEditing" label="Estimation">
+        {{ minutesToTimespan(issue.estimationMinutes) }}
       </LabelProperty>
 
-      <LabelInput v-if="isEditing" label="Estimation (minutes)" :error="errors.estimationMinutes">
-        <input v-model="req.estimationMinutes" type="text" @input="removeNonDigits" />
+      <LabelInput v-if="isEditing" label="Estimation" :error="errors.estimationMinutes">
+        <div class="estimation">
+          <input
+            v-model="estimationHours"
+            type="text"
+            @input="estimationHours = removeNonDigits(estimationHours)"
+            maxlength="3"
+          />
+          <span>:</span>
+          <input
+            v-model="estimationMinutes"
+            type="text"
+            @input="estimationMinutes = removeNonDigits(estimationMinutes)"
+            maxlength="2"
+          />
+        </div>
       </LabelInput>
 
       <LabelProperty label="Created">{{ formatDate(issue.createdAt) }}</LabelProperty>
@@ -446,5 +463,15 @@ watch(
 
 .text-input {
   width: 500px;
+}
+
+.estimation {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.estimation input {
+  width: 1.6rem;
 }
 </style>
