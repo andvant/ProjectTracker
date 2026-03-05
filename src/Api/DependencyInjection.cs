@@ -15,7 +15,12 @@ namespace ProjectTracker.Api;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
+    private const long UploadFileSizeLimit = 100 * 1024 * 1024; // 100 MB
+
+    public static IServiceCollection AddApiServices(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostBuilder webHost)
     {
         services.ConfigureHttpJsonOptions(opts =>
             opts.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -38,9 +43,14 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUser, CurrentUser>();
 
         services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
+
+        webHost.ConfigureKestrel(options =>
+        {
+            options.Limits.MaxRequestBodySize = UploadFileSizeLimit;
+        });
         services.Configure<FormOptions>(options =>
         {
-            options.MultipartBodyLengthLimit = 100 * 1024 * 1024; // 100 MB uploaded file size limit
+            options.MultipartBodyLengthLimit = UploadFileSizeLimit;
         });
 
         services.AddHealthChecks()

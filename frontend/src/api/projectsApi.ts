@@ -1,4 +1,5 @@
 import apiClient from '@/api/apiClient'
+import { BASE_URL } from '@/api/apiClient'
 import type {
   ProjectsDto,
   ProjectDto,
@@ -31,6 +32,9 @@ const projectsApi = {
 
   uploadAttachment: (projectId: string, file: FormData): Promise<void> =>
     apiClient.post<void, FormData>(`projects/${projectId}/attachments`, file),
+
+  getDownloadAttachmentLink: (projectId: string, attachmentId: string): string =>
+    new URL(`projects/${projectId}/attachments/${attachmentId}`, BASE_URL).toString(),
 }
 
 export default projectsApi

@@ -14,7 +14,7 @@ builder.AddServiceDefaults();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment.IsDevelopment());
-builder.Services.AddApiServices(builder.Configuration);
+builder.Services.AddApiServices(builder.Configuration, builder.WebHost);
 
 var app = builder.Build();
 

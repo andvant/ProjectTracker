@@ -1,4 +1,5 @@
 import apiClient from '@/api/apiClient'
+import { BASE_URL } from '@/api/apiClient'
 import type { IssuesDto, IssueDto, CreateIssueRequest, UpdateIssueRequest } from '@/types/issues'
 
 const issuesApi = {
@@ -25,6 +26,12 @@ const issuesApi = {
 
   uploadAttachment: (projectId: string, issueId: string, file: FormData): Promise<void> =>
     apiClient.post<void, FormData>(`projects/${projectId}/issues/${issueId}/attachments`, file),
+
+  getDownloadAttachmentLink: (projectId: string, issueId: string, attachmentId: string): string =>
+    new URL(
+      `projects/${projectId}/issues/${issueId}/attachments/${attachmentId}`,
+      BASE_URL,
+    ).toString(),
 }
 
 export default issuesApi

@@ -33,6 +33,7 @@ internal static class Endpoints
         group.MapAddMember();
         group.MapRemoveMember();
         group.MapUploadProjectAttachment();
+        group.MapDownloadProjectAttachment();
     }
 
     private static void MapIssues(this IEndpointRouteBuilder app)
@@ -48,6 +49,7 @@ internal static class Endpoints
         group.MapAddWatcher();
         group.MapRemoveWatcher();
         group.MapUploadIssueAttachment();
+        group.MapDownloadIssueAttachment();
     }
 
     private static void MapUsers(this IEndpointRouteBuilder app)
