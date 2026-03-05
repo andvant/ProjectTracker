@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Projects.RemoveMember;
 
 public record RemoveMemberCommand(Guid ProjectId, Guid MemberId) : IRequest;

@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Projects.UploadProjectAttachment;
 
 public record UploadProjectAttachmentCommand(Guid ProjectId, string Name, Stream Stream, string MimeType) : IRequest;

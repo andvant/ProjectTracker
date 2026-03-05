@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Projects.AddMember;
 
 public record AddMemberCommand(Guid ProjectId, Guid MemberId) : IRequest;

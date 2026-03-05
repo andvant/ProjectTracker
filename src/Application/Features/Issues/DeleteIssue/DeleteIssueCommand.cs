@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Issues.DeleteIssue;
 
 public record DeleteIssueCommand(Guid ProjectId, Guid IssueId) : IRequest;

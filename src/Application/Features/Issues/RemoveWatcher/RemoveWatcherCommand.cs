@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Issues.RemoveWatcher;
 
 public record RemoveWatcherCommand(Guid ProjectId, Guid IssueId, Guid WatcherId) : IRequest;

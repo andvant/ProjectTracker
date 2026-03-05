@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Issues.UpdateIssue;
 
 public record UpdateIssueCommand(

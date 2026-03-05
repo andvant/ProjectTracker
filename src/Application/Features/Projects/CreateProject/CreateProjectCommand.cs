@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using ProjectTracker.Application.Common;
 using ProjectTracker.Application.Features.Projects.GetProject;
 

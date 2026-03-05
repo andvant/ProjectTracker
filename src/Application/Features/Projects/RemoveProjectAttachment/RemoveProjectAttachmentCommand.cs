@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Projects.RemoveProjectAttachment;
 
 public record RemoveProjectAttachmentCommand(Guid ProjectId, Guid AttachmentId) : IRequest;

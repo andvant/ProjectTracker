@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Issues.AddWatcher;
 
 public record AddWatcherCommand(Guid ProjectId, Guid IssueId, Guid WatcherId) : IRequest;

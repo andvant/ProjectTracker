@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Projects.TransferOwnership;
 
 public record TransferOwnershipCommand(Guid ProjectId, Guid NewOwnerId) : IRequest;

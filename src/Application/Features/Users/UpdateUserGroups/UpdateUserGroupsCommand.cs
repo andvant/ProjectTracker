@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Users.UpdateUserGroups;
 
 public record UpdateUserGroupsCommand(Guid UserId, IReadOnlyCollection<Guid> GroupIds) : IRequest;

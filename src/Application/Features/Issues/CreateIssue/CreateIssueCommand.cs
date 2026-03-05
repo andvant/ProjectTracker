@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using ProjectTracker.Application.Features.Issues.GetIssue;
 
 namespace ProjectTracker.Application.Features.Issues.CreateIssue;

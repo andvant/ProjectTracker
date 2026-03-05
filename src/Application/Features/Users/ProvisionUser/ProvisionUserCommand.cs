@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace ProjectTracker.Application.Features.Users.ProvisionUser;
 
 public record ProvisionUserCommand(Guid Id, string Username, string Email) : IRequest;
