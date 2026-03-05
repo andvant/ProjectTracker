@@ -8,7 +8,7 @@ import { CreateIssueRequest, IssuePriority, IssueType } from '@/types/issues'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
 import { applyErrorsFromApi, createDefaultErrors, getEnumOptions, removeNonDigits } from '@/utils'
-import InputProperty from '@/components/UI/InputProperty.vue'
+import LabelInput from '@/components/UI/LabelInput.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
 
@@ -89,15 +89,15 @@ watch(projectId, async () => {
   <ControlButton v-if="!isCreating && canCreateIssue" @click="onCreating" label="New issue" />
 
   <div v-if="isCreating" class="new-issue-wrapper">
-    <InputProperty label="Title" :error="errors.title">
+    <LabelInput label="Title" :error="errors.title">
       <input v-model="req.title" class="text-input" />
-    </InputProperty>
+    </LabelInput>
 
-    <InputProperty label="Description" :error="errors.description">
+    <LabelInput label="Description" :error="errors.description">
       <textarea v-model="req.description" class="text-input"></textarea>
-    </InputProperty>
+    </LabelInput>
 
-    <InputProperty label="Type" :error="errors.type">
+    <LabelInput label="Type" :error="errors.type">
       <select v-model="req.type">
         <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
         <option
@@ -108,9 +108,9 @@ watch(projectId, async () => {
           {{ option.label }}
         </option>
       </select>
-    </InputProperty>
+    </LabelInput>
 
-    <InputProperty label="Priority" :error="errors.priority">
+    <LabelInput label="Priority" :error="errors.priority">
       <select v-model="req.priority">
         <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
         <option
@@ -121,33 +121,33 @@ watch(projectId, async () => {
           {{ option.label }}
         </option>
       </select>
-    </InputProperty>
+    </LabelInput>
 
-    <InputProperty label="Assignee" :error="errors.assigneeId">
+    <LabelInput label="Assignee" :error="errors.assigneeId">
       <select v-model="req.assigneeId">
         <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
         <option v-for="user in memberUsers" :key="user.id" :value="user.id">
           {{ user.name }}
         </option>
       </select>
-    </InputProperty>
+    </LabelInput>
 
-    <InputProperty label="Parent issue" :error="errors.parentIssueId">
+    <LabelInput label="Parent issue" :error="errors.parentIssueId">
       <select v-model="req.parentIssueId">
         <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
         <option v-for="issue in epicIssues" :key="issue.id" :value="issue.id">
           {{ issue.title }}
         </option>
       </select>
-    </InputProperty>
+    </LabelInput>
 
-    <InputProperty label="Due date" :error="errors.dueDate">
+    <LabelInput label="Due date" :error="errors.dueDate">
       <input v-model="req.dueDate" type="date" />
-    </InputProperty>
+    </LabelInput>
 
-    <InputProperty label="Estimation (minutes)" :error="errors.estimationMinutes">
+    <LabelInput label="Estimation (minutes)" :error="errors.estimationMinutes">
       <input v-model="req.estimationMinutes" type="text" @input="removeNonDigits" />
-    </InputProperty>
+    </LabelInput>
 
     <InputErrors :error="errors.general" />
 

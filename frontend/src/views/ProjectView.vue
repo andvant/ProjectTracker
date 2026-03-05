@@ -14,8 +14,8 @@ import NewIssue from '@/components/NewIssue.vue'
 import Issues from '@/components/Issues.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import ViewTitle from '@/components/UI/ViewTitle.vue'
-import Property from '@/components/UI/Property.vue'
-import InputProperty from '@/components/UI/InputProperty.vue'
+import LabelProperty from '@/components/UI/LabelProperty.vue'
+import LabelInput from '@/components/UI/LabelInput.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
 
@@ -187,15 +187,15 @@ watch(
     <div class="project-column">
       <ViewTitle v-if="!isEditing" :title="project.name" :subtitle="project.key" />
 
-      <InputProperty v-if="isEditing" label="Project name" :error="errors.name">
+      <LabelInput v-if="isEditing" label="Project name" :error="errors.name">
         <input v-model="req.name" class="text-input" />
-      </InputProperty>
+      </LabelInput>
 
-      <Property v-if="!isEditing" label="Description">{{ project.description }}</Property>
+      <LabelProperty v-if="!isEditing" label="Description">{{ project.description }}</LabelProperty>
 
-      <InputProperty v-if="isEditing" label="Description" :error="errors.description">
+      <LabelInput v-if="isEditing" label="Description" :error="errors.description">
         <textarea v-model="req.description" class="text-input"></textarea>
-      </InputProperty>
+      </LabelInput>
 
       <InputErrors :error="errors.general" />
 
@@ -228,11 +228,11 @@ watch(
     </div>
 
     <div class="project-column">
-      <Property v-if="!isTransferringOwnership" label="Owner">
+      <LabelProperty v-if="!isTransferringOwnership" label="Owner">
         <RouterLink :to="{ name: 'User', params: { userId: project.owner.id } }">
           {{ project.owner.name }}
         </RouterLink>
-      </Property>
+      </LabelProperty>
 
       <ControlButton
         v-if="!isTransferringOwnership && canEditProject"
@@ -240,7 +240,7 @@ watch(
         label="Transfer ownership"
       />
 
-      <InputProperty v-if="isTransferringOwnership" label="Owner">
+      <LabelInput v-if="isTransferringOwnership" label="Owner">
         <div class="user-select">
           <select v-model="selectedOwnerId">
             <option v-for="user in project.members" :key="user.id" :value="user.id">
@@ -257,12 +257,12 @@ watch(
             <ControlButton @click="isTransferringOwnership = false" label="Cancel" />
           </div>
         </div>
-      </InputProperty>
+      </LabelInput>
 
-      <Property label="Created">{{ formatDate(project.createdAt) }}</Property>
-      <Property label="Updated">{{ formatDate(project.updatedAt) }}</Property>
+      <LabelProperty label="Created">{{ formatDate(project.createdAt) }}</LabelProperty>
+      <LabelProperty label="Updated">{{ formatDate(project.updatedAt) }}</LabelProperty>
 
-      <Property label="Attachments">
+      <LabelProperty label="Attachments">
         <ul v-if="project.attachments.length" class="list">
           <li v-for="attachment in project.attachments" :key="attachment.id">
             <a :href="projectsApi.getDownloadAttachmentLink(projectId!, attachment.id)">
@@ -275,7 +275,7 @@ watch(
             />
           </li>
         </ul>
-      </Property>
+      </LabelProperty>
 
       <div v-if="canEditProject">
         <input
@@ -288,7 +288,7 @@ watch(
         <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
       </div>
 
-      <Property label="Members">
+      <LabelProperty label="Members">
         <ul class="list">
           <li v-for="member in project.members" :key="member.id">
             <RouterLink :to="{ name: 'User', params: { userId: member.id } }">
@@ -301,7 +301,7 @@ watch(
             />
           </li>
         </ul>
-      </Property>
+      </LabelProperty>
 
       <ControlButton
         v-if="!isAddingMember && canEditProject"

@@ -26,8 +26,8 @@ import {
 import Comments from '@/components/Comments.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import ViewTitle from '@/components/UI/ViewTitle.vue'
-import Property from '@/components/UI/Property.vue'
-import InputProperty from '@/components/UI/InputProperty.vue'
+import LabelProperty from '@/components/UI/LabelProperty.vue'
+import LabelInput from '@/components/UI/LabelInput.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
 
@@ -205,15 +205,15 @@ watch(
     <div class="issue-column">
       <ViewTitle v-if="!isEditing" :title="issue.title" :subtitle="issue.key" />
 
-      <InputProperty v-if="isEditing" label="Title" :error="errors.title">
+      <LabelInput v-if="isEditing" label="Title" :error="errors.title">
         <input v-model="req.title" class="text-input" />
-      </InputProperty>
+      </LabelInput>
 
-      <Property v-if="!isEditing" label="Description">{{ issue.description }}</Property>
+      <LabelProperty v-if="!isEditing" label="Description">{{ issue.description }}</LabelProperty>
 
-      <InputProperty v-if="isEditing" label="Description" :error="errors.description">
+      <LabelInput v-if="isEditing" label="Description" :error="errors.description">
         <textarea v-model="req.description" class="text-input"></textarea>
-      </InputProperty>
+      </LabelInput>
 
       <InputErrors v-if="isEditing" :error="errors.general" />
 
@@ -241,13 +241,13 @@ watch(
         />
       </div>
 
-      <Property v-if="issue.parentIssue" label="Parent issue">
+      <LabelProperty v-if="issue.parentIssue" label="Parent issue">
         <RouterLink :to="{ name: 'Issue', params: { issueKey: issue.parentIssue.key } }">
           {{ issue.parentIssue.key }} {{ issue.parentIssue.title }}
         </RouterLink>
-      </Property>
+      </LabelProperty>
 
-      <Property v-if="issue.childIssues.length" label="Child issues">
+      <LabelProperty v-if="issue.childIssues.length" label="Child issues">
         <ul class="list">
           <li v-for="childIssue of issue.childIssues" :key="childIssue.id">
             <RouterLink :to="{ name: 'Issue', params: { issueKey: childIssue.key } }">
@@ -255,9 +255,9 @@ watch(
             </RouterLink>
           </li>
         </ul>
-      </Property>
+      </LabelProperty>
 
-      <Property label="Attachments">
+      <LabelProperty label="Attachments">
         <ul v-if="issue.attachments.length" class="list">
           <li v-for="attachment in issue.attachments" :key="attachment.id">
             <a :href="issuesApi.getDownloadAttachmentLink(projectId!, issueId!, attachment.id)">
@@ -270,7 +270,7 @@ watch(
             />
           </li>
         </ul>
-      </Property>
+      </LabelProperty>
 
       <div v-if="canEditIssue">
         <input
@@ -292,43 +292,43 @@ watch(
     </div>
 
     <div class="issue-column">
-      <Property label="Project">
+      <LabelProperty label="Project">
         <RouterLink
           :to="{ name: 'Project', params: { projectKey: projectsStore.cachedProject?.key } }"
         >
           {{ projectsStore.cachedProject?.name }}
         </RouterLink>
-      </Property>
+      </LabelProperty>
 
-      <Property label="Reporter">
+      <LabelProperty label="Reporter">
         <RouterLink :to="{ name: 'User', params: { userId: issue.reporter.id } }">
           {{ issue.reporter.name }}
         </RouterLink>
-      </Property>
+      </LabelProperty>
 
-      <Property v-if="!isEditing" label="Assignee">
+      <LabelProperty v-if="!isEditing" label="Assignee">
         <span v-if="!issue.assignee" class="unassigned">Unassigned</span>
         <RouterLink v-else :to="{ name: 'User', params: { userId: issue.assignee.id } }">
           {{ issue.assignee.name }}
         </RouterLink>
-      </Property>
+      </LabelProperty>
 
-      <InputProperty v-if="isEditing" label="Assignee" :error="errors.assigneeId">
+      <LabelInput v-if="isEditing" label="Assignee" :error="errors.assigneeId">
         <select v-model="req.assigneeId">
           <option :value="undefined">Unassigned</option>
           <option v-for="user in memberUsers" :key="user.id" :value="user.id">
             {{ user.name }}
           </option>
         </select>
-      </InputProperty>
+      </LabelInput>
 
-      <Property label="Type">{{ getEnumLabel(IssueType, issue.type) }}</Property>
+      <LabelProperty label="Type">{{ getEnumLabel(IssueType, issue.type) }}</LabelProperty>
 
-      <Property v-if="!isEditing" label="Status">
+      <LabelProperty v-if="!isEditing" label="Status">
         {{ getEnumLabel(IssueStatus, issue.status) }}
-      </Property>
+      </LabelProperty>
 
-      <InputProperty v-if="isEditing" label="Status" :error="errors.status">
+      <LabelInput v-if="isEditing" label="Status" :error="errors.status">
         <select v-model="req.status">
           <option
             v-for="option in getEnumOptions(IssueStatus)"
@@ -338,13 +338,13 @@ watch(
             {{ option.label }}
           </option>
         </select>
-      </InputProperty>
+      </LabelInput>
 
-      <Property v-if="!isEditing" label="Priority">
+      <LabelProperty v-if="!isEditing" label="Priority">
         {{ getEnumLabel(IssuePriority, issue.priority) }}
-      </Property>
+      </LabelProperty>
 
-      <InputProperty v-if="isEditing" label="Priority" :error="errors.priority">
+      <LabelInput v-if="isEditing" label="Priority" :error="errors.priority">
         <select v-model="req.priority">
           <option
             v-for="option in getEnumOptions(IssuePriority)"
@@ -354,30 +354,28 @@ watch(
             {{ option.label }}
           </option>
         </select>
-      </InputProperty>
+      </LabelInput>
 
-      <Property v-if="!isEditing" label="Due date">{{ formatDate(issue.dueDate, false) }}</Property>
+      <LabelProperty v-if="!isEditing" label="Due date">
+        {{ formatDate(issue.dueDate, false) }}
+      </LabelProperty>
 
-      <InputProperty v-if="isEditing" label="Due date" :error="errors.dueDate">
+      <LabelInput v-if="isEditing" label="Due date" :error="errors.dueDate">
         <input v-model="req.dueDate" type="date" />
-      </InputProperty>
+      </LabelInput>
 
-      <Property v-if="!isEditing" label="Estimation (minutes)">
+      <LabelProperty v-if="!isEditing" label="Estimation (minutes)">
         {{ issue.estimationMinutes }}
-      </Property>
+      </LabelProperty>
 
-      <InputProperty
-        v-if="isEditing"
-        label="Estimation (minutes)"
-        :error="errors.estimationMinutes"
-      >
+      <LabelInput v-if="isEditing" label="Estimation (minutes)" :error="errors.estimationMinutes">
         <input v-model="req.estimationMinutes" type="text" @input="removeNonDigits" />
-      </InputProperty>
+      </LabelInput>
 
-      <Property label="Created">{{ formatDate(issue.createdAt) }}</Property>
-      <Property label="Updated">{{ formatDate(issue.updatedAt) }}</Property>
+      <LabelProperty label="Created">{{ formatDate(issue.createdAt) }}</LabelProperty>
+      <LabelProperty label="Updated">{{ formatDate(issue.updatedAt) }}</LabelProperty>
 
-      <Property label="Watchers">
+      <LabelProperty label="Watchers">
         <ul v-if="issue.watchers.length" class="list">
           <li v-for="watcher in issue.watchers" :key="watcher.id">
             <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
@@ -386,7 +384,7 @@ watch(
             <ControlButton v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)" type="remove" />
           </li>
         </ul>
-      </Property>
+      </LabelProperty>
 
       <ControlButton
         v-if="!isAddingWatcher && canEditIssue"

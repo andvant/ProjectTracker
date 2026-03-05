@@ -7,8 +7,8 @@ import { UpdateUserGroupsRequest, type UserDto, type UserGroupDto } from '@/type
 import { Role } from '@/types/roles'
 import { formatDate } from '@/utils'
 import ViewTitle from '@/components/UI/ViewTitle.vue'
-import Property from '@/components/UI/Property.vue'
-import InputProperty from '@/components/UI/InputProperty.vue'
+import LabelProperty from '@/components/UI/LabelProperty.vue'
+import LabelInput from '@/components/UI/LabelInput.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
 
 const route = useRoute()
@@ -61,25 +61,25 @@ watch(
   <div v-if="user" class="user-wrapper">
     <ViewTitle :title="user.name" />
 
-    <Property label="Email">{{ user.email }}</Property>
-    <Property label="Registration date">{{ formatDate(user.registrationDate) }}</Property>
+    <LabelProperty label="Email">{{ user.email }}</LabelProperty>
+    <LabelProperty label="Registration date">{{ formatDate(user.registrationDate) }}</LabelProperty>
 
-    <Property v-if="!isEditing" label="Groups">
+    <LabelProperty v-if="!isEditing" label="Groups">
       <ul v-if="memberGroups.length" class="list">
         <li v-for="group in memberGroups" :key="group.id">
           {{ group.description }}
         </li>
       </ul>
-    </Property>
+    </LabelProperty>
 
-    <InputProperty v-if="isEditing" label="Groups">
+    <LabelInput v-if="isEditing" label="Groups">
       <div v-for="group in userGroups" :key="group.id">
         <label class="group-option">
           <input type="checkbox" :value="group.id" v-model="req.groupIds" />
           <div>{{ group.description }}</div>
         </label>
       </div>
-    </InputProperty>
+    </LabelInput>
 
     <div>
       <ControlButton v-if="!isEditing && canUpdateGroups" @click="onEditing" label="Edit" />

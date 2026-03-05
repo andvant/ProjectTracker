@@ -7,7 +7,7 @@ import { CreateProjectRequest } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { applyErrorsFromApi, createDefaultErrors } from '@/utils'
 import ViewTitle from '@/components/UI/ViewTitle.vue'
-import InputProperty from '@/components/UI/InputProperty.vue'
+import LabelInput from '@/components/UI/LabelInput.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
 
@@ -67,21 +67,21 @@ const onSubmit = async () => {
   <div class="new-project-wrapper">
     <ViewTitle title="New project" />
 
-    <InputProperty
+    <LabelInput
       label="Project key"
       :error="errors.key"
       subtitle="Used in URLs and as a prefix in issues' keys that belong to this project"
     >
       <input v-model="req.key" class="text-input" />
-    </InputProperty>
+    </LabelInput>
 
-    <InputProperty label="Project name" :error="errors.name">
+    <LabelInput label="Project name" :error="errors.name">
       <input v-model="req.name" class="text-input" />
-    </InputProperty>
+    </LabelInput>
 
-    <InputProperty label="Description" :error="errors.description">
+    <LabelInput label="Description" :error="errors.description">
       <textarea v-model="req.description" class="text-input"></textarea>
-    </InputProperty>
+    </LabelInput>
 
     <InputErrors :error="errors.general" />
 
