@@ -15,6 +15,8 @@ export const useIssuesStore = defineStore('issues', () => {
 
   const fetchIssues = async (projectId: string): Promise<void> => {
     issues.value = await issuesApi.getIssues(projectId)
+
+    issues.value.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
   }
 
   const clearIssues = (): void => {

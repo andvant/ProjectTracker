@@ -33,6 +33,7 @@ internal class UploadProjectAttachmentCommandHandler : IRequestHandler<UploadPro
 
         project.AddAttachment(command.Name, storageKey, command.MimeType);
 
+        _context.Update(project);
         await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(

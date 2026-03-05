@@ -49,6 +49,7 @@ internal class UploadIssueAttachmentCommandHandler : IRequestHandler<UploadIssue
 
         issue.AddAttachment(command.Name, storageKey, command.MimeType);
 
+        _context.Update(issue);
         await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(

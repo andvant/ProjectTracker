@@ -9,6 +9,7 @@ export interface IssuesDto {
   status: IssueStatusEnum
   type: IssueTypeEnum
   priority: IssuePriorityEnum
+  updatedAt: string
 }
 
 export interface IssueDto {

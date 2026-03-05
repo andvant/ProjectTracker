@@ -9,5 +9,6 @@ public record IssuesDto(
     UsersDto? Assignee,
     IssueStatus Status,
     IssueType Type,
-    IssuePriority Priority
+    IssuePriority Priority,
+    DateTimeOffset UpdatedAt
 );

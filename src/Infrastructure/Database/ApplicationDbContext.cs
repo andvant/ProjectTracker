@@ -41,6 +41,11 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         return await base.SaveChangesAsync(ct);
     }
 
+    public void Update(AuditableEntity entity)
+    {
+        base.Update(entity);
+    }
+
     private void UpdateAuditableEntities()
     {
         var entries = ChangeTracker.Entries().Where(e =>

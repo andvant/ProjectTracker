@@ -56,6 +56,7 @@ internal class AddCommentCommandHandler : IRequestHandler<AddCommentCommand>
 
         issue.AddComment(user, command.Text, command.Status, assignee);
 
+        _context.Update(issue);
         await _context.SaveChangesAsync(ct);
 
         _logger.LogInformation(
