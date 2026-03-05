@@ -223,8 +223,8 @@ watch(
         />
       </div>
 
-      <NewIssue />
-      <Issues v-if="issuesStore.issues.length" />
+      <NewIssue :projectId="projectId!" :memberUsers="project.members" />
+      <Issues v-if="issuesStore.issues.length" :issues="issuesStore.issues" />
     </div>
 
     <div class="project-column">

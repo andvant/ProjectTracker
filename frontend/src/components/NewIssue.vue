@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
 import { useIssuesStore } from '@/stores/issuesStore'
-import { useProjectsStore } from '@/stores/projectsStore'
 import { useAuth } from '@/auth/useAuth'
 import { CreateIssueRequest, IssuePriority, IssueType } from '@/types/issues'
+import type { UsersDto } from '@/types/users'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
 import { applyErrorsFromApi, createDefaultErrors, getEnumOptions, removeNonDigits } from '@/utils'
@@ -12,21 +11,19 @@ import LabelInput from '@/components/UI/LabelInput.vue'
 import InputErrors from '@/components/UI/InputErrors.vue'
 import ControlButton from '@/components/UI/ControlButton.vue'
 
-const route = useRoute()
+const props = defineProps<{
+  projectId: string
+  memberUsers: UsersDto[]
+}>()
 
 const issuesStore = useIssuesStore()
-const projectsStore = useProjectsStore()
 
 const { hasRole, userId } = useAuth()
-
-const projectId = computed(() => projectsStore.getProjectIdByKey(route.params.projectKey as string))
-
-const memberUsers = computed(() => projectsStore.cachedProject!.members)
 
 const epicIssues = computed(() => issuesStore.issues.filter((i) => i.type === IssueType.Epic.value))
 
 const canCreateIssue = computed(
-  () => hasRole(Role.Admin) || memberUsers.value.map((m) => m.id).includes(userId.value!),
+  () => hasRole(Role.Admin) || props.memberUsers.map((m) => m.id).includes(userId.value!),
 )
 
 const req = reactive(new CreateIssueRequest())
@@ -61,7 +58,7 @@ const onSubmit = async () => {
   try {
     isSubmitting.value = true
 
-    await issuesStore.createIssue(projectId.value!, req)
+    await issuesStore.createIssue(props.projectId, req)
 
     isCreating.value = false
   } catch (e) {
@@ -81,9 +78,12 @@ const onCreating = () => {
   isCreating.value = true
 }
 
-watch(projectId, async () => {
-  isCreating.value = false
-})
+watch(
+  () => props.projectId,
+  () => {
+    isCreating.value = false
+  },
+)
 </script>
 <template>
   <ControlButton v-if="!isCreating && canCreateIssue" @click="onCreating" label="New issue" />

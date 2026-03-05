@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { useIssuesStore } from '@/stores/issuesStore'
-import { IssuePriority, IssueType, IssueStatus } from '@/types/issues'
+import { IssuePriority, IssueType, IssueStatus, type IssuesDto } from '@/types/issues'
 import { getEnumLabel } from '@/utils'
+
+defineProps<{
+  issues: IssuesDto[]
+}>()
 
 const router = useRouter()
 
 const goToIssue = (issueKey: string) => {
   router.push({ name: 'Issue', params: { issueKey } })
 }
-
-const issuesStore = useIssuesStore()
 </script>
 <template>
   <div class="issues-wrapper">
@@ -26,12 +27,7 @@ const issuesStore = useIssuesStore()
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="issue in issuesStore.issues"
-          :key="issue.id"
-          @click="goToIssue(issue.key)"
-          class="issue-row"
-        >
+        <tr v-for="issue in issues" :key="issue.id" @click="goToIssue(issue.key)" class="issue-row">
           <td>{{ issue.key }}</td>
           <td>{{ issue.title }}</td>
           <td>{{ getEnumLabel(IssueStatus, issue.status) }}</td>
