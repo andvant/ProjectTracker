@@ -49,6 +49,7 @@ internal static class Endpoints
         group.MapDeleteIssue();
         group.MapAddWatcher();
         group.MapRemoveWatcher();
+        group.MapAddComment();
         group.MapUploadIssueAttachment();
         group.MapDownloadIssueAttachment();
         group.MapRemoveIssueAttachment();

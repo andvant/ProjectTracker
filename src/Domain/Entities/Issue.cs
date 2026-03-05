@@ -23,6 +23,7 @@ public class Issue : AuditableEntity
     public ICollection<IssueWatcher> Watchers { get; private set; }
     public IReadOnlyCollection<Issue> ChildIssues { get; private set; }
     public ICollection<IssueAttachment> Attachments { get; private set; }
+    public ICollection<Comment> Comments { get; private set; }
 
     // for EF Core
     protected Issue()
@@ -34,6 +35,7 @@ public class Issue : AuditableEntity
         Watchers = null!;
         ChildIssues = null!;
         Attachments = null!;
+        Comments = null!;
     }
 
     internal Issue(
@@ -72,6 +74,7 @@ public class Issue : AuditableEntity
 
         ChildIssues = new List<Issue>();
         Attachments = new List<IssueAttachment>();
+        Comments = new List<Comment>();
         Watchers = new List<IssueWatcher>() { new(this, reporter) };
 
         if (assignee is not null && reporter.Id != assignee.Id)
@@ -100,6 +103,21 @@ public class Issue : AuditableEntity
         Priority = priority;
         DueDate = dueDate;
         EstimationMinutes = estimationMinutes;
+    }
+
+    public void AddComment(User user, string text, IssueStatus status, User? assignee)
+    {
+        Comments ??= new List<Comment>();
+        Comments.Add(new Comment(this, user, text));
+        Status = status;
+
+        if (assignee is not null && !Project.IsMember(assignee))
+        {
+            throw new AssigneeNotMemberException(assignee.Id);
+        }
+
+        Assignee = assignee;
+        AssigneeId = assignee?.Id;
     }
 
     public void AddAttachment(string name, string storageKey, string mimeType)

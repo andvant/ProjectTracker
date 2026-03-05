@@ -30,7 +30,8 @@ internal class GlobalExceptionHandler(
                 ParentIssueNotFoundException or
                 ParentIssueWrongProjectException or
                 ParentIssueWrongTypeException or
-                ChildIssueWrongTypeException:
+                ChildIssueWrongTypeException or
+                EmptyCommentException:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 break;
             case // violated constraints/invariants

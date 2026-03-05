@@ -28,6 +28,7 @@ internal class AddWatcherCommandHandler : IRequestHandler<AddWatcherCommand>
         }
 
         var issue = await _context.Projects
+            .Where(p => p.Id == command.ProjectId)
             .SelectMany(p => p.Issues)
             .Include(i => i.Project).ThenInclude(p => p.Members)
             .Include(i => i.Watchers)
