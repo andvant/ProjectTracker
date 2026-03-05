@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import issuesApi from '@/api/issuesApi'
-import type { CreateIssueRequest, UpdateIssueRequest, IssueDto, IssuesDto } from '@/types/issues'
+import type {
+  CreateIssueRequest,
+  UpdateIssueRequest,
+  IssueDto,
+  IssuesDto,
+  AddCommentRequest,
+} from '@/types/issues'
 import { useUsersStore } from '@/stores/users'
 
 export const useIssuesStore = defineStore('issues', () => {
@@ -32,6 +38,9 @@ export const useIssuesStore = defineStore('issues', () => {
     existing.title = issue.title
     existing.status = issue.status
     existing.priority = issue.priority
+    existing.assignee = issue.assignee
+
+    issue.comments.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
 
     return issue
   }
@@ -81,6 +90,16 @@ export const useIssuesStore = defineStore('issues', () => {
     issue.watchers = issue.watchers.filter((w) => w.id !== watcherId)
   }
 
+  const addComment = async (
+    projectId: string,
+    issueId: string,
+    request: AddCommentRequest,
+  ): Promise<IssueDto> => {
+    await issuesApi.addComment(projectId, issueId, request)
+
+    return await getIssue(projectId, issueId)
+  }
+
   const uploadAttachment = async (
     projectId: string,
     issueId: string,
@@ -112,6 +131,7 @@ export const useIssuesStore = defineStore('issues', () => {
     updateIssue,
     addWatcher,
     removeWatcher,
+    addComment,
     uploadAttachment,
     removeAttachment,
   }

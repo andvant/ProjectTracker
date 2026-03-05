@@ -11,7 +11,7 @@ defineProps<{
   <div class="wrapper">
     <label>
       <div class="label">{{ label }}</div>
-      <div class="input">
+      <div>
         <slot></slot>
       </div>
       <div v-if="subtitle" class="subtitle">{{ subtitle }}</div>

@@ -12,6 +12,7 @@ import {
   IssueType,
   type IssueDto,
   UpdateIssueRequest,
+  AddCommentRequest,
 } from '@/types/issues'
 import { ApiError, type ValidationErrors } from '@/types/api'
 import { Role } from '@/types/roles'
@@ -119,6 +120,56 @@ const onEditing = () => {
   req.estimationMinutes = issue.value!.estimationMinutes
 
   isEditing.value = true
+}
+
+const commentReq = new AddCommentRequest()
+type CommentErrors = ValidationErrors<AddCommentRequest>
+const commentErrors = ref<CommentErrors>(createDefaultErrors(commentReq))
+const isAddingComment = ref(false)
+
+const validateComment = () => {
+  commentErrors.value = createDefaultErrors(commentReq)
+
+  let isValid = true
+
+  if (!commentReq.text.trim()) {
+    commentErrors.value.text = 'Comment cannot be empty'
+    isValid = false
+  }
+
+  return isValid
+}
+
+const onAddingComment = () => {
+  commentReq.status = issue.value!.status
+  commentReq.assigneeId = issue.value!.assignee?.id
+  isAddingComment.value = true
+}
+
+const onCancelComment = () => {
+  commentErrors.value = createDefaultErrors(commentReq)
+  commentReq.text = ''
+  isAddingComment.value = false
+}
+
+const onAddComment = async () => {
+  if (!validateComment()) return
+
+  try {
+    isSubmitting.value = true
+
+    issue.value = await issuesStore.addComment(projectId.value!, issueId.value!, commentReq)
+
+    onCancelComment()
+  } catch (e) {
+    if (e instanceof ApiError && e.problem) {
+      applyErrorsFromApi(commentErrors.value, e.problem)
+    } else {
+      commentErrors.value.general = 'Unexpected error occurred'
+    }
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
 const onDeleteIssue = async () => {
@@ -281,6 +332,44 @@ watch(
         />
         <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
       </div>
+
+      <div>
+        <textarea
+          @focus="onAddingComment"
+          placeholder="Add a comment..."
+          class="comment-input"
+          :class="{ expanded: isAddingComment }"
+          v-model="commentReq.text"
+        ></textarea>
+        <InputErrors :error="commentErrors.text" />
+        <InputErrors :error="commentErrors.general" />
+      </div>
+      <div v-if="isAddingComment">
+        <ControlButton @click="onAddComment" :disabled="isSubmitting" label="Save" type="primary" />
+        <ControlButton @click="onCancelComment" label="Cancel" />
+        <select v-model="commentReq.status">
+          <option
+            v-for="status in getEnumOptions(IssueStatus)"
+            :key="status.value"
+            :value="status.value"
+          >
+            {{ status.label }}
+          </option>
+        </select>
+        <select v-model="commentReq.assigneeId">
+          <option :value="undefined">Unassigned</option>
+          <option v-for="user in memberUsers" :key="user.id" :value="user.id">
+            {{ user.name }}
+          </option>
+        </select>
+      </div>
+      <div class="comments-wrapper">
+        <div v-for="comment in issue.comments" :key="comment.id">
+          <div class="comment-name">{{ comment.user.name }}</div>
+          <div class="comment-date">{{ formatDate(comment.createdAt) }}</div>
+          <div class="comment-text">{{ comment.text }}</div>
+        </div>
+      </div>
     </div>
 
     <div class="issue-column">
@@ -307,7 +396,7 @@ watch(
 
       <InputProperty v-if="isEditing" label="Assignee" :error="errors.assigneeId">
         <select v-model="req.assigneeId">
-          <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
+          <option :value="undefined">Unassigned</option>
           <option v-for="user in memberUsers" :key="user.id" :value="user.id">
             {{ user.name }}
           </option>
@@ -439,6 +528,35 @@ watch(
 }
 
 .text-input {
-  width: 400px;
+  width: 500px;
+}
+
+.comment-input {
+  width: 90%;
+  height: 2rem;
+}
+
+.expanded {
+  height: 10rem;
+}
+
+.comments-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  width: 90%;
+}
+
+.comment-name {
+  font-weight: 600;
+}
+
+.comment-date {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.comment-text {
+  margin-top: 0.5rem;
 }
 </style>

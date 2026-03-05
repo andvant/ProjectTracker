@@ -28,9 +28,18 @@ export interface IssueDto {
   childIssues: IssuesDto[]
   watchers: UsersDto[]
   attachments: AttachmentDto[]
+  comments: CommentDto[]
   createdBy: string
   createdAt: string
   updatedBy: string
+  updatedAt: string
+}
+
+export interface CommentDto {
+  id: string
+  user: UsersDto
+  text: string
+  createdAt: string
   updatedAt: string
 }
 
@@ -53,6 +62,12 @@ export class UpdateIssueRequest {
   priority: IssuePriorityEnum = IssuePriority.Normal.value
   dueDate?: string
   estimationMinutes?: number
+}
+
+export class AddCommentRequest {
+  text: string = ''
+  status: IssueStatusEnum = IssueStatus.Open.value
+  assigneeId?: string
 }
 
 export const IssueStatus = {

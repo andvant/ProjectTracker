@@ -259,6 +259,9 @@ watch(
         </div>
       </InputProperty>
 
+      <Property label="Created">{{ formatDate(project.createdAt) }}</Property>
+      <Property label="Updated">{{ formatDate(project.updatedAt) }}</Property>
+
       <Property label="Attachments">
         <ul v-if="project.attachments.length" class="list">
           <li v-for="attachment in project.attachments" :key="attachment.id">
@@ -284,9 +287,6 @@ watch(
         />
         <ControlButton @click="openFileDialog" :disabled="isSubmitting" label="Add attachments" />
       </div>
-
-      <Property label="Created">{{ formatDate(project.createdAt) }}</Property>
-      <Property label="Updated">{{ formatDate(project.updatedAt) }}</Property>
 
       <Property label="Members">
         <ul class="list">
@@ -358,6 +358,6 @@ watch(
 }
 
 .text-input {
-  width: 400px;
+  width: 500px;
 }
 </style>

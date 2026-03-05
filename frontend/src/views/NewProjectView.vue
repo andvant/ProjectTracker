@@ -97,6 +97,6 @@ const onSubmit = async () => {
 }
 
 .text-input {
-  width: 400px;
+  width: 500px;
 }
 </style>

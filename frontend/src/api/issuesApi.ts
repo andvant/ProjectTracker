@@ -1,6 +1,12 @@
 import apiClient from '@/api/apiClient'
 import { BASE_URL } from '@/api/apiClient'
-import type { IssuesDto, IssueDto, CreateIssueRequest, UpdateIssueRequest } from '@/types/issues'
+import type {
+  IssuesDto,
+  IssueDto,
+  CreateIssueRequest,
+  UpdateIssueRequest,
+  AddCommentRequest,
+} from '@/types/issues'
 
 const issuesApi = {
   getIssues: (projectId: string): Promise<IssuesDto[]> =>
@@ -23,6 +29,9 @@ const issuesApi = {
 
   addWatcher: (projectId: string, issueId: string, watcherId: string): Promise<void> =>
     apiClient.put(`projects/${projectId}/issues/${issueId}/watchers/${watcherId}`, null),
+
+  addComment: (projectId: string, issueId: string, request: AddCommentRequest): Promise<void> =>
+    apiClient.post(`projects/${projectId}/issues/${issueId}/comments`, request),
 
   uploadAttachment: (projectId: string, issueId: string, file: FormData): Promise<void> =>
     apiClient.post<void, FormData>(`projects/${projectId}/issues/${issueId}/attachments`, file),
