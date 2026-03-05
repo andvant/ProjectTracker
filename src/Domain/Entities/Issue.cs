@@ -110,6 +110,16 @@ public class Issue : AuditableEntity
         Attachments.Add(new(this, attachment));
     }
 
+    public void RemoveAttachment(Attachment attachment)
+    {
+        var existing = Attachments.FirstOrDefault(a => a.AttachmentId == attachment.Id);
+
+        if (existing is not null)
+        {
+            Attachments.Remove(existing);
+        }
+    }
+
     public void AddWatcher(User watcher)
     {
         if (!Project.IsMember(watcher))

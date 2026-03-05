@@ -88,6 +88,16 @@ public class Project : AuditableEntity
         Attachments.Add(new(this, attachment));
     }
 
+    public void RemoveAttachment(Attachment attachment)
+    {
+        var existing = Attachments.FirstOrDefault(a => a.AttachmentId == attachment.Id);
+
+        if (existing is not null)
+        {
+            Attachments.Remove(existing);
+        }
+    }
+
     public void AddMember(User member, DateTimeOffset currentTime)
     {
         if (!IsMember(member))

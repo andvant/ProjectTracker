@@ -4,6 +4,8 @@ public interface IApplicationDbContext
 {
     DbSet<Project> Projects { get; }
     DbSet<User> Users { get; }
+    DbSet<Attachment> Attachments { get; }
+
     Task<IReadOnlyCollection<Guid>> GetProjectMemberIds(Guid projectId, CancellationToken ct);
 
     Task<int> SaveChangesAsync(CancellationToken ct);

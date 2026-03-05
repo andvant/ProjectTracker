@@ -33,6 +33,9 @@ const projectsApi = {
   uploadAttachment: (projectId: string, file: FormData): Promise<void> =>
     apiClient.post<void, FormData>(`projects/${projectId}/attachments`, file),
 
+  removeAttachment: (projectId: string, attachmentId: string): Promise<void> =>
+    apiClient.delete(`projects/${projectId}/attachments/${attachmentId}`),
+
   getDownloadAttachmentLink: (projectId: string, attachmentId: string): string =>
     new URL(`projects/${projectId}/attachments/${attachmentId}`, BASE_URL).toString(),
 }

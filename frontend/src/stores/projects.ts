@@ -93,6 +93,12 @@ export const useProjectsStore = defineStore('projects', () => {
     return await getProject(projectId)
   }
 
+  const removeAttachment = async (project: ProjectDto, attachmentId: string): Promise<void> => {
+    await projectsApi.removeAttachment(project.id, attachmentId)
+
+    project.attachments = project.attachments.filter((a) => a.id !== attachmentId)
+  }
+
   return {
     projects,
     cachedProject,
@@ -106,5 +112,6 @@ export const useProjectsStore = defineStore('projects', () => {
     removeMember,
     transferOwnership,
     uploadAttachment,
+    removeAttachment,
   }
 })

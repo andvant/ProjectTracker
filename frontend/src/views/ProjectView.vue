@@ -163,6 +163,10 @@ const onFilesSelected = async (event: Event) => {
   input.value = ''
 }
 
+const onRemoveAttachment = async (attachmentId: string) => {
+  await projectsStore.removeAttachment(project.value!, attachmentId)
+}
+
 watch(
   projectId,
   async (projectId) => {
@@ -261,6 +265,11 @@ watch(
             <a :href="projectsApi.getDownloadAttachmentLink(projectId!, attachment.id)">
               {{ attachment.name }}
             </a>
+            <ControlButton
+              v-if="canEditProject"
+              @click="onRemoveAttachment(attachment.id)"
+              type="remove"
+            />
           </li>
         </ul>
       </Property>

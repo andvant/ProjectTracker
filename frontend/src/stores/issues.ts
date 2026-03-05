@@ -91,6 +91,16 @@ export const useIssuesStore = defineStore('issues', () => {
     return await getIssue(projectId, issueId)
   }
 
+  const removeAttachment = async (
+    projectId: string,
+    issue: IssueDto,
+    attachmentId: string,
+  ): Promise<void> => {
+    await issuesApi.removeAttachment(projectId, issue.id, attachmentId)
+
+    issue.attachments = issue.attachments.filter((a) => a.id !== attachmentId)
+  }
+
   return {
     issues,
     fetchIssues,
@@ -103,5 +113,6 @@ export const useIssuesStore = defineStore('issues', () => {
     addWatcher,
     removeWatcher,
     uploadAttachment,
+    removeAttachment,
   }
 })
