@@ -37,23 +37,16 @@ public static class DependencyInjection
         return services;
     }
 
-    public static Guid ApplyMigrations(this IServiceProvider serviceProvider)
+    public static void ApplyMigrations(this IServiceProvider serviceProvider)
     {
-        Guid defaultUserId;
+        using var scope = serviceProvider.CreateScope();
 
-        using (var scope = serviceProvider.CreateScope())
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        if (context.Database.GetPendingMigrations().Any())
         {
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-            if (context.Database.GetPendingMigrations().Any())
-            {
-                context.Database.Migrate();
-            }
-
-            defaultUserId = context.Users.OrderBy(u => u.Id).First().Id;
+            context.Database.Migrate();
         }
-
-        return defaultUserId;
     }
 
     private static void AddDefaultUser(DbContext context)
