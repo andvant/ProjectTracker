@@ -1,4 +1,5 @@
 using System.Reflection;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectTracker.Application.Interfaces;
 using ProjectTracker.Domain.Common;
@@ -8,6 +9,7 @@ namespace ProjectTracker.Infrastructure.Database;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
+    private readonly IPublisher _publisher;
     private readonly ICurrentUser _currentUser;
     private readonly TimeProvider _timeProvider;
 
@@ -16,13 +18,16 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Attachment> Attachments => Set<Attachment>();
     public DbSet<Comment> Comments => Set<Comment>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
+        IPublisher publisher,
         ICurrentUser currentUser,
         TimeProvider timeProvider)
         : base(options)
     {
+        _publisher = publisher;
         _currentUser = currentUser;
         _timeProvider = timeProvider;
     }
@@ -34,11 +39,15 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken ct = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken ct)
     {
         UpdateAuditableEntities();
 
-        return await base.SaveChangesAsync(ct);
+        var result = await base.SaveChangesAsync(ct);
+
+        await PublishDomainEvents(ct);
+
+        return result;
     }
 
     public void Update(AuditableEntity entity)
@@ -46,15 +55,24 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         base.Update(entity);
     }
 
+    public async Task<IReadOnlyCollection<Guid>> GetProjectMemberIds(Guid projectId, CancellationToken ct)
+    {
+        return await Projects
+            .Where(p => p.Id == projectId)
+            .SelectMany(p => p.Members)
+            .Select(m => m.UserId).ToListAsync(ct);
+    }
+
     private void UpdateAuditableEntities()
     {
-        var entries = ChangeTracker.Entries().Where(e =>
-            e.Entity is AuditableEntity &&
-            (e.State is EntityState.Added or EntityState.Modified));
+        var entries = ChangeTracker
+            .Entries<AuditableEntity>()
+            .Where(e => e.State is EntityState.Added or EntityState.Modified)
+            .ToList();
 
         foreach (var entry in entries)
         {
-            var entity = (AuditableEntity)entry.Entity;
+            var entity = entry.Entity;
 
             var currentUserId = _currentUser.GetUserId();
             var currentTime = _timeProvider.GetUtcNow();
@@ -70,11 +88,24 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         }
     }
 
-    public async Task<IReadOnlyCollection<Guid>> GetProjectMemberIds(Guid projectId, CancellationToken ct)
+    private async Task PublishDomainEvents(CancellationToken ct)
     {
-        return await Projects
-            .Where(p => p.Id == projectId)
-            .SelectMany(p => p.Members)
-            .Select(m => m.UserId).ToListAsync(ct);
+        var entities = ChangeTracker
+            .Entries<Entity>()
+            .Select(e => e.Entity)
+            .Where(e => e.DomainEvents.Any())
+            .ToList();
+
+        var domainEvents = entities.SelectMany(e => e.DomainEvents).ToList();
+
+        foreach (var entity in entities)
+        {
+            entity.ClearDomainEvents();
+        }
+
+        foreach (var domainEvent in domainEvents)
+        {
+            await _publisher.Publish(domainEvent, ct);
+        }
     }
 }

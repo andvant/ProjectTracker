@@ -1,4 +1,5 @@
 using ProjectTracker.Api.Endpoints.Issues;
+using ProjectTracker.Api.Endpoints.Notifications;
 using ProjectTracker.Api.Endpoints.Projects;
 using ProjectTracker.Api.Endpoints.Users;
 
@@ -17,6 +18,7 @@ internal static class Endpoints
         app.MapProjects();
         app.MapIssues();
         app.MapUsers();
+        app.MapNotifications();
     }
 
     private static void MapProjects(this IEndpointRouteBuilder app)
@@ -64,5 +66,13 @@ internal static class Endpoints
         group.MapGetUsers();
         group.MapGetUserGroups();
         group.MapUpdateUserGroups();
+    }
+
+    private static void MapNotifications(this IEndpointRouteBuilder app)
+    {
+        var group = app.MapGroup("/notifications")
+            .WithTags("Notifications");
+
+        group.MapGetNotifications();
     }
 }

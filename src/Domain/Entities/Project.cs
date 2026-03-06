@@ -1,3 +1,5 @@
+using ProjectTracker.Domain.Events;
+
 namespace ProjectTracker.Domain.Entities;
 
 public class Project : AuditableEntity
@@ -103,6 +105,7 @@ public class Project : AuditableEntity
         if (!IsMember(member))
         {
             Members.Add(new(this, member, currentTime));
+            RaiseDomainEvent(new MemberAddedEvent(this, member));
         }
     }
 
