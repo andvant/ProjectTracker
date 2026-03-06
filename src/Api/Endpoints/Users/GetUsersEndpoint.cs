@@ -1,6 +1,6 @@
 using ProjectTracker.Application.Features.Users.GetUsers;
 
-namespace UserTracker.Api.Endpoints.Users;
+namespace ProjectTracker.Api.Endpoints.Users;
 
 internal static class GetUsersEndpoint
 {

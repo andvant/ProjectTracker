@@ -1,6 +1,6 @@
 using ProjectTracker.Api.Endpoints.Issues;
 using ProjectTracker.Api.Endpoints.Projects;
-using UserTracker.Api.Endpoints.Users;
+using ProjectTracker.Api.Endpoints.Users;
 
 namespace ProjectTracker.Api.Endpoints;
 

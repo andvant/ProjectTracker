@@ -1,7 +1,7 @@
 using ProjectTracker.Application.Common;
 using ProjectTracker.Application.Features.Users.UpdateUserGroups;
 
-namespace UserTracker.Api.Endpoints.Users;
+namespace ProjectTracker.Api.Endpoints.Users;
 
 public record UpdateUserGroupsRequest(IReadOnlyCollection<Guid> GroupIds) : IRequest;
 
