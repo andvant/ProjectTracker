@@ -75,37 +75,39 @@ const onAddComment = async () => {
 </script>
 <template>
   <div>
-    <textarea
-      @focus="onAddingComment"
-      placeholder="Add a comment..."
-      class="comment-input"
-      :class="{ 'comment-input_expanded': isAddingComment }"
-      v-model="req.text"
-    ></textarea>
-    <InputErrors :error="errors.text" />
-    <InputErrors :error="errors.general" />
-  </div>
+    <div>
+      <textarea
+        @focus="onAddingComment"
+        placeholder="Add a comment..."
+        class="comment-input"
+        :class="{ 'comment-input_expanded': isAddingComment }"
+        v-model="req.text"
+      ></textarea>
+      <InputErrors :error="errors.text" />
+      <InputErrors :error="errors.general" />
+    </div>
 
-  <div v-if="isAddingComment">
-    <ControlButton @click="onAddComment" :disabled="isSubmitting" label="Save" type="primary" />
-    <ControlButton @click="onCancelComment" label="Cancel" />
+    <div v-if="isAddingComment" class="comment-buttons">
+      <ControlButton @click="onAddComment" :disabled="isSubmitting" label="Save" type="primary" />
+      <ControlButton @click="onCancelComment" label="Cancel" />
 
-    <select v-model="req.status">
-      <option
-        v-for="status in getEnumOptions(IssueStatus)"
-        :key="status.value"
-        :value="status.value"
-      >
-        {{ status.label }}
-      </option>
-    </select>
+      <select v-model="req.status">
+        <option
+          v-for="status in getEnumOptions(IssueStatus)"
+          :key="status.value"
+          :value="status.value"
+        >
+          {{ status.label }}
+        </option>
+      </select>
 
-    <select v-model="req.assigneeId">
-      <option :value="undefined">Unassigned</option>
-      <option v-for="user in memberUsers" :key="user.id" :value="user.id">
-        {{ user.fullName }}
-      </option>
-    </select>
+      <select v-model="req.assigneeId">
+        <option :value="undefined">Unassigned</option>
+        <option v-for="user in memberUsers" :key="user.id" :value="user.id">
+          {{ user.fullName }}
+        </option>
+      </select>
+    </div>
   </div>
 
   <div class="comments-wrapper">
@@ -124,6 +126,10 @@ const onAddComment = async () => {
 
 .comment-input_expanded {
   height: 10rem;
+}
+
+.comment-buttons {
+  margin-top: 0.5rem;
 }
 
 .comments-wrapper {

@@ -5,6 +5,7 @@ export interface ProjectsDto {
   id: string
   key: string
   name: string
+  createdAt: string
 }
 
 export interface ProjectDto {

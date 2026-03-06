@@ -49,6 +49,7 @@ const goToIssue = (issueKey: string) => {
 
 .issues-table {
   border-collapse: collapse;
+  width: 100%;
 }
 
 .issues-table th,

@@ -15,6 +15,8 @@ export const useProjectsStore = defineStore('projects', () => {
 
   const fetchProjects = async (): Promise<void> => {
     projects.value = await projectsApi.getProjects()
+
+    projects.value.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
   }
 
   const deleteProject = async (projectId: string): Promise<void> => {
