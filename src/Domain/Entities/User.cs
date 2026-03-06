@@ -2,8 +2,9 @@ namespace ProjectTracker.Domain.Entities;
 
 public class User : Entity
 {
-    public string Name { get; private set; }
+    public string Username { get; private set; }
     public string Email { get; private set; }
+    public string FullName { get; private set; }
     public DateTimeOffset RegistrationDate { get; private set; }
 
     public IReadOnlyCollection<ProjectMember> Projects { get; private set; }
@@ -13,18 +14,20 @@ public class User : Entity
     // for EF Core
     protected User()
     {
-        Name = null!;
+        Username = null!;
         Email = null!;
+        FullName = null!;
         Projects = null!;
         AssignedIssues = null!;
         WatchedIssues = null!;
     }
 
-    public User(Guid id, string name, string email, DateTimeOffset registrationDate)
+    public User(Guid id, string username, string email, string fullName, DateTimeOffset registrationDate)
     {
         Id = id;
-        Name = name;
+        Username = username;
         Email = email;
+        FullName = fullName;
         RegistrationDate = registrationDate;
 
         Projects = new List<ProjectMember>();

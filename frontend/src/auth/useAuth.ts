@@ -7,7 +7,7 @@ const user = ref<User | null>(null)
 
 const userRoles = computed(() => (user.value?.profile?.roles as string[]) ?? [])
 const userId = computed(() => user.value?.profile?.sub)
-const userName = computed(() => user.value?.profile?.preferred_username)
+const fullName = computed(() => user.value?.profile?.name)
 const accessToken = computed(() => user.value?.access_token)
 const isSignedIn = computed(() => !!user.value)
 
@@ -33,7 +33,7 @@ export const useAuth = () => {
     user,
     userRoles,
     userId,
-    userName,
+    fullName,
     accessToken,
     isSignedIn,
     hasRole,

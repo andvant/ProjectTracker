@@ -305,14 +305,14 @@ watch(
 
       <LabelProperty label="Reporter">
         <RouterLink :to="{ name: 'User', params: { userId: issue.reporter.id } }">
-          {{ issue.reporter.name }}
+          {{ issue.reporter.fullName }}
         </RouterLink>
       </LabelProperty>
 
       <LabelProperty v-if="!isEditing" label="Assignee">
         <span v-if="!issue.assignee" class="unassigned">Unassigned</span>
         <RouterLink v-else :to="{ name: 'User', params: { userId: issue.assignee.id } }">
-          {{ issue.assignee.name }}
+          {{ issue.assignee.fullName }}
         </RouterLink>
       </LabelProperty>
 
@@ -320,7 +320,7 @@ watch(
         <select v-model="req.assigneeId">
           <option :value="undefined">Unassigned</option>
           <option v-for="user in memberUsers" :key="user.id" :value="user.id">
-            {{ user.name }}
+            {{ user.fullName }}
           </option>
         </select>
       </LabelInput>
@@ -396,7 +396,7 @@ watch(
         <ul v-if="issue.watchers.length" class="list">
           <li v-for="watcher in issue.watchers" :key="watcher.id">
             <RouterLink :to="{ name: 'User', params: { userId: watcher.id } }">
-              {{ watcher.name }}
+              {{ watcher.fullName }}
             </RouterLink>
             <ControlButton v-if="canEditIssue" @click="onRemoveWatcher(watcher.id)" type="remove" />
           </li>
@@ -413,7 +413,7 @@ watch(
         <select v-model="selectedWatcherId">
           <option disabled :value="null">Select a user</option>
           <option v-for="user in nonWatcherUsers" :key="user.id" :value="user.id">
-            {{ user.name }}
+            {{ user.fullName }}
           </option>
         </select>
         <div>
@@ -440,7 +440,7 @@ watch(
 .issue-wrapper {
   padding: 2rem;
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 4fr 1fr;
   align-items: start;
   width: 70vw;
 }

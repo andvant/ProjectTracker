@@ -16,7 +16,7 @@ onMounted(async () => {
     <ul class="list">
       <li v-for="user in usersStore.users" :key="user.id">
         <RouterLink :to="{ name: 'User', params: { userId: user.id } }">
-          {{ user.name }}
+          {{ user.fullName }}
         </RouterLink>
       </li>
     </ul>

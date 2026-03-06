@@ -12,7 +12,7 @@ internal static partial class ProjectDtoMapper
     public static partial IQueryable<ProjectDto> ProjectToDto(this IQueryable<Project> query);
 
     private static UsersDto MapMembers(ProjectMember member) =>
-        new(member.User.Id, member.User.Name);
+        new(member.User.Id, member.User.FullName);
 
     private static AttachmentDto MapAttachments(ProjectAttachment attachment) =>
         new(attachment.Attachment.Id, attachment.Attachment.Name);

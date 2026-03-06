@@ -131,7 +131,7 @@ watch(
       <select v-model="req.assigneeId">
         <option :value="undefined">{{ '&lt;Not selected&gt;' }}</option>
         <option v-for="user in memberUsers" :key="user.id" :value="user.id">
-          {{ user.name }}
+          {{ user.fullName }}
         </option>
       </select>
     </LabelInput>

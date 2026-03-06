@@ -32,7 +32,7 @@ const goToIssue = (issueKey: string) => {
           <td>{{ issue.title }}</td>
           <td>{{ getEnumLabel(IssueStatus, issue.status) }}</td>
           <td :class="{ unassigned: !issue.assignee }">
-            {{ issue.assignee?.name ?? 'Unassigned' }}
+            {{ issue.assignee?.fullName ?? 'Unassigned' }}
           </td>
           <td>{{ getEnumLabel(IssueType, issue.type) }}</td>
           <td>{{ getEnumLabel(IssuePriority, issue.priority) }}</td>

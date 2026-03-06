@@ -59,9 +59,10 @@ watch(
 </script>
 <template>
   <div v-if="user" class="user-wrapper">
-    <ViewTitle :title="user.name" />
+    <ViewTitle :title="user.fullName" />
 
     <LabelProperty label="Email">{{ user.email }}</LabelProperty>
+    <LabelProperty label="Username">{{ user.username }}</LabelProperty>
     <LabelProperty label="Registration date">{{ formatDate(user.registrationDate) }}</LabelProperty>
 
     <LabelProperty v-if="!isEditing" label="Groups">
@@ -119,6 +120,6 @@ watch(
 }
 
 .list {
-  width: 100%;
+  width: 380px;
 }
 </style>

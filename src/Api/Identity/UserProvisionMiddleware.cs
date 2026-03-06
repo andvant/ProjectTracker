@@ -23,10 +23,11 @@ public class UserProvisionMiddleware : IMiddleware
         }
 
         var id = user.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var username = user.FindFirstValue("preferred_username")!;
         var email = user.FindFirstValue(ClaimTypes.Email)!;
+        var username = user.FindFirstValue("preferred_username")!;
+        var fullName = user.FindFirstValue("name")!;
 
-        var command = new ProvisionUserCommand(Guid.Parse(id), username, email);
+        var command = new ProvisionUserCommand(Guid.Parse(id), username, email, fullName);
 
         await _sender.Send(command);
 

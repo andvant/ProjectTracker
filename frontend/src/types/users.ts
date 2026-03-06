@@ -1,12 +1,13 @@
 export interface UsersDto {
   id: string
-  name: string
+  fullName: string
 }
 
 export interface UserDto {
   id: string
-  name: string
+  username: string
   email: string
+  fullName: string
   registrationDate: string
 }
 

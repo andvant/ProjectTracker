@@ -1,6 +1,6 @@
 namespace ProjectTracker.Application.Features.Users.ProvisionUser;
 
-public record ProvisionUserCommand(Guid Id, string Username, string Email) : IRequest;
+public record ProvisionUserCommand(Guid Id, string Username, string Email, string FullName) : IRequest;
 
 internal class ProvisionUserCommandHandler : IRequestHandler<ProvisionUserCommand>
 {
@@ -27,7 +27,7 @@ internal class ProvisionUserCommandHandler : IRequestHandler<ProvisionUserComman
             return;
         }
 
-        var user = new User(command.Id, command.Username, command.Email, _timeProvider.GetUtcNow());
+        var user = new User(command.Id, command.Username, command.Email, command.FullName, _timeProvider.GetUtcNow());
 
         _context.Users.Add(user);
 
@@ -35,6 +35,6 @@ internal class ProvisionUserCommandHandler : IRequestHandler<ProvisionUserComman
 
         _logger.LogInformation(
             "Created user with id '{Id}', username '{Username}', email '{Email}'",
-            user.Id, user.Name, user.Email);
+            user.Id, user.Username, user.Email);
     }
 }

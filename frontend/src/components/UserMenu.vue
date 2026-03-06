@@ -5,7 +5,7 @@ import SignOutButton from '@/components/SignOutButton.vue'
 
 const props = defineProps<{
   userId: string
-  userName: string
+  fullName: string
 }>()
 
 const router = useRouter()
@@ -39,7 +39,7 @@ onUnmounted(() => {
 <template>
   <div ref="rootElement" class="user-menu">
     <div @click="toggle">
-      {{ userName }}
+      {{ fullName }}
     </div>
     <div v-if="isOpen" class="dropdown user-menu">
       <div class="dropdown-item" @click="goToProfile">Profile</div>

@@ -103,14 +103,14 @@ const onAddComment = async () => {
     <select v-model="req.assigneeId">
       <option :value="undefined">Unassigned</option>
       <option v-for="user in memberUsers" :key="user.id" :value="user.id">
-        {{ user.name }}
+        {{ user.fullName }}
       </option>
     </select>
   </div>
 
   <div class="comments-wrapper">
     <div v-for="comment in issue!.comments" :key="comment.id">
-      <div class="comment-name">{{ comment.user.name }}</div>
+      <div class="comment-name">{{ comment.user.fullName }}</div>
       <div class="comment-date">{{ formatDate(comment.createdAt) }}</div>
       <div class="comment-text">{{ comment.text }}</div>
     </div>
@@ -118,7 +118,7 @@ const onAddComment = async () => {
 </template>
 <style scoped>
 .comment-input {
-  width: 90%;
+  width: 85%;
   height: 2rem;
 }
 
@@ -127,7 +127,7 @@ const onAddComment = async () => {
 }
 
 .comments-wrapper {
-  width: 90%;
+  width: 85%;
   display: flex;
   flex-direction: column;
   gap: 1.3rem;

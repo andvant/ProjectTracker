@@ -60,7 +60,8 @@ public static class DependencyInjection
     {
         if (context.Set<User>().Any()) return;
 
-        var user = new User(Guid.Parse("9ee62ef4-159b-48d0-82c8-28e61bfacd14"), "admin", "admin@mail.com", DateTimeOffset.UtcNow);
+        var user = new User(Guid.Parse("9ee62ef4-159b-48d0-82c8-28e61bfacd14"),
+            "admin", "admin@mail.com", "John Doe", DateTimeOffset.UtcNow);
         context.Set<User>().Add(user);
         context.SaveChanges();
     }

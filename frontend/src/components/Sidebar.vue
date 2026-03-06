@@ -11,7 +11,7 @@ const route = useRoute()
 
 const projectsStore = useProjectsStore()
 
-const { isSignedIn, userId, userName, onUserLoaded, hasRole } = useAuth()
+const { isSignedIn, userId, fullName, onUserLoaded, hasRole } = useAuth()
 
 const selectedProjectKey = computed(() => route.params.projectKey)
 const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
@@ -51,7 +51,7 @@ onMounted(async () => {
       </ul>
     </div>
     <div class="bottom">
-      <UserMenu v-if="isSignedIn" :userName="userName!" :userId="userId!" class="button" />
+      <UserMenu v-if="isSignedIn" :userId="userId!" :fullName="fullName!" class="button" />
 
       <div v-if="isSignedIn" class="button" :class="{ selected: usersSelected }">
         <RouterLink :to="{ name: 'Users' }"><div>Users</div></RouterLink>

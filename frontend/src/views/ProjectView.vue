@@ -230,7 +230,7 @@ watch(
     <div class="project-column">
       <LabelProperty v-if="!isTransferringOwnership" label="Owner">
         <RouterLink :to="{ name: 'User', params: { userId: project.owner.id } }">
-          {{ project.owner.name }}
+          {{ project.owner.fullName }}
         </RouterLink>
       </LabelProperty>
 
@@ -244,7 +244,7 @@ watch(
         <div class="user-select">
           <select v-model="selectedOwnerId">
             <option v-for="user in project.members" :key="user.id" :value="user.id">
-              {{ user.name }}
+              {{ user.fullName }}
             </option>
           </select>
           <div>
@@ -292,7 +292,7 @@ watch(
         <ul class="list">
           <li v-for="member in project.members" :key="member.id">
             <RouterLink :to="{ name: 'User', params: { userId: member.id } }">
-              {{ member.name }}
+              {{ member.fullName }}
             </RouterLink>
             <ControlButton
               v-if="member.id !== project.owner.id && canEditProject"
@@ -313,7 +313,7 @@ watch(
         <select v-model="selectedMemberId">
           <option disabled :value="null">Select a user</option>
           <option v-for="user in nonMemberUsers" :key="user.id" :value="user.id">
-            {{ user.name }}
+            {{ user.fullName }}
           </option>
         </select>
         <div>
@@ -340,7 +340,7 @@ watch(
 .project-wrapper {
   padding: 2rem;
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 4fr 1fr;
   align-items: start;
   width: 70vw;
 }
