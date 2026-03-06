@@ -64,7 +64,7 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
                 ?? throw new ParentIssueNotFoundException(command.ProjectId, command.ParentIssueId.Value);
         }
 
-        var nextIssueNumber = await GetNextIssueNumber(ct);
+        var nextIssueNumber = (await GetMaxIssueNumber(command.ProjectId, ct) ?? 0) + 1;
 
         var issue = project.CreateIssue(
             nextIssueNumber,
@@ -88,14 +88,11 @@ internal class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, I
         return issue.ToDto();
     }
 
-    private async Task<int> GetNextIssueNumber(CancellationToken ct)
-    {
-        var issues = _context.Projects.SelectMany(p => p.Issues);
-
-        return (await issues.AnyAsync(ct))
-            ? (await issues.MaxAsync(i => i.Number, ct)) + 1
-            : 1;
-    }
+    private Task<int?> GetMaxIssueNumber(Guid projectId, CancellationToken ct) =>
+        _context.Projects
+            .Where(p => p.Id == projectId)
+            .SelectMany(p => p.Issues)
+            .MaxAsync(i => (int?)i.Number, ct);
 }
 
 public class CreateIssueCommandValidator : AbstractValidator<CreateIssueCommand>
