@@ -6,7 +6,6 @@ import UsersView from '@/views/UsersView.vue'
 import NewProjectView from '@/views/NewProjectView.vue'
 import IssueView from '@/views/IssueView.vue'
 import UserView from '@/views/UserView.vue'
-import NotificationsView from '@/views/NotificationsView.vue'
 import AuthCallbackView from '@/views/AuthCallbackView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 
@@ -44,11 +43,6 @@ const routes: RouteRecordRaw[] = [
         path: 'users/:userId',
         name: 'User',
         component: UserView,
-      },
-      {
-        path: 'notifications',
-        name: 'Notifications',
-        component: NotificationsView,
       },
       {
         path: AUTH_CALLBACK_ROUTE,

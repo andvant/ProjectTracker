@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { useProjectsStore } from '@/stores/projectsStore'
 import { useAuth } from '@/auth/useAuth'
 import { Role } from '@/types/roles'
+import NotificationsMenu from '@/components/NotificationsMenu.vue'
 import UserMenu from '@/components/UserMenu.vue'
 import SignInButton from '@/components/SignInButton.vue'
 
@@ -14,8 +15,8 @@ const projectsStore = useProjectsStore()
 const { isSignedIn, userId, fullName, onUserLoaded, hasRole } = useAuth()
 
 const selectedProjectKey = computed(() => route.params.projectKey)
-const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
 const newProjectSelected = computed(() => route.name === 'NewProject')
+const usersSelected = computed(() => route.name === 'Users' || route.name === 'User')
 
 const canCreateProject = computed(() => hasRole([Role.Admin, Role.ProjectManager]))
 
@@ -28,7 +29,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <aside class="sidebar">
+  <nav class="sidebar">
     <div
       v-if="isSignedIn && canCreateProject"
       class="button"
@@ -51,6 +52,7 @@ onMounted(async () => {
       </ul>
     </div>
     <div class="bottom">
+      <NotificationsMenu v-if="isSignedIn" class="button" />
       <UserMenu v-if="isSignedIn" :userId="userId!" :fullName="fullName!" class="button" />
 
       <div v-if="isSignedIn" class="button" :class="{ selected: usersSelected }">
@@ -61,7 +63,7 @@ onMounted(async () => {
         <SignInButton />
       </div>
     </div>
-  </aside>
+  </nav>
 </template>
 <style scoped>
 .sidebar {

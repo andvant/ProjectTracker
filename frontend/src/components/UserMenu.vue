@@ -28,12 +28,20 @@ const onClickOutside = (e: MouseEvent) => {
   }
 }
 
-onMounted(() => {
+const onEscapeKey = (e: KeyboardEvent) => {
+  if (e.key === 'Escape') {
+    isOpen.value = false
+  }
+}
+
+onMounted(async () => {
   document.addEventListener('click', onClickOutside)
+  document.addEventListener('keydown', onEscapeKey)
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', onClickOutside)
+  document.removeEventListener('keydown', onEscapeKey)
 })
 </script>
 <template>
@@ -41,7 +49,7 @@ onUnmounted(() => {
     <div @click="toggle">
       {{ fullName }}
     </div>
-    <div v-if="isOpen" class="dropdown user-menu">
+    <div v-if="isOpen" class="dropdown">
       <div class="dropdown-item" @click="goToProfile">Profile</div>
       <SignOutButton class="dropdown-item" />
     </div>
@@ -56,7 +64,7 @@ onUnmounted(() => {
   position: absolute;
   top: 0;
   left: 100%;
-  min-width: 140px;
+  width: 140px;
   background: #15223d;
   border-radius: 8px;
   padding: 6px;

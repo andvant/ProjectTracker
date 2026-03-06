@@ -32,7 +32,7 @@ const cssClass = computed(() => {
   margin: 0 0.5rem;
   padding: 0.2rem 0.4rem;
   font-size: 0.7rem;
-  border-color: #ddd;
+  border-color: var(--color-dark-grey);
   border-radius: 20px;
   background-color: white;
   color: var(--color-red);
@@ -47,7 +47,7 @@ const cssClass = computed(() => {
 .btn-danger {
   background-color: white;
   color: var(--color-red);
-  border-color: #ddd;
+  border-color: var(--color-dark-grey);
 }
 
 .btn-danger:hover {
@@ -68,7 +68,7 @@ const cssClass = computed(() => {
 .btn-default {
   background-color: white;
   color: #333;
-  border-color: #ddd;
+  border-color: var(--color-dark-grey);
 }
 
 .btn-default:hover {
