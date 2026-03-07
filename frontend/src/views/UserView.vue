@@ -63,7 +63,9 @@ watch(
 
     <LabelProperty label="Email">{{ user.email }}</LabelProperty>
     <LabelProperty label="Username">{{ user.username }}</LabelProperty>
-    <LabelProperty label="Registration date">{{ formatDate(user.registrationDate) }}</LabelProperty>
+    <LabelProperty label="Registration date">
+      {{ formatDate(user.registrationDate, false) }}
+    </LabelProperty>
 
     <LabelProperty v-if="!isEditing" label="Groups">
       <ul v-if="memberGroups.length" class="list">
