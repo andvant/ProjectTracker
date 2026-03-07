@@ -30,19 +30,17 @@ onMounted(async () => {
 </script>
 <template>
   <nav class="sidebar">
-    <div>
-      <ul>
-        <li
-          v-for="project in projectsStore.projects"
-          :key="project.id"
-          class="button"
-          :class="{ selected: project.key === selectedProjectKey }"
-        >
-          <RouterLink :to="{ name: 'Project', params: { projectKey: project.key } }">
-            <div>{{ project.name }}</div>
-          </RouterLink>
-        </li>
-      </ul>
+    <div class="projects-list">
+      <div
+        v-for="project in projectsStore.projects"
+        :key="project.id"
+        class="button"
+        :class="{ selected: project.key === selectedProjectKey }"
+      >
+        <RouterLink :to="{ name: 'Project', params: { projectKey: project.key } }">
+          <div>{{ project.name }}</div>
+        </RouterLink>
+      </div>
     </div>
     <div>
       <div
@@ -76,10 +74,9 @@ onMounted(async () => {
   justify-content: space-between;
 }
 
-.sidebar ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.projects-list {
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
 .button {
