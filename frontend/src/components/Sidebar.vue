@@ -5,7 +5,7 @@ import { useProjectsStore } from '@/stores/projectsStore'
 import { useAuth } from '@/auth/useAuth'
 import { Role } from '@/types/roles'
 import NotificationsMenu from '@/components/NotificationsMenu.vue'
-import UserMenu from '@/components/UserMenu.vue'
+import ProfileMenu from '@/components/ProfileMenu.vue'
 import SignInButton from '@/components/SignInButton.vue'
 
 const route = useRoute()
@@ -30,13 +30,6 @@ onMounted(async () => {
 </script>
 <template>
   <nav class="sidebar">
-    <div
-      v-if="isSignedIn && canCreateProject"
-      class="button"
-      :class="{ selected: newProjectSelected }"
-    >
-      <RouterLink :to="{ name: 'NewProject' }"><div>+ New project</div></RouterLink>
-    </div>
     <div>
       <ul>
         <li
@@ -51,13 +44,21 @@ onMounted(async () => {
         </li>
       </ul>
     </div>
-    <div class="bottom">
-      <NotificationsMenu v-if="isSignedIn" class="button" />
-      <UserMenu v-if="isSignedIn" :userId="userId!" :fullName="fullName!" class="button" />
+    <div>
+      <div
+        v-if="isSignedIn && canCreateProject"
+        class="button"
+        :class="{ selected: newProjectSelected }"
+      >
+        <RouterLink :to="{ name: 'NewProject' }"><div>+ New project</div></RouterLink>
+      </div>
 
       <div v-if="isSignedIn" class="button" :class="{ selected: usersSelected }">
         <RouterLink :to="{ name: 'Users' }"><div>Users</div></RouterLink>
       </div>
+
+      <NotificationsMenu v-if="isSignedIn" class="button" />
+      <ProfileMenu v-if="isSignedIn" :userId="userId!" :fullName="fullName!" class="button" />
 
       <div v-if="!isSignedIn" class="button">
         <SignInButton />
@@ -72,16 +73,13 @@ onMounted(async () => {
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 .sidebar ul {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.bottom {
-  margin-top: auto;
 }
 
 .button {

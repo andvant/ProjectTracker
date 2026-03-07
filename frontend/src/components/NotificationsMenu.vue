@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useNotificationsStore } from '@/stores/notificationsStore'
 import { formatDate } from '@/utils'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 
 const isOpen = ref(false)
 const rootElement = ref<HTMLElement>()
@@ -12,6 +12,10 @@ const toggle = async () => {
   isOpen.value = !isOpen.value
   await notificationsStore.fetchNotifications()
 }
+
+const unreadNotificationsCount = computed(
+  () => notificationsStore.notifications.filter((n) => !n.readTime).length,
+)
 
 const onClickOutside = (e: MouseEvent) => {
   if (!rootElement.value!.contains(e.target as Node)) {
@@ -28,6 +32,7 @@ const onEscapeKey = (e: KeyboardEvent) => {
 onMounted(async () => {
   document.addEventListener('click', onClickOutside)
   document.addEventListener('keydown', onEscapeKey)
+  await notificationsStore.fetchNotifications()
 })
 
 onUnmounted(() => {
@@ -37,10 +42,18 @@ onUnmounted(() => {
 </script>
 <template>
   <div ref="rootElement" class="notifications-menu">
-    <div @click="toggle">Notifications</div>
+    <div @click="toggle" class="notifications-button">
+      <div>Notifications</div>
+      <div v-if="unreadNotificationsCount" class="unread-count">
+        {{ unreadNotificationsCount }}
+      </div>
+    </div>
 
     <div v-show="isOpen" class="dropdown">
       <div class="title">Notifications</div>
+
+      <div v-if="!notificationsStore.notifications.length">You have no notifications</div>
+
       <div
         v-for="notification in notificationsStore.notifications"
         :key="notification.id"
@@ -55,6 +68,24 @@ onUnmounted(() => {
 <style scoped>
 .notifications-menu {
   position: relative;
+}
+
+.notifications-button {
+  display: flex;
+  justify-content: space-between;
+}
+
+.unread-count {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: var(--color-red);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .dropdown {

@@ -29,12 +29,17 @@ const cssClass = computed(() => {
 }
 
 .btn-remove {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 23px;
+  height: 23px;
   margin: 0 0.5rem;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.7rem;
+  padding: 0;
+  border-radius: 50%;
   border-color: var(--color-dark-grey);
-  border-radius: 20px;
   background-color: white;
+  font-size: 0.7rem;
   color: var(--color-red);
 }
 
