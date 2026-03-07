@@ -19,6 +19,7 @@ internal class GetNotificationsQueryHandler : IRequestHandler<GetNotificationsQu
 
         return await _context.Notifications.AsNoTracking()
             .Where(n => n.UserId == userId)
+            .OrderByDescending(n => n.Timestamp)
             .ProjectToDto()
             .ToListAsync(ct);
     }

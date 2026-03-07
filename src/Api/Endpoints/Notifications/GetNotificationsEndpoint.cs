@@ -11,9 +11,9 @@ internal static class GetNotificationsEndpoint
         {
             var query = new GetNotificationsQuery();
 
-            var users = await sender.Send(query, ct);
+            var notifications = await sender.Send(query, ct);
 
-            return TypedResults.Ok(users);
+            return TypedResults.Ok(notifications);
         })
         .Produces<IReadOnlyCollection<NotificationDto>>(StatusCodes.Status200OK);
     }

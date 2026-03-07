@@ -74,5 +74,7 @@ internal static class Endpoints
             .WithTags("Notifications");
 
         group.MapGetNotifications();
+        group.MapGetUnreadCount();
+        group.MapMarkRead();
     }
 }

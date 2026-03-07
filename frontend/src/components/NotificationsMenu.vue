@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, useTemplateRef } from 'vue'
+import { ref, onMounted, onUnmounted, useTemplateRef } from 'vue'
 import { useNotificationsStore } from '@/stores/notificationsStore'
 import { formatDate } from '@/utils'
 
-const isOpen = ref(false)
-const rootRef = useTemplateRef('root-div')
-
 const notificationsStore = useNotificationsStore()
+
+const rootRef = useTemplateRef('root-div')
+const isOpen = ref(false)
 
 const toggle = async () => {
   isOpen.value = !isOpen.value
-  await notificationsStore.fetchNotifications()
-}
 
-const unreadNotificationsCount = computed(
-  () => notificationsStore.notifications.filter((n) => !n.readTime).length,
-)
+  if (isOpen.value) {
+    await notificationsStore.fetchNotifications()
+    await notificationsStore.markRead()
+  }
+}
 
 const onClickOutside = (e: MouseEvent) => {
   if (!rootRef.value!.contains(e.target as Node)) {
@@ -32,20 +32,21 @@ const onEscapeKey = (e: KeyboardEvent) => {
 onMounted(async () => {
   document.addEventListener('click', onClickOutside)
   document.addEventListener('keydown', onEscapeKey)
-  await notificationsStore.fetchNotifications()
+  notificationsStore.startPollingUnreadCount()
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', onClickOutside)
   document.removeEventListener('keydown', onEscapeKey)
+  notificationsStore.stopPollingUnreadCount()
 })
 </script>
 <template>
   <div ref="root-div" class="notifications-menu">
     <div @click="toggle" class="notifications-button">
       <div>Notifications</div>
-      <div v-if="unreadNotificationsCount" class="unread-count">
-        {{ unreadNotificationsCount }}
+      <div v-if="notificationsStore.unreadCount" class="unread-count">
+        {{ notificationsStore.unreadCount }}
       </div>
     </div>
 
@@ -60,7 +61,7 @@ onUnmounted(() => {
         :class="{ unread: !notification.readTime }"
       >
         <div class="timestamp">{{ formatDate(notification.timestamp) }}</div>
-        <div><span v-html="notification.message"></span></div>
+        <div v-html="notification.message"></div>
       </div>
     </div>
   </div>
@@ -103,12 +104,14 @@ onUnmounted(() => {
   color: var(--color-black);
   font-size: 1rem;
   cursor: default;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 }
 
 .title {
   font-size: 1.2rem;
   font-weight: 600;
-  margin-bottom: 1.2rem;
 }
 
 .timestamp {

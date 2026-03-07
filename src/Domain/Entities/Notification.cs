@@ -27,4 +27,9 @@ public class Notification : Entity
         Message = message;
         Timestamp = timestamp;
     }
+
+    public void MarkRead(DateTimeOffset readTime)
+    {
+        ReadTime = readTime;
+    }
 }
