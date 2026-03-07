@@ -105,7 +105,7 @@ public class Project : AuditableEntity
         if (!IsMember(member))
         {
             Members.Add(new(this, member, currentTime));
-            RaiseDomainEvent(new MemberAddedEvent(this, member));
+            RaiseDomainEvent(new MemberAddedEvent(Key, Name, member.Id));
         }
     }
 
@@ -139,6 +139,8 @@ public class Project : AuditableEntity
 
         Owner = newOwner;
         OwnerId = newOwner.Id;
+
+        RaiseDomainEvent(new NewOwnerEvent(Key, Name, newOwner.Id));
     }
 
     public bool IsMember(User user) =>

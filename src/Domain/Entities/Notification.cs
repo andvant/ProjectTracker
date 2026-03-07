@@ -15,15 +15,15 @@ public class Notification : Entity
         Message = null!;
     }
 
-    public Notification(User user, string message, DateTimeOffset timestamp)
+    public Notification(Guid userId, string message, DateTimeOffset timestamp)
     {
         if (string.IsNullOrWhiteSpace(message))
         {
             throw new EmptyNotificationException();
         }
 
-        User = user;
-        UserId = user.Id;
+        User = null!;
+        UserId = userId;
         Message = message;
         Timestamp = timestamp;
     }

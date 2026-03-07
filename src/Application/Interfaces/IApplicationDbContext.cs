@@ -5,6 +5,7 @@ namespace ProjectTracker.Application.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<Project> Projects { get; }
+    DbSet<Issue> Issues { get; }
     DbSet<User> Users { get; }
     DbSet<Attachment> Attachments { get; }
     DbSet<Notification> Notifications { get; }

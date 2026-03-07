@@ -2,13 +2,13 @@ using ProjectTracker.Domain.Events;
 
 namespace ProjectTracker.Application.Events;
 
-internal class MemberAddedEventHandler : INotificationHandler<MemberAddedEvent>
+internal class NewOwnerEventHandler : INotificationHandler<NewOwnerEvent>
 {
     private readonly IApplicationDbContext _context;
     private readonly INotificationMessageFactory _messageFactory;
     private readonly TimeProvider _timeProvider;
 
-    public MemberAddedEventHandler(
+    public NewOwnerEventHandler(
         IApplicationDbContext context,
         INotificationMessageFactory messageFactory,
         TimeProvider timeProvider)
@@ -18,11 +18,11 @@ internal class MemberAddedEventHandler : INotificationHandler<MemberAddedEvent>
         _timeProvider = timeProvider;
     }
 
-    public async Task Handle(MemberAddedEvent domainEvent, CancellationToken ct)
+    public async Task Handle(NewOwnerEvent domainEvent, CancellationToken ct)
     {
-        var message = _messageFactory.MemberAdded(domainEvent.ProjectKey, domainEvent.ProjectName);
+        var message = _messageFactory.NewOwner(domainEvent.ProjectKey, domainEvent.ProjectName);
 
-        var notification = new Notification(domainEvent.MemberId, message, _timeProvider.GetUtcNow());
+        var notification = new Notification(domainEvent.NewOwnerId, message, _timeProvider.GetUtcNow());
 
         _context.Notifications.Add(notification);
         await _context.SaveChangesAsync(ct);

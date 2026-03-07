@@ -80,8 +80,8 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 25px;
-  height: 25px;
+  min-width: 23px;
+  height: 23px;
   border-radius: 50%;
   background-color: var(--color-red);
   color: white;
@@ -107,6 +107,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  overflow: auto;
 }
 
 .title {

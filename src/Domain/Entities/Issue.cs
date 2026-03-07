@@ -1,3 +1,5 @@
+using ProjectTracker.Domain.Events;
+
 namespace ProjectTracker.Domain.Entities;
 
 public class Issue : AuditableEntity
@@ -80,6 +82,7 @@ public class Issue : AuditableEntity
         if (assignee is not null && reporter.Id != assignee.Id)
         {
             Watchers.Add(new(this, assignee));
+            RaiseDomainEvent(new IssueAssignedEvent(Id, assignee.Id));
         }
     }
 
@@ -94,6 +97,8 @@ public class Issue : AuditableEntity
         int? estimationMinutes)
     {
         ValidateDetails(Project, null, assignee, dueDate, currentDate, estimationMinutes, null, null);
+
+        RaiseUpdatedEvent(assignee);
 
         Title = title;
         Description = description;
@@ -116,6 +121,8 @@ public class Issue : AuditableEntity
             throw new AssigneeNotMemberException(assignee.Id);
         }
 
+        RaiseUpdatedEvent(assignee);
+
         Assignee = assignee;
         AssigneeId = assignee?.Id;
     }
@@ -126,6 +133,8 @@ public class Issue : AuditableEntity
 
         Attachments ??= new List<IssueAttachment>();
         Attachments.Add(new(this, attachment));
+
+        RaiseUpdatedEvent();
     }
 
     public void RemoveAttachment(Attachment attachment)
@@ -168,6 +177,16 @@ public class Issue : AuditableEntity
             Assignee = null;
             AssigneeId = null;
         }
+    }
+
+    private void RaiseUpdatedEvent(User? assignee = null)
+    {
+        if (assignee is not null && AssigneeId != assignee.Id)
+        {
+            RaiseDomainEvent(new IssueAssignedEvent(Id, assignee.Id));
+        }
+
+        RaiseDomainEvent(new IssueUpdatedEvent(Id));
     }
 
     private void ValidateDetails(
