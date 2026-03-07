@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, useTemplateRef } from 'vue'
 import { useRouter } from 'vue-router'
 import SignOutButton from '@/components/SignOutButton.vue'
 
@@ -11,7 +11,7 @@ const props = defineProps<{
 const router = useRouter()
 
 const isOpen = ref(false)
-const rootElement = ref<HTMLElement>()
+const rootRef = useTemplateRef('root-div')
 
 const toggle = () => {
   isOpen.value = !isOpen.value
@@ -23,7 +23,7 @@ const goToProfile = () => {
 }
 
 const onClickOutside = (e: MouseEvent) => {
-  if (!rootElement.value!.contains(e.target as Node)) {
+  if (!rootRef.value!.contains(e.target as Node)) {
     isOpen.value = false
   }
 }
@@ -45,7 +45,7 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <div ref="rootElement" class="user-menu">
+  <div ref="root-div" class="user-menu">
     <div @click="toggle">
       {{ fullName }}
     </div>

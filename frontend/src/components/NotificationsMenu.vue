@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, computed, useTemplateRef } from 'vue'
 import { useNotificationsStore } from '@/stores/notificationsStore'
 import { formatDate } from '@/utils'
-import { ref, onMounted, onUnmounted, computed } from 'vue'
 
 const isOpen = ref(false)
-const rootElement = ref<HTMLElement>()
+const rootRef = useTemplateRef('root-div')
 
 const notificationsStore = useNotificationsStore()
 
@@ -18,7 +18,7 @@ const unreadNotificationsCount = computed(
 )
 
 const onClickOutside = (e: MouseEvent) => {
-  if (!rootElement.value!.contains(e.target as Node)) {
+  if (!rootRef.value!.contains(e.target as Node)) {
     isOpen.value = false
   }
 }
@@ -41,7 +41,7 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <div ref="rootElement" class="notifications-menu">
+  <div ref="root-div" class="notifications-menu">
     <div @click="toggle" class="notifications-button">
       <div>Notifications</div>
       <div v-if="unreadNotificationsCount" class="unread-count">
