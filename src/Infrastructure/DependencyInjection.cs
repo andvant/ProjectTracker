@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectTracker.Application.Interfaces;
@@ -9,6 +10,7 @@ using ProjectTracker.Infrastructure.Identity;
 using ProjectTracker.Infrastructure.Notifications;
 using ProjectTracker.Infrastructure.ObjectStorage;
 using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Serialization.SystemTextJson;
 
 namespace ProjectTracker.Infrastructure;
 
@@ -33,10 +35,14 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
-        services.AddFusionCache().WithDefaultEntryOptions(opts =>
-        {
-            opts.Duration = TimeSpan.FromMinutes(5);
-        });
+        services.AddFusionCache()
+            .WithDistributedCache(new RedisCache(new RedisCacheOptions { Configuration = "localhost:6379, password=rd_secret" }))
+            .WithSerializer(new FusionCacheSystemTextJsonSerializer())
+            .WithDefaultEntryOptions(opts =>
+            {
+                opts.Duration = TimeSpan.FromMinutes(5);
+            });
+
         services.AddSingleton<IAppCache, AppCache>();
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<IObjectStorage, S3ObjectStorage>();

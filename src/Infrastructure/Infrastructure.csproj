@@ -7,10 +7,12 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" />
     <PackageReference Include="EFCore.NamingConventions" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="ZiggyCreatures.FusionCache" />
+    <PackageReference Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" />
   </ItemGroup>
 
   <ItemGroup>
