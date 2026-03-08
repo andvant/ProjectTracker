@@ -5,25 +5,34 @@ public record ProvisionUserCommand(Guid Id, string Username, string Email, strin
 internal class ProvisionUserCommandHandler : IRequestHandler<ProvisionUserCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IAppCache _cache;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger<ProvisionUserCommandHandler> _logger;
 
     public ProvisionUserCommandHandler(
         IApplicationDbContext context,
+        IAppCache cache,
         TimeProvider timeProvider,
         ILogger<ProvisionUserCommandHandler> logger)
     {
         _context = context;
+        _cache = cache;
         _timeProvider = timeProvider;
         _logger = logger;
     }
 
     public async Task Handle(ProvisionUserCommand command, CancellationToken ct)
     {
-        var userExists = await _context.Users.AnyAsync(u => u.Id == command.Id);
+        if (await _cache.Exists(GetCacheKey(command.Id), ct))
+        {
+            return;
+        }
+
+        var userExists = await _context.Users.AnyAsync(u => u.Id == command.Id, ct);
 
         if (userExists)
         {
+            await CacheUser(command.Id, ct);
             return;
         }
 
@@ -33,8 +42,14 @@ internal class ProvisionUserCommandHandler : IRequestHandler<ProvisionUserComman
 
         await _context.SaveChangesAsync(ct);
 
+        await CacheUser(command.Id, ct);
+
         _logger.LogInformation(
             "Created user with id '{Id}', username '{Username}', email '{Email}'",
             user.Id, user.Username, user.Email);
     }
+
+    private string GetCacheKey(Guid UserId) => $"UserExists:{UserId}";
+    private Task CacheUser(Guid UserId, CancellationToken ct) =>
+        _cache.Set(GetCacheKey(UserId), "1", TimeSpan.FromHours(1), ct);
 }

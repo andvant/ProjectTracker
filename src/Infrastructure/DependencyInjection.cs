@@ -3,10 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectTracker.Application.Interfaces;
 using ProjectTracker.Domain.Entities;
+using ProjectTracker.Infrastructure.Caching;
 using ProjectTracker.Infrastructure.Database;
 using ProjectTracker.Infrastructure.Identity;
 using ProjectTracker.Infrastructure.Notifications;
 using ProjectTracker.Infrastructure.ObjectStorage;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace ProjectTracker.Infrastructure;
 
@@ -17,6 +19,9 @@ public static class DependencyInjection
         IConfiguration configuration,
         bool isDevelopment)
     {
+        services.Configure<S3Config>(configuration.GetSection(nameof(S3Config)));
+        services.Configure<KeycloakAdminConfig>(configuration.GetSection(nameof(KeycloakAdminConfig)));
+
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("ProjectTrackerDb"));
@@ -28,9 +33,11 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
-        services.Configure<S3Config>(configuration.GetSection(nameof(S3Config)));
-        services.Configure<KeycloakAdminConfig>(configuration.GetSection(nameof(KeycloakAdminConfig)));
-
+        services.AddFusionCache().WithDefaultEntryOptions(opts =>
+        {
+            opts.Duration = TimeSpan.FromMinutes(5);
+        });
+        services.AddSingleton<IAppCache, AppCache>();
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<IObjectStorage, S3ObjectStorage>();
         services.AddSingleton<INotificationMessageFactory, NotificationMessageFactory>();
