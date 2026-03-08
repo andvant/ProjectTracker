@@ -17,6 +17,6 @@ internal class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequ
             await validator.ValidateAndThrowAsync(request, ct);
         }
 
-        return await next();
+        return await next(ct);
     }
 }

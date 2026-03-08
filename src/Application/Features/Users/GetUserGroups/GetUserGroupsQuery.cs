@@ -1,6 +1,13 @@
+using ProjectTracker.Application.Common;
+using ProjectTracker.Application.Interfaces.Caching;
+
 namespace ProjectTracker.Application.Features.Users.GetUserGroups;
 
-public record GetUserGroupsQuery(Guid UserId) : IRequest<IReadOnlyCollection<UserGroupDto>>;
+public record GetUserGroupsQuery(Guid UserId) : IRequest<IReadOnlyCollection<UserGroupDto>>, ICacheableQuery
+{
+    public string CacheKey => CacheKeys.UserGroups(UserId);
+    public TimeSpan? Duration => TimeSpan.FromMinutes(60);
+}
 
 internal class GetUserGroupsQueryHandler : IRequestHandler<GetUserGroupsQuery, IReadOnlyCollection<UserGroupDto>>
 {

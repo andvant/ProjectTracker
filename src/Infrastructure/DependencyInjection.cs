@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectTracker.Application.Interfaces;
+using ProjectTracker.Application.Interfaces.Caching;
 using ProjectTracker.Domain.Entities;
 using ProjectTracker.Infrastructure.Caching;
 using ProjectTracker.Infrastructure.Database;
@@ -43,7 +44,7 @@ public static class DependencyInjection
             .WithSerializer(new FusionCacheSystemTextJsonSerializer())
             .WithDefaultEntryOptions(opts =>
             {
-                opts.Duration = TimeSpan.FromMinutes(5);
+                opts.Duration = TimeSpan.FromMinutes(10);
             });
 
         services.AddSingleton<IAppCache, AppCache>();

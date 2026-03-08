@@ -1,3 +1,6 @@
+using ProjectTracker.Application.Common;
+using ProjectTracker.Application.Interfaces.Caching;
+
 namespace ProjectTracker.Application.Features.Users.ProvisionUser;
 
 public record ProvisionUserCommand(Guid Id, string Username, string Email, string FullName) : IRequest;
@@ -23,7 +26,7 @@ internal class ProvisionUserCommandHandler : IRequestHandler<ProvisionUserComman
 
     public async Task Handle(ProvisionUserCommand command, CancellationToken ct)
     {
-        if (await _cache.Exists(GetCacheKey(command.Id), ct))
+        if (await _cache.Exists(CacheKeys.UserExists(command.Id), ct))
         {
             return;
         }
@@ -49,7 +52,6 @@ internal class ProvisionUserCommandHandler : IRequestHandler<ProvisionUserComman
             user.Id, user.Username, user.Email);
     }
 
-    private string GetCacheKey(Guid UserId) => $"UserExists:{UserId}";
     private Task CacheUser(Guid UserId, CancellationToken ct) =>
-        _cache.Set(GetCacheKey(UserId), "1", TimeSpan.FromHours(1), ct);
+        _cache.Set(CacheKeys.UserExists(UserId), "1", TimeSpan.FromHours(2), ct);
 }

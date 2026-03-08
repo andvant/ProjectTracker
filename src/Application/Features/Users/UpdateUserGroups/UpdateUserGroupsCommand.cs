@@ -1,6 +1,12 @@
+using ProjectTracker.Application.Common;
+using ProjectTracker.Application.Interfaces.Caching;
+
 namespace ProjectTracker.Application.Features.Users.UpdateUserGroups;
 
-public record UpdateUserGroupsCommand(Guid UserId, IReadOnlyCollection<Guid> GroupIds) : IRequest;
+public record UpdateUserGroupsCommand(Guid UserId, IReadOnlyCollection<Guid> GroupIds) : IRequest, ICacheInvalidator
+{
+    public string CacheKey => CacheKeys.UserGroups(UserId);
+}
 
 internal class UpdateUserGroupsCommandHandler : IRequestHandler<UpdateUserGroupsCommand>
 {
