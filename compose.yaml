@@ -58,9 +58,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.5.2
     restart: on-failure
-    command:
-      - start-dev
-      - --import-realm
+    command: start-dev --import-realm
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: kc_admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: kc_secret
@@ -75,6 +73,13 @@ services:
       - ./container-init/keycloak:/opt/keycloak/data/import
     depends_on:
       - postgres
+
+  redis:
+    image: redis:8.6-alpine
+    restart: on-failure
+    command: redis-server --requirepass rd_secret
+    ports:
+      - "6379:6379"
 
 volumes:
   postgres_data:

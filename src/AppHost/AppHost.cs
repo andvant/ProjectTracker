@@ -5,6 +5,7 @@ var keycloakUsername = builder.AddParameter("KeycloakUsername", value: "kc_admin
 var keycloakPassword = builder.AddParameter("KeycloakPassword", secret: true, value: "kc_secret");
 var keycloakPostgresUser = builder.AddParameter("KeycloakPostgresUser", value: "kc_db_user");
 var keycloakPostgresPassword = builder.AddParameter("KeycloakPostgresPassword", secret: true, value: "kc_db_secret");
+var redisPassword = builder.AddParameter("RedisPassword", "rd_secret", secret: true);
 
 var postgres = builder.AddPostgres("postgres", password: postgresPassword)
     .WithImageTag("18")
@@ -36,12 +37,22 @@ var keycloak = builder.AddKeycloak("keycloak", 8080, keycloakUsername, keycloakP
     .WithReference(postgres)
     .WaitFor(postgres);
 
+#pragma warning disable ASPIRECERTIFICATES001
+
+var redis = builder.AddRedis("cache", 6379, redisPassword)
+    .WithImageTag("8.6-alpine")
+    .WithoutHttpsCertificate();
+
+#pragma warning restore ASPIRECERTIFICATES001
+
 var api = builder.AddProject<Projects.Api>("api")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
     .WithReference(projectTrackerDb)
+    .WithReference(redis)
     .WaitFor(projectTrackerDb)
     .WaitFor(rustfs)
-    .WaitFor(keycloak);
+    .WaitFor(keycloak)
+    .WaitFor(redis);
 
 var frontend = builder.AddDockerfile("frontend", "../../frontend")
     .WithHttpEndpoint(port: 5150, targetPort: 80)
