@@ -39,7 +39,7 @@ var keycloak = builder.AddKeycloak("keycloak", 8080, keycloakUsername, keycloakP
 
 #pragma warning disable ASPIRECERTIFICATES001
 
-var redis = builder.AddRedis("cache", 6379, redisPassword)
+var redis = builder.AddRedis("Redis", 6379, redisPassword)
     .WithImageTag("8.6-alpine")
     .WithoutHttpsCertificate();
 

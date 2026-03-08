@@ -36,7 +36,10 @@ public static class DependencyInjection
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         services.AddFusionCache()
-            .WithDistributedCache(new RedisCache(new RedisCacheOptions { Configuration = "localhost:6379, password=rd_secret" }))
+            .WithDistributedCache(new RedisCache(new RedisCacheOptions
+            {
+                Configuration = configuration.GetConnectionString("Redis")
+            }))
             .WithSerializer(new FusionCacheSystemTextJsonSerializer())
             .WithDefaultEntryOptions(opts =>
             {

@@ -9,6 +9,7 @@ services:
       S3Config__Endpoint: http://rustfs:9000
       KeycloakConfig__MetadataAddress: http://keycloak:8080/realms/project-tracker/.well-known/openid-configuration
       KeycloakAdminConfig__BaseUrl: http://keycloak:8080
+      ConnectionStrings__Redis: redis:6379, password=rd_secret
       ConnectionStrings__ProjectTrackerDb: >
         Host=postgres;
         Port=5432;
@@ -22,6 +23,7 @@ services:
       - postgres
       - rustfs
       - keycloak
+      - redis
 
   frontend:
     build: frontend
