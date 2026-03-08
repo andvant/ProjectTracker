@@ -1,3 +1,4 @@
+using ProjectTracker.Api.Endpoints.Attachments;
 using ProjectTracker.Api.Endpoints.Issues;
 using ProjectTracker.Api.Endpoints.Notifications;
 using ProjectTracker.Api.Endpoints.Projects;
@@ -19,6 +20,7 @@ internal static class Endpoints
         app.MapIssues();
         app.MapUsers();
         app.MapNotifications();
+        app.MapAttachments();
     }
 
     private static void MapProjects(this IEndpointRouteBuilder app)
@@ -35,7 +37,7 @@ internal static class Endpoints
         group.MapAddMember();
         group.MapRemoveMember();
         group.MapUploadProjectAttachment();
-        group.MapDownloadProjectAttachment();
+        group.MapGetTempIdForProjectAttachment();
         group.MapRemoveProjectAttachment();
     }
 
@@ -53,7 +55,7 @@ internal static class Endpoints
         group.MapRemoveWatcher();
         group.MapAddComment();
         group.MapUploadIssueAttachment();
-        group.MapDownloadIssueAttachment();
+        group.MapGetTempIdForIssueAttachment();
         group.MapRemoveIssueAttachment();
     }
 
@@ -76,5 +78,13 @@ internal static class Endpoints
         group.MapGetNotifications();
         group.MapGetUnreadCount();
         group.MapMarkRead();
+    }
+
+    private static void MapAttachments(this IEndpointRouteBuilder app)
+    {
+        var group = app.MapGroup("/attachments")
+            .WithTags("Attachments");
+
+        group.MapDownloadAttachment();
     }
 }

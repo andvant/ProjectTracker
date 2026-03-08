@@ -22,6 +22,7 @@ internal class GlobalExceptionHandler(
                 MemberNotFoundException or
                 WatcherNotFoundException or
                 AttachmentNotFoundException or
+                DownloadTempIdNotFoundException or
                 NewOwnerNotFoundException:
                 httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                 break;
