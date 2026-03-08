@@ -1,5 +1,4 @@
 import apiClient from '@/api/apiClient'
-import { BASE_URL } from '@/api/apiClient'
 import type {
   ProjectsDto,
   ProjectDto,
@@ -36,8 +35,8 @@ const projectsApi = {
   removeAttachment: (projectId: string, attachmentId: string): Promise<void> =>
     apiClient.delete(`projects/${projectId}/attachments/${attachmentId}`),
 
-  getDownloadAttachmentLink: (projectId: string, attachmentId: string): string =>
-    new URL(`projects/${projectId}/attachments/${attachmentId}`, BASE_URL).toString(),
+  getTempIdForAttachment: (projectId: string, attachmentId: string): Promise<string> =>
+    apiClient.get<string>(`projects/${projectId}/attachments/${attachmentId}`),
 }
 
 export default projectsApi

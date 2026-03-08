@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import issuesApi from '@/api/issuesApi'
+import attachmentsApi from '@/api/attachmentsApi'
+import { useUsersStore } from '@/stores/usersStore'
 import type {
   CreateIssueRequest,
   UpdateIssueRequest,
@@ -8,7 +10,6 @@ import type {
   IssuesDto,
   AddCommentRequest,
 } from '@/types/issues'
-import { useUsersStore } from '@/stores/usersStore'
 
 export const useIssuesStore = defineStore('issues', () => {
   const issues = ref<IssuesDto[]>([])
@@ -122,6 +123,12 @@ export const useIssuesStore = defineStore('issues', () => {
     issue.attachments = issue.attachments.filter((a) => a.id !== attachmentId)
   }
 
+  const downloadAttachment = async (projectId: string, issueId: string, attachmentId: string) => {
+    const tempId = await issuesApi.getTempIdForAttachment(projectId, issueId, attachmentId)
+
+    window.location.href = attachmentsApi.getDownloadAttachmentLink(tempId)
+  }
+
   return {
     issues,
     fetchIssues,
@@ -136,5 +143,6 @@ export const useIssuesStore = defineStore('issues', () => {
     addComment,
     uploadAttachment,
     removeAttachment,
+    downloadAttachment,
   }
 })

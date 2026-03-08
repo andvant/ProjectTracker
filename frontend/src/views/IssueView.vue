@@ -4,7 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { useIssuesStore } from '@/stores/issuesStore'
 import { useProjectsStore } from '@/stores/projectsStore'
 import { useUsersStore } from '@/stores/usersStore'
-import issuesApi from '@/api/issuesApi'
 import { useAuth } from '@/auth/useAuth'
 import {
   IssuePriority,
@@ -263,7 +262,10 @@ watch(
       <LabelProperty label="Attachments">
         <ul v-if="issue.attachments.length" class="list">
           <li v-for="attachment in issue.attachments" :key="attachment.id">
-            <a :href="issuesApi.getDownloadAttachmentLink(projectId!, issueId!, attachment.id)">
+            <a
+              href="#"
+              @click.prevent="issuesStore.downloadAttachment(projectId!, issue.id, attachment.id)"
+            >
               {{ attachment.name }}
             </a>
             <ControlButton

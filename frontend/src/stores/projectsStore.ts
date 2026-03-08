@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import projectsApi from '@/api/projectsApi'
+import attachmentsApi from '@/api/attachmentsApi'
 import { useUsersStore } from '@/stores/usersStore'
 import type {
   CreateProjectRequest,
@@ -101,6 +102,12 @@ export const useProjectsStore = defineStore('projects', () => {
     project.attachments = project.attachments.filter((a) => a.id !== attachmentId)
   }
 
+  const downloadAttachment = async (projectId: string, attachmentId: string) => {
+    const tempId = await projectsApi.getTempIdForAttachment(projectId, attachmentId)
+
+    window.location.href = attachmentsApi.getDownloadAttachmentLink(tempId)
+  }
+
   return {
     projects,
     cachedProject,
@@ -115,5 +122,6 @@ export const useProjectsStore = defineStore('projects', () => {
     transferOwnership,
     uploadAttachment,
     removeAttachment,
+    downloadAttachment,
   }
 })

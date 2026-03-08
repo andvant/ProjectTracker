@@ -4,7 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/projectsStore'
 import { useIssuesStore } from '@/stores/issuesStore'
 import { useUsersStore } from '@/stores/usersStore'
-import projectsApi from '@/api/projectsApi'
 import { useAuth } from '@/auth/useAuth'
 import { UpdateProjectRequest, type ProjectDto } from '@/types/projects'
 import { ApiError, type ValidationErrors } from '@/types/api'
@@ -265,7 +264,10 @@ watch(
       <LabelProperty label="Attachments">
         <ul v-if="project.attachments.length" class="list">
           <li v-for="attachment in project.attachments" :key="attachment.id">
-            <a :href="projectsApi.getDownloadAttachmentLink(projectId!, attachment.id)">
+            <a
+              href="#"
+              @click.prevent="projectsStore.downloadAttachment(project.id, attachment.id)"
+            >
               {{ attachment.name }}
             </a>
             <ControlButton
