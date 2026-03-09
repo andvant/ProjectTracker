@@ -31,7 +31,7 @@ public static class DependencyInjection
             options.EnableSensitiveDataLogging(isDevelopment);
             options.UseSnakeCaseNamingConvention();
 
-            options.UseSeeding((context, _) => AddDefaultUser(context));
+            options.UseSeeding((context, _) => AddDefaultUsers(context));
         });
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
@@ -67,13 +67,21 @@ public static class DependencyInjection
         }
     }
 
-    private static void AddDefaultUser(DbContext context)
+    private static void AddDefaultUsers(DbContext context)
     {
         if (context.Set<User>().Any()) return;
 
-        var user = new User(Guid.Parse("9ee62ef4-159b-48d0-82c8-28e61bfacd14"),
-            "admin", "admin@mail.com", "John Doe", DateTimeOffset.UtcNow);
-        context.Set<User>().Add(user);
+        List<User> users =
+        [
+            new(Guid.Parse("9ee62ef4-159b-48d0-82c8-28e61bfacd14"),
+                "admin", "alexei.alexeev@mail.ru", "Alexei Alexeev", DateTimeOffset.UtcNow),
+            new(Guid.Parse("ab72d992-8648-4306-8bd9-4b4fb74a7d29"),
+                "mgr", "maria.markova@mail.ru", "Maria Markova", DateTimeOffset.UtcNow),
+            new(Guid.Parse("177afd42-4715-4631-946f-f532734c6389"),
+                "user", "roman.romanov@mail.ru", "Roman Romanov", DateTimeOffset.UtcNow),
+        ];
+
+        context.Set<User>().AddRange(users);
         context.SaveChanges();
     }
 }
