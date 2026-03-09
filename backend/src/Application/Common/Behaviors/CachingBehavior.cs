@@ -3,7 +3,7 @@ using ProjectTracker.Application.Interfaces.Caching;
 namespace ProjectTracker.Application.Common.Behaviors;
 
 internal class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+    where TRequest : ICacheableQuery
 {
     private readonly IAppCache _cache;
 
@@ -14,10 +14,7 @@ internal class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
-        if (request is not ICacheableQuery cacheableQuery)
-        {
-            return await next(ct);
-        }
+        var cacheableQuery = request as ICacheableQuery;
 
         var cachedResponse = await _cache.TryGet<TResponse>(cacheableQuery.CacheKey, ct);
 

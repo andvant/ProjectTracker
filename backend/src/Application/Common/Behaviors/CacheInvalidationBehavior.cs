@@ -3,7 +3,7 @@ using ProjectTracker.Application.Interfaces.Caching;
 namespace ProjectTracker.Application.Common.Behaviors;
 
 internal class CacheInvalidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+    where TRequest : IRequest
 {
     private readonly IAppCache _cache;
 
