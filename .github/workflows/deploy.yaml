@@ -1,4 +1,4 @@
-name: Deploy Docker Images
+name: Deploy Docker Images to Docker Hub
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
           name: api-build
           path: api-artifacts
 
-      - name: Download web artifacts
+      - name: Download Web artifacts
         uses: actions/download-artifact@v8
         with:
           name: web-build
