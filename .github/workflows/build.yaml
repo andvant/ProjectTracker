@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: api-build
-          path: publish/api/
+          path: backend/publish/api/
 
   frontend-build:
     name: Frontend Lint and Build

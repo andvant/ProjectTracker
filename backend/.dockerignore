@@ -3,6 +3,5 @@
 tests/
 **/[Bb]in/
 **/[Oo]bj/
-**/container-init/
-**/Dockerfile
 **/AppHost/
+**/Dockerfile
