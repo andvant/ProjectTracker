@@ -17,7 +17,7 @@ internal class CacheInvalidationBehavior<TRequest, TResponse> : IPipelineBehavio
         RequestHandlerDelegate<TResponse> next,
         CancellationToken ct)
     {
-        var response = await next();
+        var response = await next(ct);
 
         if (request is ICacheInvalidator cacheInvalidator)
         {

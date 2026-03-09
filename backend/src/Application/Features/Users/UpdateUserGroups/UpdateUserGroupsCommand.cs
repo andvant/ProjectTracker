@@ -31,7 +31,7 @@ internal class UpdateUserGroupsCommandHandler : IRequestHandler<UpdateUserGroups
     {
         _currentUser.ValidateAllowed();
 
-        var userExists = await _context.Users.AnyAsync(u => u.Id == command.UserId);
+        var userExists = await _context.Users.AnyAsync(u => u.Id == command.UserId, ct);
 
         if (!userExists)
         {

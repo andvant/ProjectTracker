@@ -24,7 +24,7 @@ internal class GetUserGroupsQueryHandler : IRequestHandler<GetUserGroupsQuery, I
 
     public async Task<IReadOnlyCollection<UserGroupDto>> Handle(GetUserGroupsQuery query, CancellationToken ct)
     {
-        var userExists = await _context.Users.AnyAsync(u => u.Id == query.UserId);
+        var userExists = await _context.Users.AnyAsync(u => u.Id == query.UserId, ct);
 
         if (!userExists)
         {
