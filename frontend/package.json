@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "vue-tsc --build && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix",
-    "format": "prettier src/ --write --cache"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier src/ --check",
+    "format:write": "prettier src/ --write --cache"
   },
   "dependencies": {
     "oidc-client-ts": "^3.4.1",
