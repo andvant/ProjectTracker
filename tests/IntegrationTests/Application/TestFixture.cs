@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using ProjectTracker.Application;
 using ProjectTracker.Application.Common;
 using ProjectTracker.Application.Interfaces;
+using ProjectTracker.Application.Interfaces.Caching;
+using ProjectTracker.Infrastructure.Caching;
 using ProjectTracker.Infrastructure.Database;
 
 namespace ProjectTracker.IntegrationTests.Application;
@@ -30,6 +32,8 @@ public class TestFixture : IAsyncDisposable
         services.AddSingleton<TimeProvider, FakeTimeProvider>();
         services.AddScoped<ICurrentUser, FakeCurrentUser>();
         services.AddScoped(typeof(ILogger<>), typeof(NullLogger<>));
+        services.AddFusionCache();
+        services.AddSingleton<IAppCache, AppCache>();
 
         _provider = services.BuildServiceProvider();
 

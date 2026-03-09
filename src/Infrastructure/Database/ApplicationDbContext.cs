@@ -7,7 +7,7 @@ using ProjectTracker.Domain.Entities;
 
 namespace ProjectTracker.Infrastructure.Database;
 
-public class ApplicationDbContext : DbContext, IApplicationDbContext
+internal class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     private readonly IPublisher _publisher;
     private readonly ICurrentUser _currentUser;
