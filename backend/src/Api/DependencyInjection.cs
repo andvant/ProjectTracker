@@ -88,7 +88,7 @@ public static class DependencyInjection
         });
 
         services.AddCors(options =>
-            options.AddPolicy("frontend", policy =>
+            options.AddPolicy("web", policy =>
             {
                 policy.WithOrigins(configuration["CorsConfig:Origins"]!)
                     .AllowAnyMethod()

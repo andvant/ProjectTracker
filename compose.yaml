@@ -22,7 +22,7 @@ services:
       - keycloak
       - redis
 
-  frontend:
+  web:
     ports:
       - "5150:80"
     depends_on:

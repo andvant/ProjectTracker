@@ -47,12 +47,12 @@ jobs:
           name: api-build
           path: backend/publish/api/
 
-  frontend-build:
-    name: Frontend Lint and Build
+  web-build:
+    name: Web Lint and Build
     runs-on: ubuntu-latest
 
     outputs:
-      artifact-name: frontend-build
+      artifact-name: web-build
 
     defaults:
       run:
@@ -87,7 +87,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: frontend-build
+          name: web-build
           path: |
             frontend/dist/
             frontend/nginx.conf

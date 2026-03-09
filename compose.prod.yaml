@@ -7,8 +7,8 @@ services:
       file: compose.yaml
       service: api
 
-  frontend:
-    image: docker.io/andvant/projecttracker-frontend:latest
+  web:
+    image: docker.io/andvant/projecttracker-web:latest
     extends:
       file: compose.yaml
-      service: frontend
+      service: web

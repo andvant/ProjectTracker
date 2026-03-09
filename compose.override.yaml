@@ -7,8 +7,8 @@ services:
       file: compose.yaml
       service: api
 
-  frontend:
+  web:
     build: frontend
     extends:
       file: compose.yaml
-      service: frontend
+      service: web
