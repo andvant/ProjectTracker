@@ -21,7 +21,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: api-build
-          path: publish/api
+          path: api-artifacts
 
       - name: Download frontend artifacts
         uses: actions/download-artifact@v8
@@ -45,7 +45,7 @@ jobs:
             -f deploy-images/api/Dockerfile \
             -t docker.io/andvant/projecttracker-api:latest \
             -t docker.io/andvant/projecttracker-api:${{ steps.vars.outputs.SHA_TAG }} \
-            .
+            api-artifacts
 
       - name: Build frontend image
         run: |
