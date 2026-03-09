@@ -12,6 +12,6 @@ RUN dotnet restore src/Api/Api.csproj
 
 COPY . .
 
-WORKDIR src/Api
+WORKDIR /app/src/Api
 
 CMD ["dotnet", "run", "--no-launch-profile"]
