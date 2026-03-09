@@ -12,7 +12,7 @@ var postgres = builder.AddPostgres("postgres", password: postgresPassword)
     .WithEnvironment("POSTGRES_USER", "postgres")
     .WithHostPort(5432)
     .WithVolume("projecttracker_postgres_data", "/var/lib/postgresql")
-    .WithInitFiles("../../container-init/postgres");
+    .WithInitFiles("../../../container-init/postgres");
 
 var projectTrackerDb = postgres.AddDatabase("ProjectTrackerDb", "project_tracker_db");
 var keycloakDb = postgres.AddDatabase("KeycloakDb", "keycloak_db");
@@ -28,7 +28,7 @@ var rustfs = builder.AddContainer("rustfs", "rustfs/rustfs")
 
 var keycloak = builder.AddKeycloak("keycloak", 8080, keycloakUsername, keycloakPassword)
     .WithImageTag("26.5.2")
-    .WithRealmImport("../../container-init/keycloak")
+    .WithRealmImport("../../../container-init/keycloak")
     .WithEnvironment("KC_HEALTH_ENABLED", "true")
     .WithEnvironment("KC_DB", "postgres")
     .WithEnvironment("KC_DB_URL", $"jdbc:postgresql://{postgres.Resource.Name}:{postgres.Resource.Port}/{keycloakDb.Resource.DatabaseName}")
