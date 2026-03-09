@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: api-build
-          path: publish/api
+          path: publish/api/
 
   frontend-build:
     name: Frontend Lint and Build
@@ -84,4 +84,6 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: frontend-build
-          path: frontend/dist
+          path: |
+            frontend/dist/
+            frontend/nginx.conf
