@@ -2,6 +2,7 @@ name: Build, Test and Publish
 
 on:
   workflow_dispatch:
+  workflow_call:
   push:
     branches: [main]
   pull_request:
@@ -11,6 +12,9 @@ jobs:
   api-build:
     name: API Build, Test and Publish
     runs-on: ubuntu-latest
+
+    outputs:
+      artifact-name: api-build
 
     steps:
       - name: Checkout
@@ -42,6 +46,9 @@ jobs:
   frontend-build:
     name: Frontend Lint and Build
     runs-on: ubuntu-latest
+
+    outputs:
+      artifact-name: frontend-build
 
     defaults:
       run:
