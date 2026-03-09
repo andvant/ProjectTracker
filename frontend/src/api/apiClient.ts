@@ -10,7 +10,7 @@ interface RequestOptions<TBody = unknown> {
 
 export const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-const { accessToken } = useAuth()
+const { accessToken, clearAuth } = useAuth()
 
 const sendRequest = async <TResponse, TBody = unknown>(
   url: string,
@@ -41,6 +41,13 @@ const sendRequest = async <TResponse, TBody = unknown>(
 
   if (res.status === 204 || res.status === 304) {
     return undefined as TResponse
+  }
+
+  if (res.status === 401) {
+    await clearAuth()
+    window.location.href = '/'
+
+    throw new ApiError(res.status, undefined, 'Token expired')
   }
 
   const contentType = res.headers.get('content-type')

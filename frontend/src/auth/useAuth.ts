@@ -21,6 +21,11 @@ export const initAuth = async () => {
   user.value = await userManager.getUser()
 }
 
+const clearAuth = async () => {
+  await userManager.removeUser()
+  user.value = null
+}
+
 const onUserLoaded = (callback: () => Promise<void>) => {
   userManager.events.addUserLoaded(async () => {
     await initAuth()
@@ -37,6 +42,7 @@ export const useAuth = () => {
     accessToken,
     isSignedIn,
     hasRole,
+    clearAuth,
     onUserLoaded,
   }
 }
