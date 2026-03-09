@@ -54,7 +54,7 @@ var api = builder.AddProject<Projects.Api>("api")
     .WaitFor(keycloak)
     .WaitFor(redis);
 
-var frontend = builder.AddDockerfile("frontend", "../../frontend")
+var frontend = builder.AddDockerfile("frontend", "../../../frontend")
     .WithHttpEndpoint(port: 5150, targetPort: 80)
     .WithReference(api)
     .WaitFor(api);

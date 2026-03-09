@@ -16,6 +16,10 @@ jobs:
     outputs:
       artifact-name: api-build
 
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -23,7 +27,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          global-json-file: global.json
+          global-json-file: backend/global.json
 
       - name: Restore
         run: dotnet restore

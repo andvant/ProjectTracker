@@ -1,7 +1,7 @@
 services:
   api:
     build:
-      context: .
+      context: backend
       dockerfile: src/Api/Dockerfile
     extends:
       file: compose.yaml
