@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/Api/Dockerfile
+    extends:
+      file: compose.yaml
+      service: api
+
+  frontend:
+    build: frontend
+    extends:
+      file: compose.yaml
+      service: frontend

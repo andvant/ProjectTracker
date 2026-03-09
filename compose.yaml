@@ -1,8 +1,5 @@
 services:
   api:
-    build:
-      context: .
-      dockerfile: src/Api/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
@@ -26,7 +23,6 @@ services:
       - redis
 
   frontend:
-    build: frontend
     ports:
       - "5150:80"
     depends_on:

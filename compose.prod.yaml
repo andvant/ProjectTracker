@@ -1,0 +1,14 @@
+services:
+  api:
+    image: docker.io/andvant/projecttracker-api:latest
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+    extends:
+      file: compose.yaml
+      service: api
+
+  frontend:
+    image: docker.io/andvant/projecttracker-frontend:latest
+    extends:
+      file: compose.yaml
+      service: frontend

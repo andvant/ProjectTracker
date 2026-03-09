@@ -44,8 +44,6 @@ internal static class OpenApi
 
     public static IApplicationBuilder UseOpenApi(this WebApplication app)
     {
-        if (!app.Environment.IsDevelopment()) return app;
-
         app.MapOpenApi();
         app.MapScalarApiReference();
         app.UseSwagger();
