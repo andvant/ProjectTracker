@@ -1,4 +1,4 @@
-name: Deploy Docker Images to Docker Hub
+name: Push Docker Images to Docker Hub
 
 on:
   workflow_dispatch:
@@ -8,8 +8,8 @@ jobs:
     name: Run build workflow
     uses: ./.github/workflows/build.yaml
 
-  deploy:
-    name: Deploy Docker images
+  push:
+    name: Build and Push Docker Images
     needs: build
     runs-on: ubuntu-latest
 
@@ -42,7 +42,7 @@ jobs:
       - name: Build API image
         run: |
           docker build \
-            -f deploy-images/api/Dockerfile \
+            -f push-images/api.Dockerfile \
             -t docker.io/andvant/projecttracker-api:latest \
             -t docker.io/andvant/projecttracker-api:${{ steps.vars.outputs.SHA_TAG }} \
             api-artifacts
@@ -50,7 +50,7 @@ jobs:
       - name: Build Web image
         run: |
           docker build \
-            -f deploy-images/web/Dockerfile \
+            -f push-images/web.Dockerfile \
             -t docker.io/andvant/projecttracker-web:latest \
             -t docker.io/andvant/projecttracker-web:${{ steps.vars.outputs.SHA_TAG }} \
             web-artifacts
