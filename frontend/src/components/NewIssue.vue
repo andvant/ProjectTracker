@@ -79,6 +79,8 @@ const onSubmit = async () => {
 const onCreating = () => {
   errors.value = createDefaultErrors(req)
   Object.assign(req, new CreateIssueRequest())
+  estimationHours.value = ''
+  estimationMinutes.value = ''
   isCreating.value = true
 }
 
